@@ -1,0 +1,3204 @@
+BIOGRF 200
+DESCRP h2sGeo
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.97459   0.04550  -0.00340 S_3    1 0 -0.19598
+HETATM     2 H                   2.29492   0.09584   0.19028 H_     1 0  0.09799
+HETATM     3 H                   0.72315   0.37545   1.26595 H_     1 0  0.09799
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP hsshGeo
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   1.03119  -0.23406   0.02272 S_3    1 0 -0.11373
+HETATM     2 S                   3.09339  -0.13673  -0.04394 S_3    1 0 -0.11373
+HETATM     3 H                   0.77615   0.64492  -0.95541 H_     1 0  0.11373
+HETATM     4 H                   3.25784   0.84656   0.85077 H_     1 0  0.11373
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP s8Geo
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                  -2.39936  -0.00436  -1.97363 S_3    1 0  0.00000
+HETATM     2 S                  -2.99432   0.30148  -0.02631 S_3    1 0  0.00000
+HETATM     3 S                  -5.02882  -0.00514   0.05340 S_3    1 0  0.00000
+HETATM     4 S                  -5.93433   1.84350   0.00748 S_3    1 0  0.00000
+HETATM     5 S                  -2.21599   1.84446  -2.86125 S_3    1 0  0.00000
+HETATM     6 S                  -3.92889   2.17762  -3.95418 S_3    1 0  0.00000
+HETATM     7 S                  -6.55761   2.17823  -1.92620 S_3    1 0  0.00000
+HETATM     8 S                  -5.15541   3.38757  -2.82670 S_3    1 0  0.00000
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP hssh-SS7.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   7.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   7.67915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS2.071
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07100   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25015   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS2.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.67915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS1.7
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   1.70000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   1.87915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS1.85
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   1.85000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.02915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS3.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   3.67915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS2 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.17915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS2.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.75000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.92915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                  10.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                  10.17915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS4 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   4.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   4.17915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS2.25
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.25000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.42915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS1.8
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   1.80000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   1.97915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS5 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   5.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   5.17915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS3 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   3.17915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS1.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   1.75000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   1.92915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SS2.1
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.10000   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.27915   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1.7
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.23045   0.00000  -1.68431 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.20334   0.00000  -1.48615 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1.6
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.21690   0.00000  -1.58523 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH2
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.27112   0.00000  -1.98154 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1.2
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.16267   0.00000  -1.18892 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -1.35560   0.00000  -9.90769 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1.4
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18978   0.00000  -1.38708 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1.1
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.14912   0.00000  -1.08985 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1.3
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.17623   0.00000  -1.28800 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH5 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.67780   0.00000  -4.95385 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH3 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.40668   0.00000  -2.97231 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SH1 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.13556   0.00000  -0.99077 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH120
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.66922   0.00000  -1.15913 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH130
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.86034   0.00000  -1.02531 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH90
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                   0.00000   0.00000  -1.33845 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH100
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.23242   0.00000  -1.31811 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH115
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.56565   0.00000  -1.21305 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH70
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                   0.45778   0.00000  -1.25773 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH105
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.34642   0.00000  -1.29284 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH95
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.11665   0.00000  -1.33336 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH85
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                   0.11665   0.00000  -1.33336 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH110
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.45778   0.00000  -1.25773 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH80
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                   0.23242   0.00000  -1.31811 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-SSH75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                   0.34642   0.00000  -1.29284 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32720   0.03757 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH120
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.14985   0.66387 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH90
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.32773   0.00000 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH100
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.30756   0.23056 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH0
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   0.00000  -1.32773 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH20
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   0.45411  -1.24766 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH40
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   0.85345  -1.01710 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH220
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059  -0.85345   1.01710 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH200
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059  -0.45411   1.24766 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH240
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059  -1.14985   0.66387 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH180
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   0.00000   1.32773 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH60
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.14985  -0.66387 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH140
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   0.85345   1.01710 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH80
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   1.30756  -0.23056 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hssh-HSSH160
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.07144   0.00000   0.00000 S      1 0  0.00000
+HETATM     3 H                  -0.18144   0.00000  -1.32609 H      1 0  0.00000
+HETATM     4 H                   2.25059   0.45411   1.24766 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hshBase
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0 -0.19598
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.09799
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.09799
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH45
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.94428   0.00000  -0.94428 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH50
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.85839   0.00000  -1.02299 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH120
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.66771   0.00000  -1.15651 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH65
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.56437   0.00000  -1.21030 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH130
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.85839   0.00000  -1.02299 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH90
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.00000   0.00000  -1.33542 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH100
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.23189   0.00000  -1.31513 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH125
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.76596   0.00000  -1.09391 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH115
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.56437   0.00000  -1.21030 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH70
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.45674   0.00000  -1.25488 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH105
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.34563   0.00000  -1.28991 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH150
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -1.15651   0.00000  -0.66771 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH95
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.11639   0.00000  -1.33034 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH85
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.11639   0.00000  -1.33034 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH55
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.76596   0.00000  -1.09391 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH60
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.66771   0.00000  -1.15651 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH140
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -1.02299   0.00000  -0.85839 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH110
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.45674   0.00000  -1.25488 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH80
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.23189   0.00000  -1.31513 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-HSH75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.33542   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                   0.34563   0.00000  -1.28991 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.15
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.15000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH7.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   7.50000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.05
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.05000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH2.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   2.50000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.7
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.70000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.50000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.6
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.60000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.45
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.45000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH2 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   2.00000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.35
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.35000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.2
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.20000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                  10.00000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH4 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   4.00000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.4
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.40000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH0.95
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   0.95000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.9
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.90000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.1
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.10000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.8
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.80000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.3
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.30000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1.25
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.25000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH5 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   5.00000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH3
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   3.00000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP hsh-SH1 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 H                   1.00000   0.00000   0.00000 H      1 0  0.00000
+HETATM     3 H                  -0.05206   0.00000  -1.33440 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmteBase
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   1.12183  -0.04039  -0.15959 C_3    4 0 -0.01836
+HETATM     2 S                   2.91780  -0.00410   0.01847 S_3    1 0 -0.16751
+HETATM     3 C                   3.34512  -0.35430  -1.70004 C_3    4 0 -0.01836
+HETATM     4 H                   0.69321   0.15922   0.81994 H_     1 0  0.03404
+HETATM     5 H                   0.79087  -1.01988  -0.50097 H_     1 0  0.03404
+HETATM     6 H                   0.79087   0.72741  -0.85704 H_     1 0  0.03404
+HETATM     7 H                   4.43049  -0.36846  -1.76950 H_     1 0  0.03404
+HETATM     8 H                   2.95566   0.42176  -2.35696 H_     1 0  0.03404
+HETATM     9 H                   2.95566  -1.32554  -2.00089 H_     1 0  0.03404
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP mdtBase
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.87063   0.07710   0.15084 S_3    1 0 -0.16774
+HETATM     2 C                   2.68704   0.02176   0.06669 C_3    4 0  0.03380
+HETATM     3 S                   3.36057   1.68306   0.30096 S_3    1 0 -0.16774
+HETATM     4 H                   0.66602  -1.19774  -0.21151 H_     1 0  0.10244
+HETATM     5 H                   3.01218  -0.38980  -0.88383 H_     1 0  0.04839
+HETATM     6 H                   3.09051  -0.57367   0.88213 H_     1 0  0.04839
+HETATM     7 H                   2.80997   2.20755  -0.80079 H_     1 0  0.10244
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP dmds
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   1.47738  -0.02026   0.05289 C_3    4 0 -0.00782
+HETATM     2 S                   2.73288  -0.96190  -0.85500 S_3    1 0 -0.09678
+HETATM     3 S                   3.41658  -2.24371   0.58516 S_3    1 0 -0.09678
+HETATM     4 C                   4.67118  -1.23232   1.41599 C_3    4 0 -0.00782
+HETATM     5 H                   1.03289   0.67032  -0.66250 H_     1 0  0.03487
+HETATM     6 H                   1.92820   0.54685   0.86270 H_     1 0  0.03487
+HETATM     7 H                   0.71347  -0.68818   0.43933 H_     1 0  0.03487
+HETATM     8 H                   5.11564  -1.86276   2.18492 H_     1 0  0.03487
+HETATM     9 H                   4.21970  -0.36255   1.88538 H_     1 0  0.03487
+HETATM    10 H                   5.43526  -0.92536   0.70819 H_     1 0  0.03487
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP s8
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                  -2.39936  -0.00436  -1.97363 S_3    1 0  0.00000
+HETATM     2 S                  -2.99432   0.30148  -0.02631 S_3    1 0  0.00000
+HETATM     3 S                  -5.02882  -0.00514   0.05340 S_3    1 0  0.00000
+HETATM     4 S                  -5.93433   1.84350   0.00748 S_3    1 0  0.00000
+HETATM     5 S                  -2.21599   1.84446  -2.86125 S_3    1 0  0.00000
+HETATM     6 S                  -3.92889   2.17762  -3.95418 S_3    1 0  0.00000
+HETATM     7 S                  -6.55761   2.17823  -1.92620 S_3    1 0  0.00000
+HETATM     8 S                  -5.15541   3.38757  -2.82670 S_3    1 0  0.00000
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP bnz
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                  -0.75929   1.16804  -0.00160 C_R    3 0 -0.06176
+HETATM     2 C                   0.63228   1.24369  -0.00065 C_R    3 0 -0.06176
+HETATM     3 C                   1.39358   0.07640   0.00097 C_R    3 0 -0.06176
+HETATM     4 C                   0.76334  -1.16657   0.00164 C_R    3 0 -0.06176
+HETATM     5 C                  -0.62822  -1.24222   0.00067 C_R    3 0 -0.06176
+HETATM     6 C                  -1.38953  -0.07493  -0.00096 C_R    3 0 -0.06176
+HETATM     7 H                  -1.35008   2.07389  -0.00283 H_     1 0  0.06176
+HETATM     8 H                   1.12134   2.20827  -0.00118 H_     1 0  0.06176
+HETATM     9 H                   2.47346   0.13510   0.00170 H_     1 0  0.06176
+HETATM    10 H                   1.35413  -2.07242   0.00293 H_     1 0  0.06176
+HETATM    11 H                  -1.11729  -2.20679   0.00116 H_     1 0  0.06176
+HETATM    12 H                  -2.46941  -0.13362  -0.00172 H_     1 0  0.06176
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP dpds
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.46167  -1.06583  -1.21134 C_R    3 0 -0.04750
+HETATM     2 C                   1.84921  -1.16381  -1.19300 C_R    3 0 -0.06069
+HETATM     3 C                   2.52833  -1.31038   0.01839 C_R    3 0 -0.06169
+HETATM     4 C                   1.81693  -1.35726   1.21490 C_R    3 0 -0.06069
+HETATM     5 C                   0.42703  -1.24994   1.20664 C_R    3 0 -0.04750
+HETATM     6 C                  -0.25056  -1.10910  -0.00831 C_R    3 0  0.01899
+HETATM     7 S                  -2.01386  -0.92747   0.01663 S_3    1 0 -0.05200
+HETATM     8 S                  -2.12427   1.14740  -0.18028 S_3    1 0 -0.05200
+HETATM     9 C                  -1.27871   1.60674   1.30865 C_R    3 0  0.01899
+HETATM    10 C                  -1.92820   1.57059   2.54690 C_R    3 0 -0.04750
+HETATM    11 C                  -1.22357   1.89126   3.70271 C_R    3 0 -0.06069
+HETATM    12 C                   0.12317   2.25300   3.62824 C_R    3 0 -0.06169
+HETATM    13 C                   0.76699   2.29226   2.39377 C_R    3 0 -0.06069
+HETATM    14 C                   0.07120   1.96295   1.23152 C_R    3 0 -0.04750
+HETATM    15 H                  -0.07545  -0.94843  -2.14269 H_     1 0  0.06288
+HETATM    16 H                   2.40165  -1.13111  -2.12238 H_     1 0  0.06179
+HETATM    17 H                   3.60692  -1.38883   0.02639 H_     1 0  0.06176
+HETATM    18 H                   2.34078  -1.46561   2.15497 H_     1 0  0.06179
+HETATM    19 H                  -0.13741  -1.26543   2.12949 H_     1 0  0.06288
+HETATM    20 H                  -2.97047   1.28542   2.59192 H_     1 0  0.06288
+HETATM    21 H                  -1.72432   1.86444   4.66112 H_     1 0  0.06179
+HETATM    22 H                   0.66522   2.50395   4.52979 H_     1 0  0.06176
+HETATM    23 H                   1.81136   2.56717   2.33377 H_     1 0  0.06179
+HETATM    24 H                   0.56303   1.97041   0.26793 H_     1 0  0.06288
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP dpods
+RUTYPE NORMAL RUN
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                  -2.10746  -2.78603  -0.13821 C_R    3 0 -0.04398
+HETATM     2 C                  -1.23313  -3.84660  -0.33803 C_R    3 0 -0.06047
+HETATM     3 C                   0.08196  -3.74728   0.11840 C_R    3 0 -0.05824
+HETATM     4 C                   0.51147  -2.59916   0.77304 C_R    3 0 -0.01905
+HETATM     5 C                  -0.36029  -1.52622   0.97396 C_R    3 0  0.13101
+HETATM     6 O                   0.02550  -0.39025   1.61085 O_3    2 0 -0.50564
+HETATM     7 C                  -1.68234  -1.62036   0.50856 C_R    3 0  0.06034
+HETATM     8 S                  -2.76735  -0.23502   0.66909 S_3    1 0 -0.04824
+HETATM     9 S                  -2.46414   0.60310  -1.23577 S_3    1 0 -0.04824
+HETATM    10 C                  -0.72949   0.91294  -1.13377 C_R    3 0  0.06034
+HETATM    11 C                  -0.26345   2.06682  -0.47875 C_R    3 0  0.13101
+HETATM    12 O                  -1.10371   2.98382   0.04753 O_3    2 0 -0.50564
+HETATM    13 C                   1.10895   2.26915  -0.35076 C_R    3 0 -0.01905
+HETATM    14 C                   2.00367   1.32831  -0.85385 C_R    3 0 -0.05824
+HETATM    15 C                   1.54414   0.18252  -1.50531 C_R    3 0 -0.06047
+HETATM    16 C                   0.17510  -0.02338  -1.64422 C_R    3 0 -0.04398
+HETATM    17 H                  -3.12815  -2.83264  -0.49306 H_     1 0  0.06299
+HETATM    18 H                  -1.57134  -4.74131  -0.84104 H_     1 0  0.06179
+HETATM    19 H                   0.77409  -4.56474  -0.03062 H_     1 0  0.06187
+HETATM    20 H                   1.53126  -2.52504   1.13174 H_     1 0  0.06543
+HETATM    21 H                   0.98959  -0.37503   1.64276 H_HB   1 0  0.29218
+HETATM    22 H                  -2.00388   2.66622  -0.13562 H_HB   1 0  0.29218
+HETATM    23 H                   1.45579   3.16162   0.15130 H_     1 0  0.06543
+HETATM    24 H                   3.06649   1.50042  -0.74710 H_     1 0  0.06187
+HETATM    25 H                   2.24315  -0.54023  -1.90219 H_     1 0  0.06179
+HETATM    26 H                  -0.21052  -0.90614  -2.13740 H_     1 0  0.06299
+FORMAT CONECT
+END
+
+BIOGRF 200
+DESCRP dmds-SS2.042
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.15854   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.23109   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.40871   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   1.15914   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   2.88266   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS7.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.27313   1.76834   7.73536 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.34568   0.00000   7.34174 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   3.52330   1.85954   8.79147 H      1 0  0.00000
+HETATM     9 H                   2.27373   2.16167   7.57067 H      1 0  0.00000
+HETATM    10 H                   3.99725   2.31577   7.13954 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS2.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.25140   1.76834   2.84087 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.32394   0.00000   2.44725 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.50157   1.85954   3.89698 H      1 0  0.00000
+HETATM     9 H                   1.25200   2.16167   2.67617 H      1 0  0.00000
+HETATM    10 H                   2.97551   2.31577   2.24505 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS1.7
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.08792   1.76834   2.05775 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.16046   0.00000   1.66413 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.33809   1.85954   3.11386 H      1 0  0.00000
+HETATM     9 H                   1.08852   2.16167   1.89306 H      1 0  0.00000
+HETATM    10 H                   2.81203   2.31577   1.46193 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS3.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.45574   1.76834   3.81977 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.52829   0.00000   3.42614 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.70591   1.85954   4.87587 H      1 0  0.00000
+HETATM     9 H                   1.45634   2.16167   3.65507 H      1 0  0.00000
+HETATM    10 H                   3.17986   2.31577   3.22395 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS2
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.14922   1.76834   2.35142 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.22176   0.00000   1.95780 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.39939   1.85954   3.40753 H      1 0  0.00000
+HETATM     9 H                   1.14982   2.16167   2.18673 H      1 0  0.00000
+HETATM    10 H                   2.87333   2.31577   1.75560 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS2.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.30248   1.76834   3.08560 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.37503   0.00000   2.69197 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.55265   1.85954   4.14170 H      1 0  0.00000
+HETATM     9 H                   1.30308   2.16167   2.92090 H      1 0  0.00000
+HETATM    10 H                   3.02660   2.31577   2.48978 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.78400   1.76834  10.18261 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.85654   0.00000   9.78898 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   4.03417   1.85954  11.23871 H      1 0  0.00000
+HETATM     9 H                   2.78460   2.16167  10.01791 H      1 0  0.00000
+HETATM    10 H                   4.50811   2.31577   9.58679 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS4 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.55792   1.76834   4.30922 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.63046   0.00000   3.91559 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.80809   1.85954   5.36532 H      1 0  0.00000
+HETATM     9 H                   1.55852   2.16167   4.14452 H      1 0  0.00000
+HETATM    10 H                   3.28203   2.31577   3.71340 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS1.9
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.12879   1.76834   2.25353 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.20133   0.00000   1.85991 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.37896   1.85954   3.30964 H      1 0  0.00000
+HETATM     9 H                   1.12939   2.16167   2.08884 H      1 0  0.00000
+HETATM    10 H                   2.85290   2.31577   1.65771 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS2.25
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.20031   1.76834   2.59615 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.27285   0.00000   2.20252 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.45048   1.85954   3.65225 H      1 0  0.00000
+HETATM     9 H                   1.20091   2.16167   2.43145 H      1 0  0.00000
+HETATM    10 H                   2.92442   2.31577   2.00033 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS1.8
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.10835   1.76834   2.15564 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.18090   0.00000   1.76202 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.35852   1.85954   3.21175 H      1 0  0.00000
+HETATM     9 H                   1.10895   2.16167   1.99095 H      1 0  0.00000
+HETATM    10 H                   2.83247   2.31577   1.55982 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS5 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.76227   1.76834   5.28812 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.83481   0.00000   4.89449 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   3.01244   1.85954   6.34422 H      1 0  0.00000
+HETATM     9 H                   1.76286   2.16167   5.12342 H      1 0  0.00000
+HETATM    10 H                   3.48638   2.31577   4.69230 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS3 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.35357   1.76834   3.33032 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.42611   0.00000   2.93670 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.60374   1.85954   4.38642 H      1 0  0.00000
+HETATM     9 H                   1.35417   2.16167   3.16562 H      1 0  0.00000
+HETATM    10 H                   3.07768   2.31577   2.73450 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SS2.1
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.16966   1.76834   2.44931 C      1 0  0.00000
+HETATM     3 S                   1.81307   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.24220   0.00000   2.05569 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.41983   1.85954   3.50542 H      1 0  0.00000
+HETATM     9 H                   1.17026   2.16167   2.28461 H      1 0  0.00000
+HETATM    10 H                   2.89377   2.31577   1.85349 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS7.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   7.84547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   7.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   7.91802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   8.09564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   6.84607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   8.56959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS2.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.84547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   2.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.91802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   3.09564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   1.84607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   3.56959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS1.7
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.04547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   1.70000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.11802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.29564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   1.04607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   2.76959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS1.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.84547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   1.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   1.91802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.09564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   0.84607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   2.56959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS1.6
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.94547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   1.60000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.01802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.19564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   0.94607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   2.66959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS3.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.84547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   3.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.91802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   4.09564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   2.84607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   4.56959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS2 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.34547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   2.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.41802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.59564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   1.34607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   3.06959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS2.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.09547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   2.75000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.16802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   3.34564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   2.09607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   3.81959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                  10.34547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                  10.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                  10.41802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                  10.59564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   9.34607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                  11.06959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS4 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   4.34547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   4.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   4.41802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   4.59564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   3.34607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   5.06959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS1.9
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.24547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   1.90000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.31802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.49564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   1.24607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   2.96959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS2.25
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.59547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   2.25000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.66802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.84564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   1.59607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   3.31959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS5 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   5.34547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   5.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   5.41802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   5.59564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   4.34607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   6.06959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS3 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.34547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   3.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.41802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   3.59564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   2.34607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   4.06959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CS2.1
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.44547   1.76834   2.39608 C      1 0  0.00000
+HETATM     3 S                   2.10000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.51802   0.00000   2.00245 S      1 0  0.00000
+HETATM     5 H                  -0.30823  -0.03675  -1.04398 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.90765   0.45429 H      1 0  0.00000
+HETATM     7 H                  -0.37560  -0.87427   0.52307 H      1 0  0.00000
+HETATM     8 H                   2.69564   1.85954   3.45218 H      1 0  0.00000
+HETATM     9 H                   1.44607   2.16167   2.23138 H      1 0  0.00000
+HETATM    10 H                   3.16959   2.31577   1.80025 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr65
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.83448   1.40810   2.81394 C      1 0  0.00000
+HETATM     3 S                   1.94895   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   0.98660   0.00000   2.06376 S      1 0  0.00000
+HETATM     5 H                  -0.27035  -0.05032  -1.06759 H      1 0  0.00000
+HETATM     6 H                  -0.38003   0.93143   0.38855 H      1 0  0.00000
+HETATM     7 H                  -0.40286  -0.88466   0.47609 H      1 0  0.00000
+HETATM     8 H                   1.35490   1.55086   3.78350 H      1 0  0.00000
+HETATM     9 H                   1.68722   2.29633   2.20187 H      1 0  0.00000
+HETATM    10 H                   2.89563   1.22156   2.95908 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr145
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.77181   1.75483   1.54976 C      1 0  0.00000
+HETATM     3 S                   1.84732   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.53109   0.00000   1.17899 S      1 0  0.00000
+HETATM     5 H                  -0.09290  -0.03331  -1.08274 H      1 0  0.00000
+HETATM     6 H                  -0.43631   0.91044   0.40216 H      1 0  0.00000
+HETATM     7 H                  -0.44018  -0.88239   0.45733 H      1 0  0.00000
+HETATM     8 H                   4.80207   1.84980   1.89515 H      1 0  0.00000
+HETATM     9 H                   3.09555   2.08613   2.33244 H      1 0  0.00000
+HETATM    10 H                   3.62770   2.33529   0.64125 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr90
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.71036   1.77408   2.41606 C      1 0  0.00000
+HETATM     3 S                   1.82832   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   1.82832   0.00000   2.07453 S      1 0  0.00000
+HETATM     5 H                  -0.35301   0.01643  -1.03260 H      1 0  0.00000
+HETATM     6 H                  -0.35988   0.88657   0.51425 H      1 0  0.00000
+HETATM     7 H                  -0.34893  -0.89925   0.49683 H      1 0  0.00000
+HETATM     8 H                   1.64234   1.87200   3.49947 H      1 0  0.00000
+HETATM     9 H                   0.81646   2.19551   1.96075 H      1 0  0.00000
+HETATM    10 H                   2.59673   2.28780   2.05507 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr100
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.06205   1.76791   2.40399 C      1 0  0.00000
+HETATM     3 S                   1.81416   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.16995   0.00000   2.01778 S      1 0  0.00000
+HETATM     5 H                  -0.31466  -0.02427  -1.04328 H      1 0  0.00000
+HETATM     6 H                  -0.37993   0.90443   0.46874 H      1 0  0.00000
+HETATM     7 H                  -0.36813  -0.88100   0.51831 H      1 0  0.00000
+HETATM     8 H                   2.25847   1.86136   3.47190 H      1 0  0.00000
+HETATM     9 H                   1.06654   2.14778   2.18711 H      1 0  0.00000
+HETATM    10 H                   2.81060   2.31846   1.84087 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr125
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.09943   1.76331   2.07454 C      1 0  0.00000
+HETATM     3 S                   1.81848   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.98600   0.00000   1.66739 S      1 0  0.00000
+HETATM     5 H                  -0.18475  -0.04585  -1.07212 H      1 0  0.00000
+HETATM     6 H                  -0.42379   0.91279   0.41091 H      1 0  0.00000
+HETATM     7 H                  -0.42119  -0.87538   0.48812 H      1 0  0.00000
+HETATM     8 H                   3.88386   1.85374   2.82608 H      1 0  0.00000
+HETATM     9 H                   2.16128   2.12669   2.48451 H      1 0  0.00000
+HETATM    10 H                   3.37202   2.32337   1.18348 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr115
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.70449   1.76594   2.25724 C      1 0  0.00000
+HETATM     3 S                   1.81192   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.67187   0.00000   1.84416 S      1 0  0.00000
+HETATM     5 H                  -0.23720  -0.05536  -1.06171 H      1 0  0.00000
+HETATM     6 H                  -0.40977   0.91603   0.41824 H      1 0  0.00000
+HETATM     7 H                  -0.40243  -0.86981   0.51319 H      1 0  0.00000
+HETATM     8 H                   3.28584   1.85614   3.17475 H      1 0  0.00000
+HETATM     9 H                   1.69858   2.13973   2.42830 H      1 0  0.00000
+HETATM    10 H                   3.18762   2.31950   1.45626 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr70
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.23436   1.76915   2.41226 C      1 0  0.00000
+HETATM     3 S                   1.91297   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   1.15397   0.00000   2.08534 S      1 0  0.00000
+HETATM     5 H                  -0.31788   0.02243  -1.05368 H      1 0  0.00000
+HETATM     6 H                  -0.37585   0.89467   0.47800 H      1 0  0.00000
+HETATM     7 H                  -0.36582  -0.91415   0.44321 H      1 0  0.00000
+HETATM     8 H                   0.77329   1.91491   3.38995 H      1 0  0.00000
+HETATM     9 H                   0.66899   2.31990   1.65865 H      1 0  0.00000
+HETATM    10 H                   2.26183   2.11952   2.43736 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr105
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.27454   1.76709   2.37447 C      1 0  0.00000
+HETATM     3 S                   1.81146   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.33988   0.00000   1.97211 S      1 0  0.00000
+HETATM     5 H                  -0.28997  -0.04356  -1.04946 H      1 0  0.00000
+HETATM     6 H                  -0.39092   0.91194   0.44470 H      1 0  0.00000
+HETATM     7 H                  -0.37957  -0.87313   0.52415 H      1 0  0.00000
+HETATM     8 H                   2.60588   1.85950   3.40860 H      1 0  0.00000
+HETATM     9 H                   1.25824   2.14291   2.28693 H      1 0  0.00000
+HETATM    10 H                   2.94347   2.32024   1.72073 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr95
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.87175   1.77031   2.41572 C      1 0  0.00000
+HETATM     3 S                   1.81956   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   1.99906   0.00000   2.05167 S      1 0  0.00000
+HETATM     5 H                  -0.33643  -0.00187  -1.03731 H      1 0  0.00000
+HETATM     6 H                  -0.36898   0.89490   0.49435 H      1 0  0.00000
+HETATM     7 H                  -0.35759  -0.89072   0.50775 H      1 0  0.00000
+HETATM     8 H                   1.93357   1.86494   3.49971 H      1 0  0.00000
+HETATM     9 H                   0.91726   2.16508   2.07488 H      1 0  0.00000
+HETATM    10 H                   2.69295   2.30864   1.95091 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr85
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.57087   1.77744   2.41140 C      1 0  0.00000
+HETATM     3 S                   1.84121   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   1.65856   0.00000   2.08773 S      1 0  0.00000
+HETATM     5 H                  -0.36215   0.02692  -1.03068 H      1 0  0.00000
+HETATM     6 H                  -0.35437   0.88207   0.52370 H      1 0  0.00000
+HETATM     7 H                  -0.34341  -0.90519   0.48739 H      1 0  0.00000
+HETATM     8 H                   1.38207   1.88248   3.47984 H      1 0  0.00000
+HETATM     9 H                   0.75215   2.23085   1.85522 H      1 0  0.00000
+HETATM    10 H                   2.51094   2.25765   2.15598 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr135
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.45592   1.75959   1.83625 C      1 0  0.00000
+HETATM     3 S                   1.83040   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.27469   0.00000   1.44429 S      1 0  0.00000
+HETATM     5 H                  -0.13622  -0.03746  -1.07903 H      1 0  0.00000
+HETATM     6 H                  -0.43269   0.91061   0.40611 H      1 0  0.00000
+HETATM     7 H                  -0.43375  -0.87984   0.46855 H      1 0  0.00000
+HETATM     8 H                   4.38951   1.85194   2.39193 H      1 0  0.00000
+HETATM     9 H                   2.63167   2.10787   2.45206 H      1 0  0.00000
+HETATM    10 H                   3.51461   2.32926   0.91181 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr110
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.49217   1.76664   2.32514 C      1 0  0.00000
+HETATM     3 S                   1.81084   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.50758   0.00000   1.91429 S      1 0  0.00000
+HETATM     5 H                  -0.26392  -0.05435  -1.05560 H      1 0  0.00000
+HETATM     6 H                  -0.40092   0.91581   0.42740 H      1 0  0.00000
+HETATM     7 H                  -0.39119  -0.86928   0.52247 H      1 0  0.00000
+HETATM     8 H                   2.95331   1.85780   3.30843 H      1 0  0.00000
+HETATM     9 H                   1.47307   2.14191   2.36818 H      1 0  0.00000
+HETATM    10 H                   3.07244   2.31960   1.59123 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr155
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   4.04285   1.74840   1.22289 C      1 0  0.00000
+HETATM     3 S                   1.86864   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   3.74793   0.00000   0.87633 S      1 0  0.00000
+HETATM     5 H                  -0.05626  -0.03668  -1.08377 H      1 0  0.00000
+HETATM     6 H                  -0.43319   0.91395   0.39696 H      1 0  0.00000
+HETATM     7 H                  -0.44182  -0.88136   0.45738 H      1 0  0.00000
+HETATM     8 H                   5.12163   1.84539   1.35618 H      1 0  0.00000
+HETATM     9 H                   3.53708   2.06084   2.13186 H      1 0  0.00000
+HETATM    10 H                   3.71657   2.34199   0.37152 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr80
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.44643   1.77869   2.40623 C      1 0  0.00000
+HETATM     3 S                   1.85913   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   1.49012   0.00000   2.09274 S      1 0  0.00000
+HETATM     5 H                  -0.36145   0.03080  -1.03295 H      1 0  0.00000
+HETATM     6 H                  -0.35410   0.88190   0.52170 H      1 0  0.00000
+HETATM     7 H                  -0.34285  -0.90932   0.47697 H      1 0  0.00000
+HETATM     8 H                   1.15005   1.89491   3.44895 H      1 0  0.00000
+HETATM     9 H                   0.71108   2.26452   1.76587 H      1 0  0.00000
+HETATM    10 H                   2.42674   2.22013   2.25314 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-SSCr75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.33303   1.77652   2.40450 C      1 0  0.00000
+HETATM     3 S                   1.88263   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   1.32221   0.00000   2.09154 S      1 0  0.00000
+HETATM     5 H                  -0.34800   0.02928  -1.04045 H      1 0  0.00000
+HETATM     6 H                  -0.36069   0.88617   0.50706 H      1 0  0.00000
+HETATM     7 H                  -0.34942  -0.91228   0.46298 H      1 0  0.00000
+HETATM     8 H                   0.94499   1.90650   3.41527 H      1 0  0.00000
+HETATM     9 H                   0.68332   2.29383   1.69809 H      1 0  0.00000
+HETATM    10 H                   2.34115   2.17581   2.34627 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr45
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.11120  -1.24884   2.66749 C      1 0  0.00000
+HETATM     3 S                   1.80764   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.24929   0.00000   2.02505 S      1 0  0.00000
+HETATM     5 H                  -0.29110   0.12304  -1.04261 H      1 0  0.00000
+HETATM     6 H                  -0.38786   0.83145   0.58619 H      1 0  0.00000
+HETATM     7 H                  -0.38899  -0.94536   0.36698 H      1 0  0.00000
+HETATM     8 H                   1.38348  -1.37986   3.71420 H      1 0  0.00000
+HETATM     9 H                   1.23310  -2.19305   2.13930 H      1 0  0.00000
+HETATM    10 H                   0.08275  -0.90440   2.60964 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr350
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   0.77609   0.30371   2.91283 C      1 0  0.00000
+HETATM     3 S                   1.80581   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.33237   0.00000   2.04870 S      1 0  0.00000
+HETATM     5 H                  -0.26108   0.02689  -1.05762 H      1 0  0.00000
+HETATM     6 H                  -0.40278   0.88469   0.48362 H      1 0  0.00000
+HETATM     7 H                  -0.40794  -0.90638   0.44051 H      1 0  0.00000
+HETATM     8 H                   1.05266   0.27543   3.96646 H      1 0  0.00000
+HETATM     9 H                   0.04875  -0.47890   2.71967 H      1 0  0.00000
+HETATM    10 H                   0.36616   1.28396   2.68252 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr90
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.29921  -1.77631   2.36238 C      1 0  0.00000
+HETATM     3 S                   1.81347   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.22565   0.00000   2.00463 S      1 0  0.00000
+HETATM     5 H                  -0.30665   0.02975  -1.04542 H      1 0  0.00000
+HETATM     6 H                  -0.37079   0.87986   0.51828 H      1 0  0.00000
+HETATM     7 H                  -0.38368  -0.90539   0.46385 H      1 0  0.00000
+HETATM     8 H                   2.54703  -1.86612   3.41990 H      1 0  0.00000
+HETATM     9 H                   3.07384  -2.24388   1.76107 H      1 0  0.00000
+HETATM    10 H                   1.33644  -2.24554   2.17539 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr100
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.59702  -1.75021   2.30129 C      1 0  0.00000
+HETATM     3 S                   1.81365   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.22246   0.00000   2.00836 S      1 0  0.00000
+HETATM     5 H                  -0.30465   0.02974  -1.04603 H      1 0  0.00000
+HETATM     6 H                  -0.37048   0.88187   0.51464 H      1 0  0.00000
+HETATM     7 H                  -0.38463  -0.90331   0.46682 H      1 0  0.00000
+HETATM     8 H                   2.85758  -1.83357   3.35630 H      1 0  0.00000
+HETATM     9 H                   3.44143  -2.05568   1.69018 H      1 0  0.00000
+HETATM    10 H                   1.72934  -2.36994   2.08937 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr0
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   0.76435  -0.00078   2.93196 C      1 0  0.00000
+HETATM     3 S                   1.80596   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.34046   0.00000   2.05027 S      1 0  0.00000
+HETATM     5 H                  -0.25935  -0.00047  -1.05843 H      1 0  0.00000
+HETATM     6 H                  -0.40636   0.89588   0.46071 H      1 0  0.00000
+HETATM     7 H                  -0.40636  -0.89588   0.46071 H      1 0  0.00000
+HETATM     8 H                   1.05475  -0.00030   3.98230 H      1 0  0.00000
+HETATM     9 H                   0.18518  -0.89689   2.72818 H      1 0  0.00000
+HETATM    10 H                   0.18440   0.89486   2.72837 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr270
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.29923   1.77630   2.36238 C      1 0  0.00000
+HETATM     3 S                   1.81347   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.22566   0.00000   2.00462 S      1 0  0.00000
+HETATM     5 H                  -0.30664  -0.02980  -1.04542 H      1 0  0.00000
+HETATM     6 H                  -0.38367   0.90541   0.46379 H      1 0  0.00000
+HETATM     7 H                  -0.37081  -0.87983   0.51832 H      1 0  0.00000
+HETATM     8 H                   2.54710   1.86610   3.41989 H      1 0  0.00000
+HETATM     9 H                   1.33643   2.24552   2.17545 H      1 0  0.00000
+HETATM    10 H                   3.07381   2.24390   1.76104 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   0.77610  -0.30370   2.91282 C      1 0  0.00000
+HETATM     3 S                   1.80581   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.33237   0.00000   2.04868 S      1 0  0.00000
+HETATM     5 H                  -0.26106  -0.02682  -1.05762 H      1 0  0.00000
+HETATM     6 H                  -0.40795   0.90635   0.44056 H      1 0  0.00000
+HETATM     7 H                  -0.40279  -0.88472   0.48357 H      1 0  0.00000
+HETATM     8 H                   1.05271  -0.27547   3.96645 H      1 0  0.00000
+HETATM     9 H                   0.36614  -1.28394   2.68249 H      1 0  0.00000
+HETATM    10 H                   0.04877   0.47892   2.71972 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr180
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.83500  -0.00080   2.07971 C      1 0  0.00000
+HETATM     3 S                   1.80681   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.02819   0.00000   2.07971 S      1 0  0.00000
+HETATM     5 H                  -0.30257   0.00047  -1.04534 H      1 0  0.00000
+HETATM     6 H                  -0.37939   0.89429   0.48939 H      1 0  0.00000
+HETATM     7 H                  -0.37940  -0.89432   0.48932 H      1 0  0.00000
+HETATM     8 H                   4.13757  -0.00042   3.12505 H      1 0  0.00000
+HETATM     9 H                   4.21479   0.89329   1.59028 H      1 0  0.00000
+HETATM    10 H                   4.21400  -0.89532   1.59043 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr315
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.11126   1.24883   2.66753 C      1 0  0.00000
+HETATM     3 S                   1.80764   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.24932   0.00000   2.02504 S      1 0  0.00000
+HETATM     5 H                  -0.29112  -0.12312  -1.04257 H      1 0  0.00000
+HETATM     6 H                  -0.38896   0.94537   0.36690 H      1 0  0.00000
+HETATM     7 H                  -0.38783  -0.83140   0.58626 H      1 0  0.00000
+HETATM     8 H                   1.38360   1.37992   3.71419 H      1 0  0.00000
+HETATM     9 H                   0.08285   0.90436   2.60978 H      1 0  0.00000
+HETATM    10 H                   1.23310   2.19299   2.13928 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr135
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.42587  -1.26445   2.13193 C      1 0  0.00000
+HETATM     3 S                   1.81023   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.13302   0.00000   2.05048 S      1 0  0.00000
+HETATM     5 H                  -0.30006   0.00840  -1.04718 H      1 0  0.00000
+HETATM     6 H                  -0.37812   0.89420   0.48801 H      1 0  0.00000
+HETATM     7 H                  -0.38053  -0.89257   0.49028 H      1 0  0.00000
+HETATM     8 H                   3.69315  -1.35296   3.18427 H      1 0  0.00000
+HETATM     9 H                   4.29857  -0.94994   1.56607 H      1 0  0.00000
+HETATM    10 H                   3.05212  -2.21531   1.76039 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr280
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.99563   1.74860   2.42413 C      1 0  0.00000
+HETATM     3 S                   1.81262   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.22432   0.00000   2.00497 S      1 0  0.00000
+HETATM     5 H                  -0.30711  -0.03612  -1.04500 H      1 0  0.00000
+HETATM     6 H                  -0.38355   0.91015   0.45456 H      1 0  0.00000
+HETATM     7 H                  -0.37240  -0.87506   0.52591 H      1 0  0.00000
+HETATM     8 H                   2.23338   1.84413   3.48337 H      1 0  0.00000
+HETATM     9 H                   0.96412   2.05059   2.26014 H      1 0  0.00000
+HETATM    10 H                   2.67118   2.36397   1.83597 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr225
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.42587   1.26446   2.13193 C      1 0  0.00000
+HETATM     3 S                   1.81023   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.13302   0.00000   2.05049 S      1 0  0.00000
+HETATM     5 H                  -0.30006  -0.00840  -1.04718 H      1 0  0.00000
+HETATM     6 H                  -0.38052   0.89257   0.49027 H      1 0  0.00000
+HETATM     7 H                  -0.37813  -0.89420   0.48802 H      1 0  0.00000
+HETATM     8 H                   3.69316   1.35296   3.18427 H      1 0  0.00000
+HETATM     9 H                   3.05211   2.21531   1.76040 H      1 0  0.00000
+HETATM    10 H                   4.29857   0.94995   1.56606 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr190
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.81432   0.31192   2.08145 C      1 0  0.00000
+HETATM     3 S                   1.80699   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.03447   0.00000   2.07848 S      1 0  0.00000
+HETATM     5 H                  -0.30228  -0.00533  -1.04550 H      1 0  0.00000
+HETATM     6 H                  -0.37833   0.89533   0.48808 H      1 0  0.00000
+HETATM     7 H                  -0.38053  -0.89313   0.49057 H      1 0  0.00000
+HETATM     8 H                   4.11470   0.33909   3.12716 H      1 0  0.00000
+HETATM     9 H                   4.03162   1.26818   1.61100 H      1 0  0.00000
+HETATM    10 H                   4.34251  -0.49268   1.57472 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr80
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.99564  -1.74860   2.42414 C      1 0  0.00000
+HETATM     3 S                   1.81262   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.22432   0.00000   2.00497 S      1 0  0.00000
+HETATM     5 H                  -0.30711   0.03615  -1.04500 H      1 0  0.00000
+HETATM     6 H                  -0.37239   0.87505   0.52593 H      1 0  0.00000
+HETATM     7 H                  -0.38357  -0.91016   0.45454 H      1 0  0.00000
+HETATM     8 H                   2.23342  -1.84413   3.48337 H      1 0  0.00000
+HETATM     9 H                   2.67118  -2.36396   1.83596 H      1 0  0.00000
+HETATM    10 H                   0.96413  -2.05061   2.26018 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr360
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   0.76435   0.00305   2.93196 C      1 0  0.00000
+HETATM     3 S                   1.80596   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.34046   0.00000   2.05027 S      1 0  0.00000
+HETATM     5 H                  -0.25935   0.00047  -1.05843 H      1 0  0.00000
+HETATM     6 H                  -0.40633   0.89566   0.46113 H      1 0  0.00000
+HETATM     7 H                  -0.40639  -0.89609   0.46028 H      1 0  0.00000
+HETATM     8 H                   1.05475   0.00255   3.98230 H      1 0  0.00000
+HETATM     9 H                   0.18309  -0.89171   2.72827 H      1 0  0.00000
+HETATM    10 H                   0.18649   0.90003   2.72828 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr260
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.59703   1.75020   2.30129 C      1 0  0.00000
+HETATM     3 S                   1.81365   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.22246   0.00000   2.00835 S      1 0  0.00000
+HETATM     5 H                  -0.30465  -0.02972  -1.04604 H      1 0  0.00000
+HETATM     6 H                  -0.38462   0.90331   0.46683 H      1 0  0.00000
+HETATM     7 H                  -0.37050  -0.88187   0.51462 H      1 0  0.00000
+HETATM     8 H                   2.85758   1.83355   3.35630 H      1 0  0.00000
+HETATM     9 H                   1.72935   2.36993   2.08937 H      1 0  0.00000
+HETATM    10 H                   3.44145   2.05569   1.69019 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmds-CSSCr170
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.81432  -0.31192   2.08146 C      1 0  0.00000
+HETATM     3 S                   1.80698   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 S                   2.03447   0.00000   2.07849 S      1 0  0.00000
+HETATM     5 H                  -0.30228   0.00538  -1.04550 H      1 0  0.00000
+HETATM     6 H                  -0.38052   0.89311   0.49061 H      1 0  0.00000
+HETATM     7 H                  -0.37833  -0.89535   0.48804 H      1 0  0.00000
+HETATM     8 H                   4.11471  -0.33904   3.12716 H      1 0  0.00000
+HETATM     9 H                   4.34250   0.49267   1.57469 H      1 0  0.00000
+HETATM    10 H                   4.03162  -1.26819   1.61104 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC120
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.70850   0.00000   1.56375 C      1 0  0.00000
+HETATM     3 S                   1.80567   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.21809   0.00048  -1.06524 H      1 0  0.00000
+HETATM     5 H                  -0.42477   0.89222   0.45517 H      1 0  0.00000
+HETATM     6 H                  -0.42477  -0.89222   0.45518 H      1 0  0.00000
+HETATM     7 H                   3.74007   0.00048   1.22001 H      1 0  0.00000
+HETATM     8 H                   2.52669  -0.89222   2.15920 H      1 0  0.00000
+HETATM     9 H                   2.52670   0.89222   2.15920 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC65
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.13150   0.00000   1.77609 C      1 0  0.00000
+HETATM     3 S                   1.95970   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.30712  -0.00047  -1.05303 H      1 0  0.00000
+HETATM     5 H                  -0.39062   0.90586   0.43515 H      1 0  0.00000
+HETATM     6 H                  -0.39062  -0.90586   0.43515 H      1 0  0.00000
+HETATM     7 H                   1.95608  -0.00047   2.49947 H      1 0  0.00000
+HETATM     8 H                   0.57203  -0.90586   1.94621 H      1 0  0.00000
+HETATM     9 H                   0.57203   0.90586   1.94621 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC130
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.98034   0.00000   1.38976 C      1 0  0.00000
+HETATM     3 S                   1.81420   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.17417  -0.00048  -1.07271 H      1 0  0.00000
+HETATM     5 H                  -0.43472   0.89278   0.44357 H      1 0  0.00000
+HETATM     6 H                  -0.43472  -0.89277   0.44358 H      1 0  0.00000
+HETATM     7 H                   3.91404  -0.00048   0.83365 H      1 0  0.00000
+HETATM     8 H                   2.91997  -0.89277   2.00790 H      1 0  0.00000
+HETATM     9 H                   2.91998   0.89278   2.00789 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC90
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.81501   0.00000   1.81501 C      1 0  0.00000
+HETATM     3 S                   1.81501   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.35884  -0.00046  -1.02727 H      1 0  0.00000
+HETATM     5 H                  -0.36579   0.89199   0.50525 H      1 0  0.00000
+HETATM     6 H                  -0.36580  -0.89151   0.50609 H      1 0  0.00000
+HETATM     7 H                   2.84228  -0.00046   2.17385 H      1 0  0.00000
+HETATM     8 H                   1.30892  -0.89151   2.18081 H      1 0  0.00000
+HETATM     9 H                   1.30976   0.89199   2.18080 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC100
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.11693   0.00000   1.77631 C      1 0  0.00000
+HETATM     3 S                   1.80371   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.31581   0.00047  -1.04077 H      1 0  0.00000
+HETATM     5 H                  -0.38733   0.89168   0.49022 H      1 0  0.00000
+HETATM     6 H                  -0.38734  -0.89168   0.49021 H      1 0  0.00000
+HETATM     7 H                   3.19672   0.00047   1.90660 H      1 0  0.00000
+HETATM     8 H                   1.70143  -0.89168   2.24289 H      1 0  0.00000
+HETATM     9 H                   1.70141   0.89168   2.24289 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC115
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.56529   0.00000   1.63427 C      1 0  0.00000
+HETATM     3 S                   1.80322   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.24170   0.00047  -1.06028 H      1 0  0.00000
+HETATM     5 H                  -0.41738   0.89208   0.46274 H      1 0  0.00000
+HETATM     6 H                  -0.41738  -0.89208   0.46274 H      1 0  0.00000
+HETATM     7 H                   3.62838   0.00047   1.40523 H      1 0  0.00000
+HETATM     8 H                   2.32230  -0.89208   2.20811 H      1 0  0.00000
+HETATM     9 H                   2.32230   0.89208   2.20810 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC105
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.26843   0.00000   1.74063 C      1 0  0.00000
+HETATM     3 S                   1.80203   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.29115   0.00047  -1.04790 H      1 0  0.00000
+HETATM     5 H                  -0.39849   0.89180   0.48061 H      1 0  0.00000
+HETATM     6 H                  -0.39850  -0.89180   0.48061 H      1 0  0.00000
+HETATM     7 H                   3.35598   0.00047   1.75064 H      1 0  0.00000
+HETATM     8 H                   1.90734  -0.89180   2.24994 H      1 0  0.00000
+HETATM     9 H                   1.90733   0.89180   2.24993 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC150
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.44029   0.00000   0.92182 C      1 0  0.00000
+HETATM     3 S                   1.84364   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.10809   0.00048  -1.07877 H      1 0  0.00000
+HETATM     5 H                  -0.43564   0.89448   0.43721 H      1 0  0.00000
+HETATM     6 H                  -0.43564  -0.89449   0.43720 H      1 0  0.00000
+HETATM     7 H                   4.07328   0.00048   0.04162 H      1 0  0.00000
+HETATM     8 H                   3.59896  -0.89449   1.51827 H      1 0  0.00000
+HETATM     9 H                   3.59896   0.89448   1.51828 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC95
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.96532   0.00000   1.80089 C      1 0  0.00000
+HETATM     3 S                   1.80777   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.33908   0.00046  -1.03358 H      1 0  0.00000
+HETATM     5 H                  -0.37612   0.89149   0.49920 H      1 0  0.00000
+HETATM     6 H                  -0.37611  -0.89167   0.49889 H      1 0  0.00000
+HETATM     7 H                   3.02453   0.00046   2.04860 H      1 0  0.00000
+HETATM     8 H                   1.50111  -0.89167   2.21905 H      1 0  0.00000
+HETATM     9 H                   1.50080   0.89149   2.21908 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC85
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.66799   0.00000   1.82030 C      1 0  0.00000
+HETATM     3 S                   1.82725   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.37213  -0.00046  -1.02333 H      1 0  0.00000
+HETATM     5 H                  -0.35855   0.89249   0.50763 H      1 0  0.00000
+HETATM     6 H                  -0.35855  -0.89246   0.50767 H      1 0  0.00000
+HETATM     7 H                   2.65500  -0.00046   2.28020 H      1 0  0.00000
+HETATM     8 H                   1.13100  -0.89246   2.13323 H      1 0  0.00000
+HETATM     9 H                   1.13105   0.89249   2.13324 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC55
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   0.89291   0.00000  -1.71526 C      1 0  0.00000
+HETATM     3 S                   2.09395   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.14943   0.00049   1.08944 H      1 0  0.00000
+HETATM     5 H                  -0.46404  -0.91015  -0.33758 H      1 0  0.00000
+HETATM     6 H                  -0.46404   0.91015  -0.33758 H      1 0  0.00000
+HETATM     7 H                   1.69962   0.00017  -2.46255 H      1 0  0.00000
+HETATM     8 H                   0.35022   0.91015  -1.90175 H      1 0  0.00000
+HETATM     9 H                   0.35022  -0.91015  -1.90175 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC140
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.22663   0.00000   1.17440 C      1 0  0.00000
+HETATM     3 S                   1.82704   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.13659   0.00048  -1.07704 H      1 0  0.00000
+HETATM     5 H                  -0.43855   0.89349   0.43738 H      1 0  0.00000
+HETATM     6 H                  -0.43855  -0.89349   0.43737 H      1 0  0.00000
+HETATM     7 H                   4.02357   0.00048   0.43714 H      1 0  0.00000
+HETATM     8 H                   3.28144  -0.89349   1.79134 H      1 0  0.00000
+HETATM     9 H                   3.28144   0.89349   1.79134 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC110
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.41826   0.00000   1.69328 C      1 0  0.00000
+HETATM     3 S                   1.80196   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.26619   0.00047  -1.05448 H      1 0  0.00000
+HETATM     5 H                  -0.40859   0.89194   0.47130 H      1 0  0.00000
+HETATM     6 H                  -0.40859  -0.89194   0.47129 H      1 0  0.00000
+HETATM     7 H                   3.50019   0.00047   1.58277 H      1 0  0.00000
+HETATM     8 H                   2.11514  -0.89194   2.23842 H      1 0  0.00000
+HETATM     9 H                   2.11513   0.89194   2.23842 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC80
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.52541   0.00000   1.81792 C      1 0  0.00000
+HETATM     3 S                   1.84596   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.37661  -0.00046  -1.02304 H      1 0  0.00000
+HETATM     5 H                  -0.35616   0.89415   0.50294 H      1 0  0.00000
+HETATM     6 H                  -0.35616  -0.89413   0.50298 H      1 0  0.00000
+HETATM     7 H                   2.46751  -0.00046   2.36646 H      1 0  0.00000
+HETATM     8 H                   0.96823  -0.89412   2.08132 H      1 0  0.00000
+HETATM     9 H                   0.96827   0.89415   2.08133 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC160
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.61053   0.00000   0.63663 C      1 0  0.00000
+HETATM     3 S                   1.86139   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.09650   0.00048  -1.07798 H      1 0  0.00000
+HETATM     5 H                  -0.42372   0.89570   0.44506 H      1 0  0.00000
+HETATM     6 H                  -0.42371  -0.89573   0.44502 H      1 0  0.00000
+HETATM     7 H                   4.06989   0.00048  -0.34333 H      1 0  0.00000
+HETATM     8 H                   3.85648  -0.89573   1.19973 H      1 0  0.00000
+HETATM     9 H                   3.85648   0.89570   1.19978 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC170
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.71038   0.00000   0.32462 C      1 0  0.00000
+HETATM     3 S                   1.86939   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.13385   0.00048  -1.07215 H      1 0  0.00000
+HETATM     5 H                  -0.39342   0.89672   0.46809 H      1 0  0.00000
+HETATM     6 H                  -0.39339  -0.89683   0.46791 H      1 0  0.00000
+HETATM     7 H                   4.02837   0.00048  -0.70800 H      1 0  0.00000
+HETATM     8 H                   4.01654  -0.89683   0.85373 H      1 0  0.00000
+HETATM     9 H                   4.01654   0.89672   0.85391 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CSC75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.38830   0.00000   1.80927 C      1 0  0.00000
+HETATM     3 S                   1.87309   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.36934  -0.00046  -1.02764 H      1 0  0.00000
+HETATM     5 H                  -0.36010   0.89704   0.48980 H      1 0  0.00000
+HETATM     6 H                  -0.36009  -0.89703   0.48982 H      1 0  0.00000
+HETATM     7 H                   2.28534  -0.00046   2.43200 H      1 0  0.00000
+HETATM     8 H                   0.82197  -0.89703   2.03032 H      1 0  0.00000
+HETATM     9 H                   0.82199   0.89704   2.03033 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS7.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   7.74861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   7.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   8.82132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   7.31193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   7.31193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS2.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.74861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   2.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.82132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   2.31193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   2.31193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS1.7
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.94861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   1.70000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.02132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.51193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.51193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS1.85
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.09861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   1.85000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.17132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.66193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.66193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS1.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.74861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   1.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   2.82132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.31193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.31193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS1.6
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.84861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   1.60000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   2.92132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.41193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.41193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS3.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.74861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   3.50000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   4.82132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   3.31193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   3.31193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS2 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.24861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   2.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.32132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.81193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.81193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS2.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.99861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   2.75000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   4.07132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   2.56193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   2.56193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                  10.24861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                  10.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                  11.32132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   9.81193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   9.81193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS4 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   4.24861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   4.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   5.32132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   3.81193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   3.81193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS1.9
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.14861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   1.90000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.22132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.71193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.71193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS2.25
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.49861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   2.25000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.57132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   2.06193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   2.06193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS5 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   5.24861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   5.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   6.32132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   4.81193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   4.81193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS3 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   3.24861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   3.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   4.32132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   2.81193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   2.81193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS1.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   1.99861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   1.75000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.07132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.56193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.56193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP dmte-CS2.1
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 C                   0.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     2 C                   2.34861   0.00000   1.78794 C      1 0  0.00000
+HETATM     3 S                   2.10000   0.00000   0.00000 S      1 0  0.00000
+HETATM     4 H                  -0.32581   0.00046  -1.03773 H      1 0  0.00000
+HETATM     5 H                  -0.38264   0.89160   0.49409 H      1 0  0.00000
+HETATM     6 H                  -0.38264  -0.89160   0.49409 H      1 0  0.00000
+HETATM     7 H                   3.42132   0.00046   1.96772 H      1 0  0.00000
+HETATM     8 H                   1.91193  -0.89160   2.23497 H      1 0  0.00000
+HETATM     9 H                   1.91193   0.89160   2.23497 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS7.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   8.11112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   7.50000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   7.88113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   7.88324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   7.59637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS2.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.11112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   2.50000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   2.88113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   2.88324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   2.59637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS1.7
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.31112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   1.70000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   2.08113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   2.08324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   1.79637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS1.85
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.46112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   1.85000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   2.23113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   2.23324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   1.94637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS1.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.11112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   1.50000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   1.88113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   1.88324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   1.59637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS1.6
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.21112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   1.60000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   1.98113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   1.98324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   1.69637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS3.5
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   4.11112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   3.50000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   3.88113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   3.88324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   3.59637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS2 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.61112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   2.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   2.38113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   2.38324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   2.09637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS2.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.36112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   2.75000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   3.13113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   3.13324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   2.84637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS10
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                  10.61112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                  10.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                  10.38113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                  10.38324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                  10.09637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS4 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   4.61112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   4.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   4.38113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   4.38324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   4.09637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS2.25
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.86112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   2.25000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   2.63113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   2.63324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   2.34637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS5 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   5.61112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   5.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   5.38113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   5.38324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   5.09637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS3 
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.61112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   3.00000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   3.38113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   3.38324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   3.09637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS1.75
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.36112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   1.75000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   2.13113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   2.13324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   1.84637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-CS2.1
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.71112   0.00000   1.70147 S      1 0  0.00000
+HETATM     3 C                   2.10000   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.14874   0.16739  -1.32220 H      1 0  0.00000
+HETATM     5 H                   2.48113   0.86066  -0.54090 H      1 0  0.00000
+HETATM     6 H                   2.48324  -0.91409  -0.44703 H      1 0  0.00000
+HETATM     7 H                   2.19637   1.19163   2.02880 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS120
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.72258   0.00000   1.55755 S      1 0  0.00000
+HETATM     3 C                   1.82333   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.09677   0.35880  -1.28547 H      1 0  0.00000
+HETATM     5 H                   2.15330   0.85018  -0.59061 H      1 0  0.00000
+HETATM     6 H                   2.17153  -0.90493  -0.49521 H      1 0  0.00000
+HETATM     7 H                   2.31695   1.20593   1.97503 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS130
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.97167   0.00000   1.38570 S      1 0  0.00000
+HETATM     3 C                   1.80893   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.16348   1.25775   0.42736 H      1 0  0.00000
+HETATM     5 H                   2.12411   0.79106  -0.67590 H      1 0  0.00000
+HETATM     6 H                   2.04866  -0.93169  -0.51424 H      1 0  0.00000
+HETATM     7 H                   2.74943   1.25779   1.78557 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS90
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   1.83721   0.00000   1.86632 S      1 0  0.00000
+HETATM     3 C                   1.83721   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.24929   0.08327  -1.32740 H      1 0  0.00000
+HETATM     5 H                   2.29923   0.88489  -0.41926 H      1 0  0.00000
+HETATM     6 H                   2.27065  -0.93332  -0.33983 H      1 0  0.00000
+HETATM     7 H                   1.35991   1.24443   1.96334 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS100
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.14029   0.00000   1.80028 S      1 0  0.00000
+HETATM     3 C                   1.82286   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.20334   0.11936  -1.32438 H      1 0  0.00000
+HETATM     5 H                   2.24600   0.87177  -0.48661 H      1 0  0.00000
+HETATM     6 H                   2.23375  -0.92345  -0.39641 H      1 0  0.00000
+HETATM     7 H                   1.54671   1.17906   2.01839 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS125
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.84675   0.00000   1.48193 S      1 0  0.00000
+HETATM     3 C                   1.80909   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.15409   1.25277   0.44461 H      1 0  0.00000
+HETATM     5 H                   2.14812   0.80084  -0.65147 H      1 0  0.00000
+HETATM     6 H                   2.06912  -0.93313  -0.49960 H      1 0  0.00000
+HETATM     7 H                   2.57048   1.25262   1.86334 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS115
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.58197   0.00000   1.63289 S      1 0  0.00000
+HETATM     3 C                   1.82054   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.11997   0.21872  -1.31607 H      1 0  0.00000
+HETATM     5 H                   2.17721   0.85480  -0.56733 H      1 0  0.00000
+HETATM     6 H                   2.18616  -0.90967  -0.47204 H      1 0  0.00000
+HETATM     7 H                   2.12783   1.20277   2.00672 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS70
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   1.28460   0.00000   1.83552 S      1 0  0.00000
+HETATM     3 C                   1.95267   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.24674  -0.47865  -1.25250 H      1 0  0.00000
+HETATM     5 H                   2.36816   0.94258  -0.32183 H      1 0  0.00000
+HETATM     6 H                   2.39615  -0.94356  -0.27874 H      1 0  0.00000
+HETATM     7 H                   2.37743   0.47874   2.49522 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS105
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   2.28987   0.00000   1.75425 S      1 0  0.00000
+HETATM     3 C                   1.81982   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.17578   0.14097  -1.32373 H      1 0  0.00000
+HETATM     5 H                   2.22186   0.86611  -0.51532 H      1 0  0.00000
+HETATM     6 H                   2.21743  -0.91844  -0.42309 H      1 0  0.00000
+HETATM     7 H                   1.72489   1.18099   2.03254 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS150
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.40198   0.00000   0.91154 S      1 0  0.00000
+HETATM     3 C                   1.82314   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.19808   1.24766   0.44488 H      1 0  0.00000
+HETATM     5 H                   2.02720   0.75122  -0.76130 H      1 0  0.00000
+HETATM     6 H                   1.97239  -0.92998  -0.55757 H      1 0  0.00000
+HETATM     7 H                   3.35103   1.24776   1.39557 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS140
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.21833   0.00000   1.16274 S      1 0  0.00000
+HETATM     3 C                   1.83263   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.10020   1.20728  -0.55959 H      1 0  0.00000
+HETATM     5 H                   2.06187   0.81746  -0.67939 H      1 0  0.00000
+HETATM     6 H                   2.08697  -0.89175  -0.57400 H      1 0  0.00000
+HETATM     7 H                   3.03167   1.21158   1.70334 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS80
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   1.53687   0.00000   1.89571 S      1 0  0.00000
+HETATM     3 C                   1.87114   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.27881  -0.17221  -1.32515 H      1 0  0.00000
+HETATM     5 H                   2.34623   0.90535  -0.35121 H      1 0  0.00000
+HETATM     6 H                   2.30608  -0.94639  -0.29036 H      1 0  0.00000
+HETATM     7 H                   2.00770   1.23504   2.11746 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END
+
+BIOGRF 200
+DESCRP mdt-SCS160
+RUTYPE SINGLE POINT
+FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)
+HETATM     1 S                   0.00000   0.00000   0.00000 S      1 0  0.00000
+HETATM     2 S                   3.56595   0.00000   0.62878 S      1 0  0.00000
+HETATM     3 C                   1.83839   0.00000   0.00000 C      1 0  0.00000
+HETATM     4 H                  -0.21736   1.22648   0.49402 H      1 0  0.00000
+HETATM     5 H                   1.97843   0.73106  -0.79478 H      1 0  0.00000
+HETATM     6 H                   1.93878  -0.93192  -0.56867 H      1 0  0.00000
+HETATM     7 H                   3.60136   1.22630   1.16774 H      1 0  0.00000
+FORMAT CONECT (a6,12i6)
+END

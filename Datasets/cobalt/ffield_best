@@ -1,0 +1,59 @@
+G. Shchygol et al. JCTC 2019    cobalt_cmaes_edu   run_0    8120      1156.88158
+ 41        ! Number of general parameters
+   50.0000 !Overcoordination parameter            
+    5.5469 !Overcoordination parameter            
+   21.2839 !Valency angle conjugation parameter   
+    3.0000 !Triple bond stabilisation parameter   
+    6.5000 !Triple bond stabilisation parameter   
+    1.0000 !C2-correction                         
+    1.0159 !Povun6 Undercoordination Eq(12)       
+    9.0000 !Triple bond stabilisation parameter   
+    8.0878 !Povun7 Undercoordination Eq(12)       
+   13.0238 !Povun8 Undercoordination Eq(12)       
+  -13.8107 !Triple bond stabilization energy      
+    0.0000 !Lower Taper-radius                    
+   10.0000 !Upper Taper-radius                    
+    2.8793 !Fe dimer correction                   
+   33.8667 !Valency undercoordination             
+   25.6125 !Plp1 Lone pair param in Eq(8)                  
+    1.0563 !Valency angle                         
+    2.0384 !Valency angle parameter               
+    6.1431 !Fe dimer correction                   
+    6.9290 !Double bond/angle parameter           
+    0.3989 !Double bond/angle parameter: overcoord
+    3.9954 !Double bond/angle parameter: overcoord
+   -2.4837 !Fe dimer correction                   
+    4.7747 !Torsion/BO parameter                  
+   10.0000 !Torsion overcoordination              
+    2.3276 !Torsion overcoordination              
+   -1.2327 !Reserved                              
+    2.1645 !Conjugation                           
+    1.5591 !vdWaals shielding                     
+    0.1000 !Cutoff for bond order (*100)          
+    2.8921 !Valency angle conjugation parameter   
+    1.6356 !Povun4 Over/Undercoordination Eq(11b) 
+    5.6937 !Povun3 Over/Undercoordination Eq(11b) 
+    2.5067 !Valency/lone pair parameter           
+    0.5000 !ACKS2 softness parameter              
+   20.0000 !Scale factor (d) in dispersion (LJ)   
+    5.0000 !Gauss exponent for explicit electrons 
+    0.0000 !1: disable undecoord term in val angle
+    1.6052 !Valency angle conjugation parameter   
+    0.0000 !1: triple bond stabilization for all bonds
+    0.0000 !eReax taper radius for electrons and holes
+  1    ! Nr of atoms; cov.r; valency;a.m;Rvdw;Evdw;gammaEEM;cov.r2;#
+            alfa;gammavdW;valency;Eunder;Eover;chiEEM;etaEEM;n.u.
+            cov r3;Elp;Heat inc.;bo131;bo132;bo133;softcut;n.u.
+            ov/un;val1;n.u.;val3,vval4
+ Co   2.0118   3.0000  63.5460   2.4451   0.3000   0.8218   0.1000   3.0000
+      9.5511  49.9966   3.0000   0.0000   0.0000   4.8038   7.3852   0.0000
+     -1.0000   0.0000  92.5070   6.2293   5.2294   0.1542   0.8563   0.0000
+     -2.5000   2.9867   1.0338   6.2998   2.5791   0.0000   0.0000   0.0000
+  1    ! Nr of bonds; Edis1;LPpen;n.u.;pbe1;pbo5;13corr;pbo6
+                         pbe2;pbo3;pbo4;n.u.;pbo1;pbo2;ovcorr
+  1  1 100.0000   0.0000   0.0000  -0.7252  -0.2000   0.0000  16.0000   0.1526
+         3.0599  -0.2000  15.0000   1.0000  -0.0599   5.9667   0.0000   0.0000
+  0    ! Nr of off-diagonal terms; Ediss;Ro;gamma;rsigma;rpi;rpi2
+  0    ! Nr of angles;at1;at2;at3;Thetao,o;ka;kb;pv1;pv2
+  0    ! Nr of torsions;at1;at2;at3;at4;;V1;V2;V3;V2(BO);vconj;n.u;n
+  0    ! Nr of hydrogen bonds;at1;at2;at3;Rhb;Dehb;vhb1

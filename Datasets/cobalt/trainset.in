@@ -1,0 +1,193 @@
+ENERGY
+# General Co_clusters
+2.00  + Co_2_atom/2 - Co_1_atom/1   -29.79
+2.00  + Co_3_atom/3 - Co_1_atom/1   -38.80
+2.00  + Co_4_atom/4 - Co_1_atom/1   -46.94
+2.00  + Co_5_atom/5 - Co_1_atom/1   -56.91
+2.00  + Co_6_atom/6 - Co_1_atom/1   -64.58
+2.00  + Co_8_atom/8 - Co_1_atom/1   -65.68
+2.00  + Co_13_atom/13 - Co_1_atom/1   -71.06
+# General Co2_cluster
+5.00  + dimer_sep_1/2 - Co_1_atom/1   -22.75
+5.00  + dimer_sep_2/2 - Co_1_atom/1   -27.36
+5.00  + dimer_sep_3/2 - Co_1_atom/1   -29.43
+5.00  + dimer_sep_4/2 - Co_1_atom/1   -29.79
+5.00  + dimer_sep_5/2 - Co_1_atom/1   -29.75
+5.00  + dimer_sep_6/2 - Co_1_atom/1   -29.52
+5.00  + dimer_sep_7/2 - Co_1_atom/1   -28.89
+5.00  + dimer_sep_8/2 - Co_1_atom/1   -27.27
+5.00  + dimer_sep_9/2 - Co_1_atom/1   -25.41
+5.00  + dimer_sep_10/2 - Co_1_atom/1   -23.42
+5.00  + dimer_sep_11/2 - Co_1_atom/1   -22.17
+# Volume Co_hcp
+0.40  + EOS_hcp_6/2 - EOS_hcp_1/2   -13.42
+0.20  + EOS_hcp_6/2 - EOS_hcp_2/2    -1.86
+0.10  + EOS_hcp_6/2 - EOS_hcp_3/2    -1.04
+0.10  + EOS_hcp_6/2 - EOS_hcp_4/2    -0.46
+0.10  + EOS_hcp_6/2 - EOS_hcp_5/2    -0.12
+0.10  + EOS_hcp_6/2 - EOS_hcp_6/2    -0.01
+0.10  + EOS_hcp_6/2 - EOS_hcp_7/2    -0.08
+0.10  + EOS_hcp_6/2 - EOS_hcp_8/2    -0.34
+0.10  + EOS_hcp_6/2 - EOS_hcp_9/2    -0.77
+0.10  + EOS_hcp_6/2 - EOS_hcp_10/2   -1.34
+0.20  + EOS_hcp_6/2 - EOS_hcp_11/2   -2.00
+0.40  + EOS_hcp_6/2 - EOS_hcp_12/2   -6.79
+# Volume Co_fcc
+0.10  + EOS_fcc_7/4 - EOS_fcc_1/4   -4.93
+0.10  + EOS_fcc_7/4 - EOS_fcc_2/4   -2.45
+0.10  + EOS_fcc_7/4 - EOS_fcc_3/4   -0.90
+0.10  + EOS_fcc_7/4 - EOS_fcc_4/4   -0.13
+0.10  + EOS_fcc_7/4 - EOS_fcc_5/4   -0.06
+0.10  + EOS_fcc_7/4 - EOS_fcc_6/4   -0.02
+0.10  + EOS_fcc_7/4 - EOS_fcc_7/4   -0.001
+0.10  + EOS_fcc_7/4 - EOS_fcc_8/4   -0.004
+0.10  + EOS_fcc_7/4 - EOS_fcc_9/4   -0.03
+0.10  + EOS_fcc_7/4 - EOS_fcc_10/4   -0.08
+0.10  + EOS_fcc_7/4 - EOS_fcc_11/4   -0.14
+0.10  + EOS_fcc_7/4 - EOS_fcc_12/4   -0.23
+0.10  + EOS_fcc_7/4 - EOS_fcc_13/4   -0.33
+0.10  + EOS_fcc_7/4 - EOS_fcc_14/4   -0.44
+0.10  + EOS_fcc_7/4 - EOS_fcc_15/4   -1.25
+0.10  + EOS_fcc_7/4 - EOS_fcc_16/4   -2.20
+0.10  + EOS_fcc_7/4 - EOS_fcc_17/4   -3.97
+# Volume Co_bcc
+0.50  + EOS_bcc_6/2 - EOS_bcc_1/2   -29.10
+0.50  + EOS_bcc_6/2 - EOS_bcc_2/2   -11.78
+0.50  + EOS_bcc_6/2 - EOS_bcc_3/2    -6.45
+0.50  + EOS_bcc_6/2 - EOS_bcc_4/2    -2.92
+0.50  + EOS_bcc_6/2 - EOS_bcc_5/2    -0.87
+0.50  + EOS_bcc_6/2 - EOS_bcc_6/2    -0.001
+0.50  + EOS_bcc_6/2 - EOS_bcc_7/2    -0.01
+0.50  + EOS_bcc_6/2 - EOS_bcc_8/2    -0.73
+0.50  + EOS_bcc_6/2 - EOS_bcc_9/2    -2.11
+0.50  + EOS_bcc_6/2 - EOS_bcc_10/2   -4.08
+0.50  + EOS_bcc_6/2 - EOS_bcc_11/2   -6.51
+0.50  + EOS_bcc_6/2 - EOS_bcc_12/2   -9.30
+0.50  + EOS_bcc_6/2 - EOS_bcc_13/2   -12.35
+0.50  + EOS_bcc_6/2 - EOS_bcc_14/2   -15.58
+0.50  + EOS_bcc_6/2 - EOS_bcc_15/2   -22.48
+# Volume Co_sc
+4.00  + EOS_sc_6/1 - EOS_sc_1/1   -18.59
+4.00  + EOS_sc_6/1 - EOS_sc_2/1   -10.94
+4.00  + EOS_sc_6/1 - EOS_sc_3/1   -5.66
+4.00  + EOS_sc_6/1 - EOS_sc_4/1   -2.43
+4.00  + EOS_sc_6/1 - EOS_sc_5/1   -0.63
+4.00  + EOS_sc_6/1 - EOS_sc_6/1   -0.01
+4.00  + EOS_sc_6/1 - EOS_sc_7/1   -0.52
+4.00  + EOS_sc_6/1 - EOS_sc_8/1   -1.95
+4.00  + EOS_sc_6/1 - EOS_sc_9/1   -4.10
+4.00  + EOS_sc_6/1 - EOS_sc_10/1   -6.77
+# Volume Co_diamond
+8.00  + EOS_diam_5/8 - EOS_diam_1/8   -14.80
+8.00  + EOS_diam_5/8 - EOS_diam_2/8    -5.59
+8.00  + EOS_diam_5/8 - EOS_diam_3/8    -1.63
+8.00  + EOS_diam_5/8 - EOS_diam_4/8    -0.35
+8.00  + EOS_diam_5/8 - EOS_diam_5/8    -0.01
+8.00  + EOS_diam_5/8 - EOS_diam_6/8    -0.43
+8.00  + EOS_diam_5/8 - EOS_diam_7/8    -1.51
+8.00  + EOS_diam_5/8 - EOS_diam_8/8    -3.10
+8.00  + EOS_diam_5/8 - EOS_diam_9/8    -5.04
+8.00  + EOS_diam_5/8 - EOS_diam_10/8   -7.26
+8.00  + EOS_diam_5/8 - EOS_diam_11/8  -12.35
+8.00  + EOS_diam_5/8 - EOS_diam_12/8  -17.95
+# General Co_surfaces
+2.00  + Surface_bcc100/28  - hcp_opt/2  9.67
+2.00  + Surface_bcc110/11  - hcp_opt/2  15.97
+2.00  + Surface_bcc310/30  - hcp_opt/2   7.79
+0.10  + Surface_fcc100/14  - hcp_opt/2  6.69
+8.00  + Surface_fcc110/7  -  hcp_opt/2  25.20
+2.00  + Surface_fcc510/37  -  hcp_opt/2  6.84
+0.05  + Surface_hcp1000/7  -  hcp_opt/2  4.71
+18.00  + Surface_sc100/7  -  hcp_opt/2  19.72
+18.00  + Surface_sc110/7  -  hcp_opt/2  35.55
+18.00  + Surface_sc111/14  -  hcp_opt/2  23.14
+18.00  + Surface_sc510/32  -  hcp_opt/2  20.95
+#
+80.00  + Surface_bcc510/54  - hcp_opt/2  10.00
+25.00  + Surface_bcc111/14  - hcp_opt/2  48.06
+8.00  + Surface_fcc310/21  -  hcp_opt/2  0.81
+# General Co_surfaces_adatom
+2.00  + Surf_adatom_bcc100/29  - hcp_opt/2     9.83
+2.00  + Surf_adatom_bcc110/49  - hcp_opt/2     8.20
+2.00  + Surf_adatom_fcc100/57  - hcp_opt/2     7.36
+2.00  + Surf_adatom_fcc110/37  - hcp_opt/2     8.19
+2.00  + Surf_adatom_fcc111/25  - hcp_opt/2     6.65
+2.00  + Surf_adatom_fcc310/43  - hcp_opt/2     7.38
+2.00  + Surf_adatom_fcc510/63  - hcp_opt/2     8.22
+5.00  + Surf_adatom_sc110/29  - hcp_opt/2     21.74
+#
+#12.00  + Vac_0v/1 - Vac_1v/1           -154.09
+#12.00  + Vac_1v/1 - Vac_2v1/1          -151.17
+#12.00  + Vac_1v/1 - Vac_2v2/1          -155.13
+#12.00  + Vac_1v/1 - Vac_2v3/1          -153.38
+#12.00  + Vac_1v/1 - Vac_2v4/1          -154.25
+#12.00  + Vac_1v/1 - Vac_2v5/1          -153.79
+#12.00  + Vac_1v/1 - Vac_2v6/1          -154.19
+#12.00  + Vac_1v/1 - Vac_2v7/1          -154.24
+#12.00  + Vac_1v/1 - Vac_2v8/1          -153.92
+#12.00  + Vac_1v/1 - Vac_2v9/1          -154.28
+#12.00  + Vac_2v1/1 - Vac_3v/1          -147.25
+#12.00  + Vac_3v/1 - Vac_4v/1           -145.25
+#12.00  + Vac_4v/1 - Vac_5v/1           -140.10
+#12.00  + Vac_5v/1 - Vac_6v/1           -127.66
+# General Co_vacancies2
+ 1.00  + Vac_0v/1 - Vac_1v/1           -154.09
+ 4.00  + Vac_0v/1 - Vac_2v1/1          -305.26
+ 4.00  + Vac_0v/1 - Vac_2v2/1          -309.22
+ 4.00  + Vac_0v/1 - Vac_2v3/1          -307.46
+ 4.00  + Vac_0v/1 - Vac_2v4/1          -308.34
+ 4.00  + Vac_0v/1 - Vac_2v5/1          -307.88
+ 4.00  + Vac_0v/1 - Vac_2v6/1          -308.27
+ 4.00  + Vac_0v/1 - Vac_2v7/1          -308.33
+ 4.00  + Vac_0v/1 - Vac_2v8/1          -308.00
+ 4.00  + Vac_0v/1 - Vac_2v9/1          -308.37
+ 4.00  + Vac_0v/1 - Vac_3v/1           -452.51
+ 4.00  + Vac_0v/1 - Vac_4v/1           -598.22
+ 4.00  + Vac_0v/1 - Vac_5v/1           -738.33
+ 4.00  + Vac_0v/1 - Vac_6v/1           -865.98
+#
+# 0.10  + Vac_0v/108  -  fcc_opt/4       0.01
+# 0.10  + Vac_1v/107  -  fcc_opt/4       0.37
+# 0.10  + Vac_2v1/106  -  fcc_opt/4       0.72
+# 0.10  + Vac_2v2/106  -  fcc_opt/4       0.76
+# 0.10  + Vac_2v2/106  -  fcc_opt/4       0.74
+# 0.10  + Vac_2v3/106  -  fcc_opt/4       0.75
+# 0.10  + Vac_2v4/106  -  fcc_opt/4       0.74
+# 0.10  + Vac_2v5/106  -  fcc_opt/4       0.75
+# 0.10  + Vac_2v6/106  -  fcc_opt/4       0.75
+# 0.10  + Vac_2v7/106  -  fcc_opt/4       0.75
+# 0.10  + Vac_2v8/106  -  fcc_opt/4       0.74
+# 0.10  + Vac_2v9/106  -  fcc_opt/4       0.75
+# 0.10  + Vac_3v/105  -  fcc_opt/4       1.04
+# 0.10  + Vac_4v/104  -  fcc_opt/4       1.35
+# 0.10  + Vac_5v/103  -  fcc_opt/4       1.61
+# 0.10  + Vac_6v/102  -  fcc_opt/4       1.75
+# General Co_stacking_faults
+2.00  + SFE_bcc001/10 - hcp_opt/2     32.72
+0.50  + SFE_fcc111/16 - hcp_opt/2      0.32
+0.50  + SFE_hcp100/16 - hcp_opt/2      4.94
+2.00  + SFE_sc001/8 - hcp_opt/2      21.28
+# General Co_elastic_constants
+0.25  + Elast_bcc_c11/1 - hcp_opt/2     3.34
+0.25  + Elast_bcc_c44/1 - hcp_opt/2     3.06
+5.00  + Elast_diam_c11/2 - hcp_opt/2     29.89
+5.00  + Elast_diam_c44/2 - hcp_opt/2     29.37
+0.25  + Elast_fcc_c11/1 - hcp_opt/2      2.27
+0.25  + Elast_fcc_c44/1 - hcp_opt/2      1.56
+0.25  + Elast_hcp_c11/2 - hcp_opt/2      2.08
+0.25  + Elast_hcp_c44/2 - hcp_opt/2      0.78
+2.00  + Elast_sc_c11/1 - hcp_opt/2      18.74
+2.00  + Elast_sc_c44/1 - hcp_opt/2      16.83
+# General Co_amorphous
+8.00  + Amorphous_1/108  - hcp_opt/2    14.13
+8.00  + Amorphous_2/108  - hcp_opt/2    10.35
+8.00  + Amorphous_3/108  - hcp_opt/2    8.48
+8.00  + Amorphous_4/108  - hcp_opt/2    7.27
+4.00  + Amorphous_5/108  - hcp_opt/2    8.50
+# General Co_energies
+0.50  + hcp_opt/2  - Co_1_atom/1    -101.30
+0.02  + hcp_opt/2  - fcc_opt/4       -0.52
+0.10  + hcp_opt/2  - bcc_opt/2       -2.21
+1.00  + hcp_opt/2  - sc_opt/1       -17.00
+2.00  + hcp_opt/2  - diam_opt/8      -28.60
+ENDENERGY
