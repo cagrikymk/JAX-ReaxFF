@@ -847,6 +847,7 @@ def preprocess_trainset_line(line):
 def read_train_set(train_in):
     f = open(train_in, 'r')
     training_items = {}
+    training_items_str = {}
     energy_flag = 0
     charge_flag = 0
     geo_flag = 0
@@ -860,6 +861,15 @@ def read_train_set(train_in):
     new_RMSG_items = []
     energy_items = []
     charge_items = []
+
+    geo2_items_str = []
+    geo3_items_str = []
+    geo4_items_str = []
+    force_RMSG_items_str = []
+    force_atom_items_str = []
+    new_RMSG_items_str = []
+    energy_items_str = []
+    charge_items_str = []
     for line in f:
         #print(line)
         line = line.strip()
@@ -907,7 +917,6 @@ def read_train_set(train_in):
             force_flag = 0
         elif energy_flag == 1:
             line = preprocess_trainset_line(line)
-
             split_line = line.split()
             num_ref_items = int((len(split_line) - 2) / 4) # w and energy + 4 items per ref. item
 
@@ -929,6 +938,7 @@ def read_train_set(train_in):
             energy = float(split_line[-1])
 
             energy_items.append((w, name_list,multiplier_list, energy))
+            energy_items_str.append(line)
 
         elif charge_flag == 1:
             line = preprocess_trainset_line(line)
@@ -938,6 +948,8 @@ def read_train_set(train_in):
             index = int(split_line[2])
             charge = float(split_line[3])
             charge_items.append((name,weight,index,charge))
+            charge_items_str.append(line)
+
 
         elif geo_flag == 1:
             line = preprocess_trainset_line(line)
@@ -950,6 +962,7 @@ def read_train_set(train_in):
                 index1 = int(split_line[2])
                 index2 = int(split_line[3])
                 geo2_items.append((name,weight,index1,index2,target))
+                geo2_items_str.append(line)
 
             # 3-body
             if len(split_line) == 6:
@@ -957,6 +970,7 @@ def read_train_set(train_in):
                 index2 = int(split_line[3])
                 index3 = int(split_line[4])
                 geo3_items.append((name,weight,index1,index2,index3,target))
+                geo3_items_str.append(line)
             # 4-body
             if len(split_line) == 7:
                 index1 = int(split_line[2])
@@ -964,8 +978,10 @@ def read_train_set(train_in):
                 index3 = int(split_line[4])
                 index4 = int(split_line[5])
                 geo4_items.append((name,weight,index1,index2,index3,index4,target))
+                geo4_items_str.append(line)
             #RMSG
             if len(split_line) == 3:
+                force_RMSG_items_str.append(line)
                 force_RMSG_items.append((name,weight,target))
 
         elif force_flag == 1:
@@ -980,6 +996,7 @@ def read_train_set(train_in):
                 f2 = float(split_line[4])
                 f3 = float(split_line[5])
                 force_atom_items.append((name,weight,index,f1,f2,f3))
+                force_atom_items_str.append(line)
         elif new_RMSG_flag == 1:
             line = preprocess_trainset_line(line)
             split_line = line.split()
@@ -987,30 +1004,42 @@ def read_train_set(train_in):
             weight = float(split_line[1])
             target = float(split_line[-1])
             new_RMSG_items.append((name,weight,target))
+            new_RMSG_items_str.append(line)
 
     if len(energy_items) > 0:
         training_items['ENERGY'] = energy_items
+        training_items_str['ENERGY'] = energy_items_str
 
     if len(charge_items) > 0:
         training_items['CHARGE'] = charge_items
+        training_items_str['CHARGE'] = charge_items_str
+
 
     if len(geo2_items) > 0:
         training_items['GEOMETRY-2'] = geo2_items
+        training_items_str['GEOMETRY-2'] = geo2_items_str
+
 
     if len(geo3_items) > 0:
         training_items['GEOMETRY-3'] = geo3_items
+        training_items_str['GEOMETRY-3'] = geo3_items_str
+
 
     if len(geo4_items) > 0:
         training_items['GEOMETRY-4'] = geo4_items
+        training_items_str['GEOMETRY-4'] = geo4_items_str
+
 
     if len(force_RMSG_items) > 0:
         training_items['FORCE-RMSG'] = force_RMSG_items
+        training_items_str['FORCE-RMSG'] = force_RMSG_items_str
 
     if len(force_atom_items) > 0:
         training_items['FORCE-ATOM'] = force_atom_items
+        training_items_str['FORCE-ATOM'] = force_atom_items_str
 
 
-    return training_items
+    return training_items,training_items_str
 
 def structure_energy_training_data(name_dict, training_items):
 	import copy

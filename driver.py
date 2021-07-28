@@ -51,8 +51,66 @@ from helper import align_system_inter_lists,cluster_systems_for_aligning,pool_ha
 from multiprocessing import Pool
 
 import argparse
-
 DEVICE_NAME = 'gpu'
+
+
+def produce_error_report(filename, tranining_items, tranining_items_str, indiv_error):
+    fptr = open(filename, 'w')
+    out_str = "Weight Data Target Prediction  WeightedError"
+    fptr.write(out_str + '\n')
+
+    if "ENERGY" in tranining_items:
+        fptr.write('\n')
+        [preds,error_vals] = [indiv_error['ENERGY'][0], indiv_error['ENERGY'][-1]]
+        for i,strr in enumerate(tranining_items_str['ENERGY']):
+            out_str = strr + " {:.4f} {:.4f}".format(preds[i], error_vals[i])
+            fptr.write(out_str + '\n')
+        fptr.write('\n')
+
+    if "CHARGE" in tranining_items:
+        fptr.write('\n')
+        [preds,error_vals] = [indiv_error['CHARGE'][0], indiv_error['CHARGE'][-1]]
+        for i,strr in enumerate(tranining_items_str['CHARGE']):
+            out_str = strr + " {:.4f} {:.4f}".format(preds[i], error_vals[i])
+            fptr.write(out_str + '\n')
+        fptr.write('\n')
+    if "GEOMETRY-2" in tranining_items:
+        fptr.write('\n')
+        [preds,error_vals] = [indiv_error['GEOMETRY-2'][0], indiv_error['GEOMETRY-2'][-1]]
+        for i,strr in enumerate(tranining_items_str['GEOMETRY-2']):
+            out_str = strr + " {:.4f} {:.4f}".format(preds[i], error_vals[i])
+            fptr.write(out_str + '\n')
+        fptr.write('\n')
+    if "GEOMETRY-3" in tranining_items:
+        fptr.write('\n')
+        [preds,error_vals] = [indiv_error['GEOMETRY-3'][0], indiv_error['GEOMETRY-3'][-1]]
+        for i,strr in enumerate(tranining_items_str['GEOMETRY-3']):
+            out_str = strr + " {:.4f} {:.4f}".format(preds[i], error_vals[i])
+            fptr.write(out_str + '\n')
+        fptr.write('\n')
+    if "GEOMETRY-4" in tranining_items:
+        fptr.write('\n')
+        [preds,error_vals] = [indiv_error['GEOMETRY-4'][0], indiv_error['GEOMETRY-4'][-1]]
+        for i,strr in enumerate(tranining_items_str['GEOMETRY-4']):
+            out_str = strr + " {:.4f} {:.4f}".format(preds[i], error_vals[i])
+            fptr.write(out_str + '\n')
+        fptr.write('\n')
+    if "FORCE-RMSG" in tranining_items:
+        fptr.write('\n')
+        [preds,error_vals] = [indiv_error['FORCE-RMSG'][0], indiv_error['FORCE-RMSG'][-1]]
+        for i,strr in enumerate(tranining_items_str['FORCE-RMSG']):
+            out_str = strr + " {:.4f} {:.4f}".format(preds[i], error_vals[i])
+            fptr.write(out_str + '\n')
+        fptr.write('\n')
+    if "FORCE-ATOM" in tranining_items:
+        fptr.write('\n')
+        [preds,error_vals] = [indiv_error['FORCE-ATOM'][0], indiv_error['FORCE-ATOM'][-1]]
+        for i,strr in enumerate(tranining_items_str['FORCE-ATOM']):
+            out_str = strr + " {:.4f} {:.4f}".format(preds[i], error_vals[i])
+            fptr.write(out_str + '\n')
+        fptr.write('\n')
+    fptr.close()
+
 
 if __name__ == '__main__':
     # create parser for command-line arguments
@@ -89,7 +147,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_steps', metavar='number',
         type=int,
         choices=range(1, 1000),
-        default=20,
+        default=5,
         help='Number of optimization steps per trial')
     parser.add_argument('--init_FF_type', metavar='number',
         choices=['random', 'educated'],
@@ -116,6 +174,10 @@ if __name__ == '__main__':
         type=str,
         default="outputs",
         help='Folder to store the output files')
+    parser.add_argument('--save_opt', metavar='folder',
+        choices=['all', 'best'],
+        default="best",
+        help='Save all or only the best FF')
 
     #parse arguments
     args = parser.parse_args()
@@ -193,8 +255,11 @@ if __name__ == '__main__':
                      list_all_angles_and_dist]) = process_and_cluster_geos(systems,force_field,param_indices,bounds)
     ###########################################################################
 
-    all_training_items = read_train_set(args.train_file)
-    print("[INFO] trainset file is read, there are {} items".format(len(all_training_items)))
+    all_training_items,all_training_items_str = read_train_set(args.train_file)
+    total_num_items = sum([len(all_training_items[key]) for key in all_training_items])
+    print("[INFO] trainset file is read, there are {} items".format(total_num_items))
+    for key in all_training_items:
+        print("{}:{}".format(key, len(all_training_items[key])))
 
     structured_training_data = structure_training_data(ordered_systems, all_training_items)
     ###########################################################################
@@ -215,10 +280,10 @@ if __name__ == '__main__':
 
 
 
-    orig_loss = jax.jit(jax_loss_vmap_new_test,static_argnums=(1,3),backend=DEVICE_NAME)
-    loss_func = jax.jit(jax_loss_vmap_new_test,static_argnums=(1,3),backend=DEVICE_NAME)
-    grad_func = jax.jit(jax.grad(jax_loss_vmap_new_test),static_argnums=(1,3),backend=DEVICE_NAME)
-    loss_and_grad = jax.jit(jax.value_and_grad(jax_loss_vmap_new_test),static_argnums=(1,3),backend=DEVICE_NAME)
+    orig_loss = jax.jit(jax_loss_vmap_new_test,static_argnums=(1,3,34),backend=DEVICE_NAME)
+    loss_func = jax.jit(jax_loss_vmap_new_test,static_argnums=(1,3,34),backend=DEVICE_NAME)
+    grad_func = jax.jit(jax.grad(jax_loss_vmap_new_test),static_argnums=(1,3,34),backend=DEVICE_NAME)
+    loss_and_grad = jax.jit(jax.value_and_grad(jax_loss_vmap_new_test),static_argnums=(1,3,34),backend=DEVICE_NAME)
 
 
     grad_and_loss_func = energy_minim_loss_and_grad_function = jax.jit(jax.vmap(jax.value_and_grad(jax_calculate_total_energy_for_minim_vmap),
@@ -261,7 +326,8 @@ if __name__ == '__main__':
     population_size = args.num_trials
     min_weight = 1.0
     results_list = []
-
+    best_FF = None
+    best_fitness = 10**20
     opt_method = args.opt_method
     # Options for LBFGS
     optim_options =dict(maxiter=100,maxls=20,maxfev=1000,maxcor=20, disp=False)
@@ -289,7 +355,68 @@ if __name__ == '__main__':
     												   list_all_body_3_list,list_all_body_3_map,list_all_body_3_angles,list_all_body_3_shift,
     												   list_all_body_4_list,list_all_body_4_map,list_all_body_4_angles,list_all_body_4_shift,
     												   list_all_hbond_list,list_all_hbond_mask,list_all_angles_and_dist,list_all_hbond_shift,
-    												   list_bond_rest,list_angle_rest,list_torsion_rest,inner_minim=0,minim_start_init=True,optimizer=opt_method,optim_options=optim_options)
+    												   list_bond_rest,list_angle_rest,list_torsion_rest,
+                                                       inner_minim=0,minim_start_init=True,
+                                                       optimizer=opt_method,optim_options=optim_options)
         e=time.time()
         result = {"time":e-s, "value": global_min, "params": global_min_params}
         results_list.append(result)
+
+        if best_fitness > global_min or best_FF == None:
+            best_fitness = global_min
+            best_FF = result
+
+    if not os.path.exists(args.out_folder):
+        os.makedirs(args.out_folder)
+
+    if args.save_opt == "all":
+        for i,res in enumerate(results_list):
+            params = res['params']
+            flattened_force_field = jax.jit(use_selected_parameters,backend=DEVICE_NAME, static_argnums=(1))(params,param_indices, flattened_force_field)
+            force_field.flattened_force_field = flattened_force_field
+            force_field.unflatten()
+            new_name = "{}/new_FF_{}_{:.2f}".format(args.out_folder,i,res['value'])
+            parse_and_save_force_field(args.init_FF, new_name, force_field)
+
+            current_loss,indiv_error = orig_loss(params,param_indices,flattened_force_field,flattened_non_dif_params,
+    								 structured_training_data,
+    								 list_all_pos,
+    								 list_all_type,list_all_mask,
+    								 list_all_total_charge,
+    							 	 list_all_shift_combs,
+    								 list_orth_matrices,
+    								 list_all_body_2_neigh_list,
+    								 list_all_dist_mat,
+    								 list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
+    								 list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
+    								 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
+    								 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
+    								 list_bond_rest,list_angle_rest,list_torsion_rest,
+    								 list_do_minim,orig_list_all_pos,True)
+            report_name = "{}/report_{}_{:.2f}".format(args.out_folder,i,res['value'])
+            produce_error_report(report_name, all_training_items,all_training_items_str, indiv_error)
+    else:
+        params = best_FF['params']
+        flattened_force_field = jax.jit(use_selected_parameters,backend=DEVICE_NAME, static_argnums=(1))(params,param_indices, flattened_force_field)
+        force_field.flattened_force_field = flattened_force_field
+        force_field.unflatten()
+        new_name = "{}/best_FF_{:.2f}".format(args.out_folder,best_FF['value'])
+        parse_and_save_force_field(args.init_FF, new_name, force_field)
+
+        current_loss,indiv_error = orig_loss(params,param_indices,flattened_force_field,flattened_non_dif_params,
+								 structured_training_data,
+								 list_all_pos,
+								 list_all_type,list_all_mask,
+								 list_all_total_charge,
+							 	 list_all_shift_combs,
+								 list_orth_matrices,
+								 list_all_body_2_neigh_list,
+								 list_all_dist_mat,
+								 list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
+								 list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
+								 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
+								 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
+								 list_bond_rest,list_angle_rest,list_torsion_rest,
+								 list_do_minim,orig_list_all_pos,True)
+        report_name = "{}/best_report_{:.2f}".format(args.out_folder,best_FF['value'])
+        produce_error_report(report_name, all_training_items,all_training_items_str, indiv_error)

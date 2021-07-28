@@ -428,7 +428,7 @@ def jax_loss_vmap_new_test(selected_params, param_indices, flattened_force_field
 			   list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
 			   list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
 			   list_bond_rest,list_angle_rest,list_torsion_rest,
-			   list_do_minim,orig_list_pos):
+			   list_do_minim,orig_list_pos,return_indiv_error=False):
 
 	flattened_force_field = use_selected_parameters(selected_params,param_indices, flattened_force_field)
 	flattened_force_field = preprocess_force_field(flattened_force_field,flattened_non_dif_params)
@@ -446,7 +446,7 @@ def jax_loss_vmap_new_test(selected_params, param_indices, flattened_force_field
 			   list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
 			   list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
 			   list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
-			   list_bond_rest,list_angle_rest,list_torsion_rest)
+			   list_bond_rest,list_angle_rest,list_torsion_rest,return_indiv_error=return_indiv_error)
 
 
 def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
@@ -462,8 +462,8 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
 			   list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
 			   list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
 			   list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
-			   list_bond_rest,list_angle_rest,list_torsion_rest):
-	#all_errors = dict()
+			   list_bond_rest,list_angle_rest,list_torsion_rest,return_indiv_error):
+	all_errors = dict()
 	total_error = 0
 	energy_items_flag = 'ENERGY' in structured_training_data
 	charge_items_flag = 'CHARGE' in structured_training_data
@@ -528,7 +528,8 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
 		energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals = structured_training_data['ENERGY']
 		energy_preds = np.sum(all_pots[energy_sys_list_of_lists] * energy_multip_list_of_lists,axis=1)
 		energy_error = np.sum(((energy_all_energy_vals - energy_preds) / energy_all_weights) ** 2)
-		#all_errors['energy'] = [energy_preds, energy_all_energy_vals, energy_all_weights, ((energy_all_energy_vals - energy_preds) / energy_all_weights) ** 2]
+		if return_indiv_error:
+			all_errors['ENERGY'] = [energy_preds, energy_all_energy_vals, energy_all_weights, ((energy_all_energy_vals - energy_preds) / energy_all_weights) ** 2]
 	else:
 		energy_error = 0
 	total_error = total_error  + energy_error
@@ -539,7 +540,8 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
 		charge_preds = all_charges[chg_sys_index_list,chg_atom_index_list]
 		charge_error = np.sum(((chg_all_charge_vals - charge_preds) / chg_all_weights) ** 2)
 		total_error = total_error  + charge_error
-		#all_errors['charge'] = [charge_preds, chg_all_charge_vals, chg_all_weights, ((chg_all_charge_vals - charge_preds) / chg_all_weights) ** 2]
+		if return_indiv_error:
+			all_errors['CHARGE'] = [charge_preds, chg_all_charge_vals, chg_all_weights, ((chg_all_charge_vals - charge_preds) / chg_all_weights) ** 2]
 		#print('charge_error', charge_error)
 	#2-body
 	if 'GEOMETRY-2' in structured_training_data:
@@ -549,7 +551,8 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
 		calc_dist = jax.vmap(SimulationSystem.calculate_2_body_distance)(pos1s,pos2s)
 		geo2_error = np.sum(((geo2_all_target_vals - calc_dist) / geo2_all_weights) ** 2)
 		total_error = total_error  + geo2_error
-		#all_errors['geo2'] = [calc_dist, geo2_all_target_vals, geo2_all_weights, ((geo2_all_target_vals - calc_dist) / geo2_all_weights) ** 2]
+		if return_indiv_error:
+			all_errors['GEOMETRY-2'] = [calc_dist, geo2_all_target_vals, geo2_all_weights, ((geo2_all_target_vals - calc_dist) / geo2_all_weights) ** 2]
 		#print('geo2_error',geo2_error)
 	#3-body
 	if 'GEOMETRY-3' in structured_training_data:
@@ -565,7 +568,8 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
 
 		geo3_error = np.sum(((geo3_all_target_vals - calc_ang) / geo3_all_weights) ** 2)
 		total_error = total_error  + geo3_error
-		#all_errors['geo3'] = [calc_ang, geo3_all_target_vals, geo3_all_weights, ((geo3_all_target_vals - calc_ang) / geo3_all_weights) ** 2]
+		if return_indiv_error:
+			all_errors['GEOMETRY-3'] = [calc_ang, geo3_all_target_vals, geo3_all_weights, ((geo3_all_target_vals - calc_ang) / geo3_all_weights) ** 2]
 		#print('geo3_error',geo3_error)
 	#4-body
 	if 'GEOMETRY-4' in structured_training_data:
@@ -586,7 +590,8 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
 		geo4_all_target_vals = np.abs(geo4_all_target_vals)
 		geo4_error = np.sum(((geo4_all_target_vals - calc_ang) / geo4_all_weights) ** 2)
 		total_error = total_error  + geo4_error
-		#all_errors['geo4'] = [calc_ang, geo4_all_target_vals, geo4_all_weights, ((geo4_all_target_vals - calc_ang) / geo4_all_weights) ** 2]
+		if return_indiv_error:
+			all_errors['GEOMETRY-4'] = [calc_ang, geo4_all_target_vals, geo4_all_weights, ((geo4_all_target_vals - calc_ang) / geo4_all_weights) ** 2]
 		#print(geo4_all_target_vals)
 		#print(calc_ang)
 		#print('geo4_error',geo4_error)
@@ -609,20 +614,24 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
 		#force_all_weights = np.where(np.abs(force_list_target_vals).flatten()<40.0, 5.0, force_all_weights).flatten()
 		#force_error = np.sum(((diff) / force_all_weights) ** 2) # force_all_weights.reshape(-1,1)
 		total_error = total_error  + force_error
-		#all_errors['force-atom'] = [calc_forces, force_list_target_vals, force_all_weights, ((diff) / force_all_weights.reshape(-1,1)) ** 2]
+		if return_indiv_error:
+			all_errors['FORCE-ATOM'] = [calc_forces, force_list_target_vals, force_all_weights, ((force_list_target_vals - calc_forces) / force_all_weights.reshape(-1,1)) ** 2]
 		#(calc_forces[:20])
-	if 'RMSG-NEW' in structured_training_data:
-		force_sys_index_list, force_all_weights, all_target = structured_training_data['RMSG-NEW']
+	if 'FORCE-RMSG' in structured_training_data:
+		force_sys_index_list, force_all_weights, all_target = structured_training_data['FORCE-RMSG']
 		calc_rmsg = safe_sqrt(np.mean(all_forces[force_sys_index_list, :, :]**2,axis=(1,2))).reshape(-1)
-		force_all_weights = force_all_weights * 10
+		force_all_weights = force_all_weights
 		new_rmsg_error = np.sum((calc_rmsg / force_all_weights)**2)
 		#print(calc_rmsg)
 		total_error = total_error  + new_rmsg_error
 		#print(new_rmsg_error)
+		if return_indiv_error:
+			all_errors['FORCE-RMSG'] = [calc_rmsg, all_target, force_all_weights, (calc_rmsg / force_all_weights)**2]
 
-
-
-	return total_error#,calc_forces
+	if not return_indiv_error:
+		return total_error
+	else:
+		return total_error, all_errors
 
 def calculate_params_from_grad(selected_params, grads, learning_rate):
 	new_vals = selected_params - grads * learning_rate
@@ -827,7 +836,7 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
 								 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
 								 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
 								 list_bond_rest,list_angle_rest,list_torsion_rest,
-								 list_do_minim,orig_list_pos)
+								 list_do_minim,orig_list_pos,False)
 
 		#is_in_bound = onp.all(selected_params >= bounds[:,0]) and onp.all(selected_params <= bounds[:,1])
 
@@ -934,7 +943,7 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
 								 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
 								 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
 								 list_bond_rest,list_angle_rest,list_torsion_rest,
-								 list_do_minim,orig_list_pos)
+								 list_do_minim,orig_list_pos,False)
 
 		all_loss_values.append(current_loss)
 		all_params.append(selected_params)
