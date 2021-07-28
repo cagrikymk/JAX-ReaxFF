@@ -2073,7 +2073,8 @@ def parse_force_field(force_field_file):
 def parse_geo_file(geo_file):
 	import copy
 	if not os.path.exists(geo_file):
-		return
+		print("Path {} does not exist!".format(geo_file))
+		return []
 	list_systems = []
 	f = open(geo_file,'r')
 	run_str = ''
