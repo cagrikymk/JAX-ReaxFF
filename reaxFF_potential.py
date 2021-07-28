@@ -191,7 +191,10 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                                            )
 
     overunder_pot = jax_calculate_ovcor_pot(types,
+                                      flattened_non_dif_params[18],
                                       atom_mask,
+                                      global_body_2_inter_list,
+                                      global_body_2_inter_list_mask,
                                       local_body_2_neigh_list,
                                       bo,bopi, bopi2,abo, vlp,
                                       flattened_force_field[34],
@@ -463,7 +466,10 @@ def jax_calculate_torsion_pot(atom_types, global_body_4_inter_list, global_body_
 
 #@jax.jit
 def jax_calculate_ovcor_pot(atom_types,
+						    name_to_index,
 						    atom_mask,
+						    global_body_2_inter_list,
+						    global_body_2_inter_list_mask,
 						    local_neigh_list,
 						    bo,bopi, bopi2,abo, vlp,
 						    stlp, aval, amas, vover,
@@ -547,6 +553,18 @@ def jax_calculate_ovcor_pot(atom_types,
 	ea = ea + np.sum(eahu * atom_mask)
 
 	#TODO: Calculate correction for C2 PART effecting (eplh) is missing (related to vpar(6))
+	C_ind = name_to_index['C']
+	par6_mask = np.where(np.abs(par_6) > 0.001, 1.0, 0.0)
+	C_C_bonds_mask = (np.where(global_body_2_inter_list[:,1] == C_ind, 1.0, 0.0) *
+                     np.where(global_body_2_inter_list[:,3] == C_ind, 1.0, 0.0) *
+                     global_body_2_inter_list_mask *
+                     par6_mask)
+	vov4 = abo[global_body_2_inter_list[:,1]] - aval[global_body_2_inter_list[:,1]]
+	vov3 = (bo - vov4 - 0.040 * (vov4 ** 4))
+	vov3_mask = np.where(vov3 > 3.0, 1.0, 0.0)
+	elph = par_6 * (vov3 -3.0)**2
+	elph = elph * vov3_mask * C_C_bonds_mask
+	ea = ea + np.sum(elph)
 
 	return ea
 

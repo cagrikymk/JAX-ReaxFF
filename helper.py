@@ -1539,7 +1539,7 @@ def parse_and_save_force_field(old_ff_file, new_ff_file,force_field):
     f.close()
 
 
-def parse_force_field(force_field_file):
+def parse_force_field(force_field_file, cutoff2):
 
 
     f = open(force_field_file, 'r')
@@ -1555,7 +1555,7 @@ def parse_force_field(force_field_file):
         general_params[i] = float(line.split()[0])
     num_atom_types = int(f.readline().strip().split()[0])
 
-    force_field = ForceField() # + 1 for the filler type
+    force_field = ForceField(cutoff2=cutoff2) # + 1 for the filler type
 
     force_field.low_tap_rad = general_params[11] # nondiff
     force_field.up_tap_rad = general_params[12] # nondiff

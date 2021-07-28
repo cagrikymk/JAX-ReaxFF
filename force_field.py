@@ -57,7 +57,7 @@ dgrrdn=1.0/rdndgr
 
 
 class ForceField:
-	def __init__(self, total_num_atom_types=MAX_NUM_ATOM_TYPES):
+	def __init__(self, total_num_atom_types=MAX_NUM_ATOM_TYPES, cutoff2 = 0.001):
 		self.total_num_atom_types = total_num_atom_types
 		self.name_2_index = dict()
 		self.params_to_indices = dict()
@@ -148,7 +148,7 @@ class ForceField:
 
 
 		# valency related parameters
-		self.cutoff2 = 0.005
+		self.cutoff2 = cutoff2
         # from control, BO-cutoff for valency angles and torsion angles
 		self.val_par3 = 0.0
 		self.val_par15 = 0.0
@@ -538,7 +538,8 @@ class ForceField:
 
                               self.rob1_off_mask,
                               self.rob2_off_mask,
-                              self.rob3_off_mask
+                              self.rob3_off_mask,
+                              self.name_2_index
                               ]
 
 		for i in range(len(self.non_dif_params)):

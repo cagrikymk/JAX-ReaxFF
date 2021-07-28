@@ -158,8 +158,8 @@ if __name__ == '__main__':
     # energy minimization related parameters
     parser.add_argument('--num_e_minim_steps', metavar='number',
         type=int,
-        choices=range(1, 5000),
-        default=200,
+        choices=range(0, 5000),
+        default=0,
         help='Number of energy minimization steps')
     parser.add_argument('--e_minim_LR', metavar='init_LR',
         type=float,
@@ -178,12 +178,16 @@ if __name__ == '__main__':
         choices=['all', 'best'],
         default="best",
         help='Save all or only the best FF')
+    parser.add_argument('--cutoff2', metavar='cutoff',
+        type=float,
+        default=0.001,
+        help='BO-cutoff for valency angles and torsion angles')
 
     #parse arguments
     args = parser.parse_args()
 
     # read the initial force field
-    force_field = parse_force_field(args.init_FF)
+    force_field = parse_force_field(args.init_FF,cutoff2 = args.cutoff2)
     force_field.init_params_for_filler_atom_type()
     force_field.flatten()
 
@@ -332,11 +336,13 @@ if __name__ == '__main__':
     # Options for LBFGS
     optim_options =dict(maxiter=100,maxls=20,maxfev=1000,maxcor=20, disp=False)
     for i in range(population_size):
+
         if args.init_FF_type == 'random':
             selected_params = onp.random.uniform(low=bounds[:,0],high=bounds[:,1])
             selected_params = np.array(selected_params, dtype=TYPE)
         else:
             selected_params = add_noise_to_params(selected_params_init,bounds,scale=0.1)
+
         s=time.time()
         flattened_force_field,global_min_params,global_min,all_params,all_loss_values,f_ev_list,g_ev_list = train_FF(orig_loss,loss_and_grad,grad_func,
     													 minim_index_lists,subs,energy_minim_loss_and_grad_function,energy_minim_count,
