@@ -553,18 +553,19 @@ def jax_calculate_ovcor_pot(atom_types,
 	ea = ea + np.sum(eahu * atom_mask)
 
 	#TODO: Calculate correction for C2 PART effecting (eplh) is missing (related to vpar(6))
-	C_ind = name_to_index['C']
-	par6_mask = np.where(np.abs(par_6) > 0.001, 1.0, 0.0)
-	C_C_bonds_mask = (np.where(global_body_2_inter_list[:,1] == C_ind, 1.0, 0.0) *
-                     np.where(global_body_2_inter_list[:,3] == C_ind, 1.0, 0.0) *
-                     global_body_2_inter_list_mask *
-                     par6_mask)
-	vov4 = abo[global_body_2_inter_list[:,1]] - aval[global_body_2_inter_list[:,1]]
-	vov3 = (bo - vov4 - 0.040 * (vov4 ** 4))
-	vov3_mask = np.where(vov3 > 3.0, 1.0, 0.0)
-	elph = par_6 * (vov3 -3.0)**2
-	elph = elph * vov3_mask * C_C_bonds_mask
-	ea = ea + np.sum(elph)
+	if 'C' in name_to_index:
+		C_ind = name_to_index['C']
+		par6_mask = np.where(np.abs(par_6) > 0.001, 1.0, 0.0)
+		C_C_bonds_mask = (np.where(global_body_2_inter_list[:,1] == C_ind, 1.0, 0.0) *
+                         np.where(global_body_2_inter_list[:,3] == C_ind, 1.0, 0.0) *
+                         global_body_2_inter_list_mask *
+                         par6_mask)
+		vov4 = abo[global_body_2_inter_list[:,1]] - aval[global_body_2_inter_list[:,1]]
+		vov3 = (bo - vov4 - 0.040 * (vov4 ** 4))
+		vov3_mask = np.where(vov3 > 3.0, 1.0, 0.0)
+		elph = par_6 * (vov3 -3.0)**2
+		elph = elph * vov3_mask * C_C_bonds_mask
+		ea = ea + np.sum(elph)
 
 	return ea
 
