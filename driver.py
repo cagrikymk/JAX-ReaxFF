@@ -333,6 +333,7 @@ if __name__ == '__main__':
     best_FF = None
     best_fitness = 10**20
     opt_method = args.opt_method
+    num_steps = args.num_steps
     # Options for LBFGS
     optim_options =dict(maxiter=100,maxls=20,maxfev=1000,maxcor=20, disp=False)
     for i in range(population_size):
@@ -348,7 +349,7 @@ if __name__ == '__main__':
     													 minim_index_lists,subs,energy_minim_loss_and_grad_function,energy_minim_count,
     												   energy_minim_init_LR,energy_minim_multip_LR,list_do_minim,list_num_minim_steps,end_RMSG,
     												   selected_params,param_indices,bounds, flattened_force_field,flattened_non_dif_params,
-    												   min_weight, structured_training_data, params_list,20,
+    												   min_weight, structured_training_data, params_list,num_steps,
     												   list_real_atom_counts,
     												   list_all_pos,
     												   list_all_shift_combs,
