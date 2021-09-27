@@ -621,8 +621,8 @@ class SimulationSystem:
 
 			bond_check = onp.logical_and(bond_indices1!=-1, bond_indices2!=-1)
 			dist_check = onp.logical_and(global_body_2_distances[bond_indices1] < BODY_4_BOND_CUTOFF, global_body_2_distances[bond_indices2] < BODY_4_BOND_CUTOFF)
-			#bo_check =  onp.where(bo[bond_indices1] * bo[bond_indices2] * bo[b1] > cutoff2, 1, 0)
-			bo_check=1.0
+			bo_check =  onp.where(bo[bond_indices1] * bo[bond_indices2] * bo[b1] > cutoff2, 1, 0)
+			#bo_check=1.0
 			bond_and_dist_check = onp.logical_and(bond_check, dist_check)
 			bond_and_dist_check = onp.logical_and(bond_and_dist_check, bo_check)
 			'''
