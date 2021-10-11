@@ -204,7 +204,7 @@ if __name__ == '__main__':
     # preprocess params
     param_indices=[]
     for par in params_list:
-    	param_indices.append(par[0])
+        param_indices.append(par[0])
 
     bounds = []
     for p in params_list:
@@ -218,8 +218,8 @@ if __name__ == '__main__':
 
     do_minim_count = 0
     for s in systems:
-    	do_minim_count += s.num_min_steps > 2
-    	#print(s.name,s.num_min_steps)
+        do_minim_count += s.num_min_steps > 2
+        #print(s.name,s.num_min_steps)
 
     # print INFO
     print("[INFO] Geometry file is read, there are {} geometries and {} require energy minimization!".format(len(systems), do_minim_count))
@@ -270,9 +270,9 @@ if __name__ == '__main__':
 
     # put force field in device memory
     for i in range(len(force_field.flattened_force_field)):
-    	force_field.flattened_force_field[i] = jax.device_put(force_field.flattened_force_field[i])
+        force_field.flattened_force_field[i] = jax.device_put(force_field.flattened_force_field[i])
     for i in range(len(force_field.non_dif_params)):
-    	force_field.non_dif_params[i] = jax.device_put(force_field.non_dif_params[i])
+        force_field.non_dif_params[i] = jax.device_put(force_field.non_dif_params[i])
 
     flattened_force_field = force_field.flattened_force_field
     flattened_non_dif_params = force_field.non_dif_params
@@ -291,20 +291,20 @@ if __name__ == '__main__':
 
 
     grad_and_loss_func = energy_minim_loss_and_grad_function = jax.jit(jax.vmap(jax.value_and_grad(jax_calculate_total_energy_for_minim_vmap),
-    													   in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),
-    													   static_argnums=(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22),backend=DEVICE_NAME)
+                                                           in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),
+                                                           static_argnums=(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22),backend=DEVICE_NAME)
 
     orig_loss2 = jax_loss_vmap_new_test
 
     def new_g(*x):
-    	grads = grad_func(*x)
-    	grads = grads / 1e2 #works for silica
-    	return grads
+        grads = grad_func(*x)
+        grads = grads / 1e2 #works for silica
+        return grads
 
     def new_loss_and_grad(*x):
-    	val,grads = loss_and_grad(*x)
-    	grads = grads / 1e2 #works for silica
-    	return val, grads
+        val,grads = loss_and_grad(*x)
+        grads = grads / 1e2 #works for silica
+        return val, grads
 
     grad_func_w_noise = lambda *x:np.clip(grad_func(*x),-1e8,1e8)
     orig_list_all_pos = copy.deepcopy(list_all_pos)
@@ -312,16 +312,16 @@ if __name__ == '__main__':
     minim_index_lists = select_energy_minim(list_do_minim)
 
     subs = jax.jit(get_minim_lists, static_argnums=(0,), backend=DEVICE_NAME)(minim_index_lists,list_do_minim, list_num_minim_steps,
-    										 list_real_atom_counts,
-    										 orig_list_all_pos,list_all_pos, list_all_shift_combs,list_orth_matrices,
-    										 list_all_type,list_all_mask,
-    										 list_all_total_charge,
-    									 list_all_body_2_neigh_list,list_all_body_2_list,list_all_body_2_map,
-    									 list_all_body_2_trip_mask,list_all_body_3_list,
-    									 list_all_body_3_map,list_all_body_3_shift,
-    									 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
-    									  list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,
-    									 list_bond_rest,list_angle_rest,list_torsion_rest)
+                                         list_real_atom_counts,
+                                         orig_list_all_pos,list_all_pos, list_all_shift_combs,list_orth_matrices,
+                                         list_all_type,list_all_mask,
+                                         list_all_total_charge,
+                                         list_all_body_2_neigh_list,list_all_body_2_list,list_all_body_2_map,
+                                         list_all_body_2_trip_mask,list_all_body_3_list,
+                                         list_all_body_3_map,list_all_body_3_shift,
+                                         list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
+                                         list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,
+                                         list_bond_rest,list_angle_rest,list_torsion_rest)
 
     energy_minim_count = args.num_e_minim_steps
     energy_minim_init_LR = np.float32(args.e_minim_LR)
@@ -346,23 +346,23 @@ if __name__ == '__main__':
 
         s=time.time()
         flattened_force_field,global_min_params,global_min,all_params,all_loss_values,f_ev_list,g_ev_list = train_FF(orig_loss,loss_and_grad,grad_func,
-    													 minim_index_lists,subs,energy_minim_loss_and_grad_function,energy_minim_count,
-    												   energy_minim_init_LR,energy_minim_multip_LR,list_do_minim,list_num_minim_steps,end_RMSG,
-    												   selected_params,param_indices,bounds, flattened_force_field,flattened_non_dif_params,
-    												   min_weight, structured_training_data, params_list,num_steps,
-    												   list_real_atom_counts,
-    												   list_all_pos,
-    												   list_all_shift_combs,
-    												   list_orth_matrices,
-    												   list_all_type,list_all_mask,
-    												   list_all_total_charge,
-    												   list_all_body_2_neigh_list,
-    												   list_all_dist_mat,
-    												   list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
-    												   list_all_body_3_list,list_all_body_3_map,list_all_body_3_angles,list_all_body_3_shift,
-    												   list_all_body_4_list,list_all_body_4_map,list_all_body_4_angles,list_all_body_4_shift,
-    												   list_all_hbond_list,list_all_hbond_mask,list_all_angles_and_dist,list_all_hbond_shift,
-    												   list_bond_rest,list_angle_rest,list_torsion_rest,
+                                                       minim_index_lists,subs,energy_minim_loss_and_grad_function,energy_minim_count,
+                                                       energy_minim_init_LR,energy_minim_multip_LR,list_do_minim,list_num_minim_steps,end_RMSG,
+                                                       selected_params,param_indices,bounds, flattened_force_field,flattened_non_dif_params,
+                                                       min_weight, structured_training_data, params_list,num_steps,
+                                                       list_real_atom_counts,
+                                                       list_all_pos,
+                                                       list_all_shift_combs,
+                                                       list_orth_matrices,
+                                                       list_all_type,list_all_mask,
+                                                       list_all_total_charge,
+                                                       list_all_body_2_neigh_list,
+                                                       list_all_dist_mat,
+                                                       list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
+                                                       list_all_body_3_list,list_all_body_3_map,list_all_body_3_angles,list_all_body_3_shift,
+                                                       list_all_body_4_list,list_all_body_4_map,list_all_body_4_angles,list_all_body_4_shift,
+                                                       list_all_hbond_list,list_all_hbond_mask,list_all_angles_and_dist,list_all_hbond_shift,
+                                                       list_bond_rest,list_angle_rest,list_torsion_rest,
                                                        inner_minim=0,minim_start_init=True,
                                                        optimizer=opt_method,optim_options=optim_options)
         e=time.time()
@@ -386,20 +386,20 @@ if __name__ == '__main__':
             parse_and_save_force_field(args.init_FF, new_name, force_field)
 
             current_loss,indiv_error = orig_loss(params,param_indices,flattened_force_field,flattened_non_dif_params,
-    								 structured_training_data,
-    								 list_all_pos,
-    								 list_all_type,list_all_mask,
-    								 list_all_total_charge,
-    							 	 list_all_shift_combs,
-    								 list_orth_matrices,
-    								 list_all_body_2_neigh_list,
-    								 list_all_dist_mat,
-    								 list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
-    								 list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
-    								 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
-    								 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
-    								 list_bond_rest,list_angle_rest,list_torsion_rest,
-    								 list_do_minim,orig_list_all_pos,True)
+                                     structured_training_data,
+                                     list_all_pos,
+                                     list_all_type,list_all_mask,
+                                     list_all_total_charge,
+                                     list_all_shift_combs,
+                                     list_orth_matrices,
+                                     list_all_body_2_neigh_list,
+                                     list_all_dist_mat,
+                                     list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
+                                     list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
+                                     list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
+                                     list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
+                                     list_bond_rest,list_angle_rest,list_torsion_rest,
+                                     list_do_minim,orig_list_all_pos,True)
             report_name = "{}/report_{}_{:.2f}".format(args.out_folder,i,res['value'])
             produce_error_report(report_name, all_training_items,all_training_items_str, indiv_error)
     else:
@@ -411,19 +411,19 @@ if __name__ == '__main__':
         parse_and_save_force_field(args.init_FF, new_name, force_field)
 
         current_loss,indiv_error = orig_loss(params,param_indices,flattened_force_field,flattened_non_dif_params,
-								 structured_training_data,
-								 list_all_pos,
-								 list_all_type,list_all_mask,
-								 list_all_total_charge,
-							 	 list_all_shift_combs,
-								 list_orth_matrices,
-								 list_all_body_2_neigh_list,
-								 list_all_dist_mat,
-								 list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
-								 list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
-								 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
-								 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
-								 list_bond_rest,list_angle_rest,list_torsion_rest,
-								 list_do_minim,orig_list_all_pos,True)
+                                 structured_training_data,
+                                 list_all_pos,
+                                 list_all_type,list_all_mask,
+                                 list_all_total_charge,
+                                 list_all_shift_combs,
+                                 list_orth_matrices,
+                                 list_all_body_2_neigh_list,
+                                 list_all_dist_mat,
+                                 list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
+                                 list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
+                                 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
+                                 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
+                                 list_bond_rest,list_angle_rest,list_torsion_rest,
+                                 list_do_minim,orig_list_all_pos,True)
         report_name = "{}/best_report_{:.2f}".format(args.out_folder,best_FF['value'])
         produce_error_report(report_name, all_training_items,all_training_items_str, indiv_error)

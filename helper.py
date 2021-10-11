@@ -32,118 +32,118 @@ from multiprocessing import Pool
 
 
 def generate_BGF_file(file_name, geo_name, num_atoms, positions, str_types, box_dim, box_ang):
-	lines =  ["XTLGRF 200"]
-	lines.append("DESCRP {}".format(geo_name))
-	box_line = "CRYSTX  {:10.5f} {:10.5f} {:10.5f} {:10.5f} {:10.5f} {:10.5f}".format(box_dim[0],
-					   box_dim[1],box_dim[2],box_ang[0],box_ang[1],box_ang[2])
-	format_line = "FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)"
-	lines.append(box_line)
-	lines.append(format_line)
-	for i in range(num_atoms):
-		atom_line = "HETATM {:5} {:2}               {:10.5f}{:10.5f}{:10.5f}    {:2}  1 1  0.00000".format((i+1),str_types[i],
-																					  positions[i][0],positions[i][1],positions[i][2],str_types[i])
-		lines.append(atom_line)
-	lines.append('END')
+    lines =  ["XTLGRF 200"]
+    lines.append("DESCRP {}".format(geo_name))
+    box_line = "CRYSTX  {:10.5f} {:10.5f} {:10.5f} {:10.5f} {:10.5f} {:10.5f}".format(box_dim[0],
+                       box_dim[1],box_dim[2],box_ang[0],box_ang[1],box_ang[2])
+    format_line = "FORMAT ATOM   (a6,1x,i5,1x,a5,1x,a3,1x,a1,1x,a5,3f10.5,1x,a5,i3,i2,1x,f8.5)"
+    lines.append(box_line)
+    lines.append(format_line)
+    for i in range(num_atoms):
+        atom_line = "HETATM {:5} {:2}               {:10.5f}{:10.5f}{:10.5f}    {:2}  1 1  0.00000".format((i+1),str_types[i],
+                                                                                      positions[i][0],positions[i][1],positions[i][2],str_types[i])
+        lines.append(atom_line)
+    lines.append('END')
 
-	with open(file_name, 'w') as f:
-		for line in lines:
-			f.write("%s\n" % line)
+    with open(file_name, 'w') as f:
+        for line in lines:
+            f.write("%s\n" % line)
 
 def calculate_bo_single(distance,
-				rob1, rob2, rob3,
-				ptp, pdp, popi, pdo, bop1, bop2,
-				cutoff):
-	'''
-	to get the highest bor:
-		rob1:
-		bop2: group 2, line 2, col. 6
-		bop1: group 2, line 2, col. 5
+                rob1, rob2, rob3,
+                ptp, pdp, popi, pdo, bop1, bop2,
+                cutoff):
+    '''
+    to get the highest bor:
+        rob1:
+        bop2: group 2, line 2, col. 6
+        bop1: group 2, line 2, col. 5
 
-		rob2:
-		ptp: group 2, line 2, col. 3
-		pdp: group 2, line 2, col. 2
+        rob2:
+        ptp: group 2, line 2, col. 3
+        pdp: group 2, line 2, col. 2
 
-		rob3:
-		popi: group 2, line 1, col. 7
-		pdo: group 2, line 1, col. 5
-	'''
+        rob3:
+        popi: group 2, line 1, col. 7
+        pdo: group 2, line 1, col. 5
+    '''
 
-	rhulp = np.where(rob1 <= 0, 0, distance / rob1)
-	rh2 = rhulp ** bop2
-	ehulp = (1 + cutoff) * np.exp(bop1 * rh2)
-	ehulp = np.where(rob1 <= 0, 0.0, ehulp)
+    rhulp = np.where(rob1 <= 0, 0, distance / rob1)
+    rh2 = rhulp ** bop2
+    ehulp = (1 + cutoff) * np.exp(bop1 * rh2)
+    ehulp = np.where(rob1 <= 0, 0.0, ehulp)
 
-	rhulp2 = np.where(rob2 == 0, 0, distance / rob2)
-	rh2p = rhulp2 ** ptp
-	ehulpp = np.exp(pdp * rh2p)
-	ehulpp = np.where(rob2 <= 0, 0.0, ehulpp)
-
-
-	rhulp3 = np.where(rob3 == 0, 0, distance / rob3)
-	rh2pp = rhulp3 ** popi
-	ehulppp = np.exp(pdo*rh2pp)
-	ehulppp = np.where(rob3 <= 0, 0.0, ehulppp)
-
-	#print(ehulp , ehulpp , ehulppp)
-	bor = ehulp + ehulpp + ehulppp
+    rhulp2 = np.where(rob2 == 0, 0, distance / rob2)
+    rh2p = rhulp2 ** ptp
+    ehulpp = np.exp(pdp * rh2p)
+    ehulpp = np.where(rob2 <= 0, 0.0, ehulpp)
 
 
-	return bor # if < cutoff, will be ignored
+    rhulp3 = np.where(rob3 == 0, 0, distance / rob3)
+    rh2pp = rhulp3 ** popi
+    ehulppp = np.exp(pdo*rh2pp)
+    ehulppp = np.where(rob3 <= 0, 0.0, ehulppp)
+
+    #print(ehulp , ehulpp , ehulppp)
+    bor = ehulp + ehulpp + ehulppp
+
+
+    return bor # if < cutoff, will be ignored
 
 def set_flattened_force_field(flattened_force_field,param_indices, bounds):
-	copy_ff = copy.deepcopy(flattened_force_field)
-	bond_param_indices_max = set([8,15,9,12,10,14,75,76,77,81,82,83]) #rob 75,76,77 rob_off 81 82 83
-	bond_param_indices_min = set([16,11,13])
-	for i,p in enumerate(param_indices):
-		bound = bounds[i]
-		if p[0] in bond_param_indices_max:
-			copy_ff[p[0]][p[1]] = bound[1]
-		if p[0] in bond_param_indices_min:
-			copy_ff[p[0]][p[1]] = bound[0]
-	return copy_ff
+    copy_ff = copy.deepcopy(flattened_force_field)
+    bond_param_indices_max = set([8,15,9,12,10,14,75,76,77,81,82,83]) #rob 75,76,77 rob_off 81 82 83
+    bond_param_indices_min = set([16,11,13])
+    for i,p in enumerate(param_indices):
+        bound = bounds[i]
+        if p[0] in bond_param_indices_max:
+            copy_ff[p[0]][p[1]] = bound[1]
+        if p[0] in bond_param_indices_min:
+            copy_ff[p[0]][p[1]] = bound[0]
+    return copy_ff
 
 def find_limits(type1, type2, flattened_force_field, cutoff):
-	vect_bo_function = jax.jit(jax.vmap(calculate_bo_single,in_axes=(0,None,None,None,None,None,None,None,None,None,None)),backend='cpu')
-	rob1 = flattened_force_field[8][type1,type2] # select max, typical values (0.1, 2)
-	bop2 = flattened_force_field[16][type1,type2] # select min, typical values (1,10) (negative doesnt make sense)
-	bop1 = flattened_force_field[15][type1,type2] # select max, typical values (-0.2, -0.01)
+    vect_bo_function = jax.jit(jax.vmap(calculate_bo_single,in_axes=(0,None,None,None,None,None,None,None,None,None,None)),backend='cpu')
+    rob1 = flattened_force_field[8][type1,type2] # select max, typical values (0.1, 2)
+    bop2 = flattened_force_field[16][type1,type2] # select min, typical values (1,10) (negative doesnt make sense)
+    bop1 = flattened_force_field[15][type1,type2] # select max, typical values (-0.2, -0.01)
 
-	rob2 = flattened_force_field[9][type1,type2]
-	ptp = flattened_force_field[11][type1,type2]
-	pdp = flattened_force_field[12][type1,type2]
+    rob2 = flattened_force_field[9][type1,type2]
+    ptp = flattened_force_field[11][type1,type2]
+    pdp = flattened_force_field[12][type1,type2]
 
-	rob3 = flattened_force_field[10][type1,type2]
-	popi = flattened_force_field[13][type1,type2]
-	pdo = flattened_force_field[14][type1,type2]
+    rob3 = flattened_force_field[10][type1,type2]
+    popi = flattened_force_field[13][type1,type2]
+    pdo = flattened_force_field[14][type1,type2]
 
-	distance = np.linspace(0.0, 10, 1000)
+    distance = np.linspace(0.0, 10, 1000)
 
-	res = vect_bo_function(distance,
-					rob1, rob2, rob3,
-					ptp, pdp, popi, pdo, bop1, bop2,
-					cutoff)
+    res = vect_bo_function(distance,
+                    rob1, rob2, rob3,
+                    ptp, pdp, popi, pdo, bop1, bop2,
+                    cutoff)
 
-	ind = np.sum(res > cutoff)
+    ind = np.sum(res > cutoff)
 
-	return distance[ind]
+    return distance[ind]
 # return a matrix where (i,j) is the cutoff dist. for a bond between type i and type j
 def find_all_cutoffs(flattened_force_field,flattened_non_dif_params,cutoff,atom_indices):
-	lenn = len(atom_indices)
-	cutoff_dict = dict()
-	flattened_force_field = preprocess_force_field(flattened_force_field, flattened_non_dif_params)
-	for i in range(lenn):
-		type_i = atom_indices[i]
-		for j in range(i,lenn):
-			type_j = atom_indices[j]
-			dist = find_limits(type_i,type_j, flattened_force_field, cutoff)
-			cutoff_dict[(type_i,type_j)] = dist
-			cutoff_dict[(type_j,type_i)] = dist
+    lenn = len(atom_indices)
+    cutoff_dict = dict()
+    flattened_force_field = preprocess_force_field(flattened_force_field, flattened_non_dif_params)
+    for i in range(lenn):
+        type_i = atom_indices[i]
+        for j in range(i,lenn):
+            type_j = atom_indices[j]
+            dist = find_limits(type_i,type_j, flattened_force_field, cutoff)
+            cutoff_dict[(type_i,type_j)] = dist
+            cutoff_dict[(type_j,type_i)] = dist
 
-			if dist > CLOSE_NEIGH_CUTOFF and type_i != -1 and type_j!=-1: #-1 TYPE is for the filler atom
-				print("[WARNING] between type {0:d} and type {1:d}, the bond length could be greater than {2:.1f} A! ({3:.1f} A)".format(type_i,type_j,CLOSE_NEIGH_CUTOFF,dist))
-				cutoff_dict[(type_i,type_j)] = CLOSE_NEIGH_CUTOFF
-				cutoff_dict[(type_j,type_i)] = CLOSE_NEIGH_CUTOFF
-	return cutoff_dict
+            if dist > CLOSE_NEIGH_CUTOFF and type_i != -1 and type_j!=-1: #-1 TYPE is for the filler atom
+                print("[WARNING] between type {0:d} and type {1:d}, the bond length could be greater than {2:.1f} A! ({3:.1f} A)".format(type_i,type_j,CLOSE_NEIGH_CUTOFF,dist))
+                cutoff_dict[(type_i,type_j)] = CLOSE_NEIGH_CUTOFF
+                cutoff_dict[(type_j,type_i)] = CLOSE_NEIGH_CUTOFF
+    return cutoff_dict
 
 def process_and_cluster_geos(systems,force_field,param_indices,bounds):
     start = time.time()
@@ -154,9 +154,9 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds):
     start = time.time()
     all_time_data = onp.zeros((len(systems),6))
     for i,s in enumerate(systems):
-    	s.fill_atom_types(force_field)
-    	for a_type in s.atom_types:
-    		all_atom_types.add(a_type)
+        s.fill_atom_types(force_field)
+        for a_type in s.atom_types:
+            all_atom_types.add(a_type)
 
     cutoff_dict = find_all_cutoffs(force_field.flattened_force_field, force_field.non_dif_params,force_field.cutoff,list(all_atom_types))
     force_field.cutoff_dict = cutoff_dict
@@ -178,16 +178,16 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds):
     selected_n_cut = 0
     max_cut = 15
     for n_cut in range(1,max_cut+1):
-    	all_cut_indices,globally_sorted_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
-    	print("Cost with {} clusters: {}".format(n_cut, cost_total))
-    	all_costs_old.append(cost_total)
-    	if prev != -1 and cost_total > prev or (prev-cost_total) / prev < 0.15:
-    		selected_n_cut = n_cut - 1
-    		break
-    	prev = cost_total
+        all_cut_indices,globally_sorted_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
+        print("Cost with {} clusters: {}".format(n_cut, cost_total))
+        all_costs_old.append(cost_total)
+        if prev != -1 and cost_total > prev or (prev-cost_total) / prev < 0.15:
+            selected_n_cut = n_cut - 1
+            break
+        prev = cost_total
     #sys.exit()
     if selected_n_cut == 0:
-    	selected_n_cut = max_cut
+        selected_n_cut = max_cut
     all_cut_indices,globally_sorted_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=selected_n_cut,max_iterations=100,rep_count=1000,print_mode=True)
 
 
@@ -267,534 +267,534 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds):
                              list_all_angles_and_dist])
 
 def pool_handler_for_inter_list_generation(systems,flattened_force_field,force_field,pool):
-	# prepare input
-	all_flat_systems = [s.flatten_no_inter_list() for s in systems]
+    # prepare input
+    all_flat_systems = [s.flatten_no_inter_list() for s in systems]
 
-	modified_create_inter_lists = partial(create_inter_lists,force_field=force_field,flattened_force_field=flattened_force_field)
-	all_inter_lists = pool.starmap(modified_create_inter_lists, all_flat_systems)
+    modified_create_inter_lists = partial(create_inter_lists,force_field=force_field,flattened_force_field=flattened_force_field)
+    all_inter_lists = pool.starmap(modified_create_inter_lists, all_flat_systems)
 
-	for i,s in enumerate(systems):
-		s.distance_matrices = all_inter_lists[i][0]
+    for i,s in enumerate(systems):
+        s.distance_matrices = all_inter_lists[i][0]
 
-		[s.local_body_2_neigh_list,s.local_body_2_neigh_counts] = all_inter_lists[i][1]
+        [s.local_body_2_neigh_list,s.local_body_2_neigh_counts] = all_inter_lists[i][1]
 
-		[s.global_body_2_inter_list,s.global_body_2_inter_list_mask,
-		s.triple_bond_body_2_mask,s.global_body_2_distances,
-		s.global_body_2_count] = all_inter_lists[i][2]
+        [s.global_body_2_inter_list,s.global_body_2_inter_list_mask,
+        s.triple_bond_body_2_mask,s.global_body_2_distances,
+        s.global_body_2_count] = all_inter_lists[i][2]
 
-		[s.global_body_3_inter_list,
-		 s.global_body_3_inter_list_mask,
-		 s.global_body_3_inter_shift_map,
-		 s.global_body_3_count] = all_inter_lists[i][3]
+        [s.global_body_3_inter_list,
+         s.global_body_3_inter_list_mask,
+         s.global_body_3_inter_shift_map,
+         s.global_body_3_count] = all_inter_lists[i][3]
 
-		[s.global_body_4_inter_list,
-		 s.global_body_4_inter_shift,
-		 s.global_body_4_inter_list_mask,
-		 s.global_body_4_count]= all_inter_lists[i][4]
+        [s.global_body_4_inter_list,
+         s.global_body_4_inter_shift,
+         s.global_body_4_inter_list_mask,
+         s.global_body_4_count]= all_inter_lists[i][4]
 
-		[s.global_hbond_inter_list,
-		 s.global_hbond_shift_list,
-		 s.global_hbond_inter_list_mask,
-		 s.global_hbond_count] = all_inter_lists[i][5]
+        [s.global_hbond_inter_list,
+         s.global_hbond_shift_list,
+         s.global_hbond_inter_list_mask,
+         s.global_hbond_count] = all_inter_lists[i][5]
 
 # can be usedfor multi processing
 def create_inter_lists(is_periodic,
-					do_minim,
-					num_atoms,
-					real_atom_count,
-					atom_types,
-					atom_names,
-					atom_positions,
-					orth_matrix,
-					all_shift_comb,
-					flattened_force_field,
-					force_field):
+                    do_minim,
+                    num_atoms,
+                    real_atom_count,
+                    atom_types,
+                    atom_names,
+                    atom_positions,
+                    orth_matrix,
+                    all_shift_comb,
+                    flattened_force_field,
+                    force_field):
 
-	#start = time.time()
-	distance_matrices = SimulationSystem.create_distance_matrices_onp(atom_positions,orth_matrix, all_shift_comb)
-	#end = time.time()
-	#print("distance_matrices", end-start)
-	#start = time.time()
-	local_neigh_arrays = [local_body_2_neigh_list,
-						local_body_2_neigh_counts] = SimulationSystem.create_local_neigh_list(num_atoms,
-														real_atom_count,
-														atom_types,
-														distance_matrices,
-														all_shift_comb,
-														force_field.cutoff_dict,
-														do_minim)
-	#end = time.time()
-	#print("local_neigh_arrays", end-start)
-	#start = time.time()
-	body_2_arrays = [global_body_2_inter_list,global_body_2_inter_list_mask,
-	triple_bond_body_2_mask,global_body_2_distances,
-	global_body_2_count] = SimulationSystem.create_global_body_2_inter_list(real_atom_count,
-							atom_types,atom_names,
-							atom_positions,orth_matrix,
-							local_body_2_neigh_counts,local_body_2_neigh_list,
-							force_field.bond_params_mask)
+    #start = time.time()
+    distance_matrices = SimulationSystem.create_distance_matrices_onp(atom_positions,orth_matrix, all_shift_comb)
+    #end = time.time()
+    #print("distance_matrices", end-start)
+    #start = time.time()
+    local_neigh_arrays = [local_body_2_neigh_list,
+                        local_body_2_neigh_counts] = SimulationSystem.create_local_neigh_list(num_atoms,
+                                                        real_atom_count,
+                                                        atom_types,
+                                                        distance_matrices,
+                                                        all_shift_comb,
+                                                        force_field.cutoff_dict,
+                                                        do_minim)
+    #end = time.time()
+    #print("local_neigh_arrays", end-start)
+    #start = time.time()
+    body_2_arrays = [global_body_2_inter_list,global_body_2_inter_list_mask,
+    triple_bond_body_2_mask,global_body_2_distances,
+    global_body_2_count] = SimulationSystem.create_global_body_2_inter_list(real_atom_count,
+                            atom_types,atom_names,
+                            atom_positions,orth_matrix,
+                            local_body_2_neigh_counts,local_body_2_neigh_list,
+                            force_field.bond_params_mask)
 
-	#start = time.time()
-	modified_dist = global_body_2_distances - BUFFER_DIST * do_minim
-	modified_dist = onp.where(modified_dist < 1e-5, 1e-5,modified_dist)
+    #start = time.time()
+    modified_dist = global_body_2_distances - BUFFER_DIST * do_minim
+    modified_dist = onp.where(modified_dist < 1e-5, 1e-5,modified_dist)
 
-	bo = calculate_bo(global_body_2_inter_list,
-					global_body_2_inter_list_mask,
-					modified_dist,
-					flattened_force_field[8], flattened_force_field[9], flattened_force_field[10],
-					flattened_force_field[11], flattened_force_field[12], flattened_force_field[13],
-					flattened_force_field[14], flattened_force_field[15], flattened_force_field[16],
-					force_field.cutoff)
+    bo = calculate_bo(global_body_2_inter_list,
+                    global_body_2_inter_list_mask,
+                    modified_dist,
+                    flattened_force_field[8], flattened_force_field[9], flattened_force_field[10],
+                    flattened_force_field[11], flattened_force_field[12], flattened_force_field[13],
+                    flattened_force_field[14], flattened_force_field[15], flattened_force_field[16],
+                    force_field.cutoff)
 
-	bo = bo - force_field.cutoff
-	bo = onp.where(bo > 0.0, bo, 0.0)
-	#end = time.time()
-	#print("calculate_bo", end-start)
+    bo = bo - force_field.cutoff
+    bo = onp.where(bo > 0.0, bo, 0.0)
+    #end = time.time()
+    #print("calculate_bo", end-start)
 
-	#start = time.time()
-	body_3_arrays = [global_body_3_inter_list,
-	 global_body_3_inter_list_mask,
-	 global_body_3_inter_shift_map,
-	 global_body_3_count] = SimulationSystem.create_body_3_inter_list(is_periodic,
-							real_atom_count,atom_types,atom_names,atom_positions,orth_matrix,
-							local_body_2_neigh_counts,local_body_2_neigh_list,
-							global_body_2_inter_list,global_body_2_distances,bo,
-							force_field.valency_params_mask,
-							force_field.cutoff2)
-	#end = time.time()
-	#print("body_3_arrays", end-start)
+    #start = time.time()
+    body_3_arrays = [global_body_3_inter_list,
+     global_body_3_inter_list_mask,
+     global_body_3_inter_shift_map,
+     global_body_3_count] = SimulationSystem.create_body_3_inter_list(is_periodic,
+                            real_atom_count,atom_types,atom_names,atom_positions,orth_matrix,
+                            local_body_2_neigh_counts,local_body_2_neigh_list,
+                            global_body_2_inter_list,global_body_2_distances,bo,
+                            force_field.valency_params_mask,
+                            force_field.cutoff2)
+    #end = time.time()
+    #print("body_3_arrays", end-start)
 
-	#start = time.time()
-	body_4_arrays = [global_body_4_inter_list,
-	 global_body_4_inter_shift,
-	 global_body_4_inter_list_mask,
-	 global_body_4_count]= SimulationSystem.create_body_4_inter_list_fast(is_periodic,
-							   real_atom_count,atom_types,atom_names,atom_positions,orth_matrix,
-							   local_body_2_neigh_counts,local_body_2_neigh_list,
-							   global_body_2_inter_list,global_body_2_distances,bo,global_body_2_count,
-							   force_field.torsion_params_mask,
-							   force_field.cutoff2)
-	#end = time.time()
-	#print("body_4_arrays", end-start)
+    #start = time.time()
+    body_4_arrays = [global_body_4_inter_list,
+     global_body_4_inter_shift,
+     global_body_4_inter_list_mask,
+     global_body_4_count]= SimulationSystem.create_body_4_inter_list_fast(is_periodic,
+                               real_atom_count,atom_types,atom_names,atom_positions,orth_matrix,
+                               local_body_2_neigh_counts,local_body_2_neigh_list,
+                               global_body_2_inter_list,global_body_2_distances,bo,global_body_2_count,
+                               force_field.torsion_params_mask,
+                               force_field.cutoff2)
+    #end = time.time()
+    #print("body_4_arrays", end-start)
 
-	#start = time.time()
-	body_h_arrays = [global_hbond_inter_list,
-	 global_hbond_shift_list,
-	 global_hbond_inter_list_mask,
-	 global_hbond_count] = SimulationSystem.create_global_hbond_inter_list(is_periodic,do_minim,
-							   real_atom_count,atom_types,atom_names,
-							   atom_positions,orth_matrix,
-							   distance_matrices,all_shift_comb,
-							   local_body_2_neigh_counts,local_body_2_neigh_list,
-							   global_body_2_inter_list,global_body_2_distances,global_body_2_count,
-							   force_field.nphb,force_field.hbond_params_mask)
-	#end = time.time()
-	#print("body_h_arrays", end-start)
+    #start = time.time()
+    body_h_arrays = [global_hbond_inter_list,
+     global_hbond_shift_list,
+     global_hbond_inter_list_mask,
+     global_hbond_count] = SimulationSystem.create_global_hbond_inter_list(is_periodic,do_minim,
+                               real_atom_count,atom_types,atom_names,
+                               atom_positions,orth_matrix,
+                               distance_matrices,all_shift_comb,
+                               local_body_2_neigh_counts,local_body_2_neigh_list,
+                               global_body_2_inter_list,global_body_2_distances,global_body_2_count,
+                               force_field.nphb,force_field.hbond_params_mask)
+    #end = time.time()
+    #print("body_h_arrays", end-start)
 
-	return [distance_matrices,local_neigh_arrays,body_2_arrays,body_3_arrays,body_4_arrays,body_h_arrays]
+    return [distance_matrices,local_neigh_arrays,body_2_arrays,body_3_arrays,body_4_arrays,body_h_arrays]
 
 
 def print_extra_rmsg_items(systems,folder):
-	with open("{}/new_items.txt".format(folder), 'w') as out_file:
-		out_file.write("RMSG-NEW\n")
-		for s in systems:
-			if s.do_minimization:
-				line = "{} {} {}\n".format(s.name, 1.0, 25.0)
-				out_file.write(line)
-		out_file.write("ENDRMSG-NEW\n")
+    with open("{}/new_items.txt".format(folder), 'w') as out_file:
+        out_file.write("RMSG-NEW\n")
+        for s in systems:
+            if s.do_minimization:
+                line = "{} {} {}\n".format(s.name, 1.0, 25.0)
+                out_file.write(line)
+        out_file.write("ENDRMSG-NEW\n")
 
 
 def align_atom_counts_and_local_neigh(systems,all_type,all_mask,positions,all_body_2_neigh_list):
 
-	for i,s in enumerate(systems):
-		cur_neigh_cnt = s.local_body_2_neigh_list.shape[1]
-		all_body_2_neigh_list[i,:s.num_atoms,:cur_neigh_cnt,:] = s.local_body_2_neigh_list[:s.num_atoms,:cur_neigh_cnt,:]
-		all_body_2_neigh_list[i,s.num_atoms:,:,:2] = -1
-		all_body_2_neigh_list[i, :s.num_atoms,cur_neigh_cnt:,:2] = -1
+    for i,s in enumerate(systems):
+        cur_neigh_cnt = s.local_body_2_neigh_list.shape[1]
+        all_body_2_neigh_list[i,:s.num_atoms,:cur_neigh_cnt,:] = s.local_body_2_neigh_list[:s.num_atoms,:cur_neigh_cnt,:]
+        all_body_2_neigh_list[i,s.num_atoms:,:,:2] = -1
+        all_body_2_neigh_list[i, :s.num_atoms,cur_neigh_cnt:,:2] = -1
 
-		all_mask[i,:s.num_atoms] = s.atom_mask[:s.num_atoms]
+        all_mask[i,:s.num_atoms] = s.atom_mask[:s.num_atoms]
 
-		all_type[i,:s.num_atoms] = s.atom_types[:s.num_atoms]
-		all_type[i,s.num_atoms:] = -1
+        all_type[i,:s.num_atoms] = s.atom_types[:s.num_atoms]
+        all_type[i,s.num_atoms:] = -1
 
-		positions[i,:s.num_atoms,:] = s.atom_positions[:s.num_atoms,:]
-		diff = positions.shape[1] - s.num_atoms
-		cur = onp.array([10000,10000,10000])
-		incr = onp.array([100,100,100])
-		for k in range(diff):
-			cur = cur+incr
-			positions[i,s.num_atoms + k,:] = cur[:]
+        positions[i,:s.num_atoms,:] = s.atom_positions[:s.num_atoms,:]
+        diff = positions.shape[1] - s.num_atoms
+        cur = onp.array([10000,10000,10000])
+        incr = onp.array([100,100,100])
+        for k in range(diff):
+            cur = cur+incr
+            positions[i,s.num_atoms + k,:] = cur[:]
 
 
-		#distance matrices need to be created again
-		#s.distance_matrices = SimulationSystem.create_distance_matrices(s.atom_positions,s.box_size, s.all_shift_comb)
+        #distance matrices need to be created again
+        #s.distance_matrices = SimulationSystem.create_distance_matrices(s.atom_positions,s.box_size, s.all_shift_comb)
 
 def align_body_2_inter_list(systems,all_body_2_list,all_body_2_mask,all_body_2_trip_mask):
-	for i,s in enumerate(systems):
-		cur_count = s.global_body_2_count
+    for i,s in enumerate(systems):
+        cur_count = s.global_body_2_count
 
-		all_body_2_list[i,:cur_count,:] = s.global_body_2_inter_list[:cur_count,:]
-		all_body_2_list[i,cur_count:,:4] = [-1,-1,-1,-1]
-		all_body_2_mask[i,:cur_count] = s.global_body_2_inter_list_mask[:cur_count]
-		all_body_2_trip_mask[i,:cur_count] = s.triple_bond_body_2_mask[:cur_count]
+        all_body_2_list[i,:cur_count,:] = s.global_body_2_inter_list[:cur_count,:]
+        all_body_2_list[i,cur_count:,:4] = [-1,-1,-1,-1]
+        all_body_2_mask[i,:cur_count] = s.global_body_2_inter_list_mask[:cur_count]
+        all_body_2_trip_mask[i,:cur_count] = s.triple_bond_body_2_mask[:cur_count]
 
 
 def align_body_3_inter_list(systems,all_body_3_list,all_body_3_mask,all_body_3_shift):
-	for i,s in enumerate(systems):
-		cur_count = s.global_body_3_count
+    for i,s in enumerate(systems):
+        cur_count = s.global_body_3_count
 
-		all_body_3_list[i,:cur_count,:] = s.global_body_3_inter_list[:cur_count,:]
-		all_body_3_list[i,cur_count:,:] = -1
-		all_body_3_mask[i,:cur_count] = s.global_body_3_inter_list_mask[:cur_count]
-		all_body_3_shift[i,:cur_count,:] = s.global_body_3_inter_shift_map[:cur_count,:]
+        all_body_3_list[i,:cur_count,:] = s.global_body_3_inter_list[:cur_count,:]
+        all_body_3_list[i,cur_count:,:] = -1
+        all_body_3_mask[i,:cur_count] = s.global_body_3_inter_list_mask[:cur_count]
+        all_body_3_shift[i,:cur_count,:] = s.global_body_3_inter_shift_map[:cur_count,:]
 
 def align_body_4_inter_list(systems,all_body_4_list,all_body_4_mask,all_body_4_shift):
-	for i,s in enumerate(systems):
-		cur_count = s.global_body_4_count
+    for i,s in enumerate(systems):
+        cur_count = s.global_body_4_count
 
-		all_body_4_list[i,:cur_count,:] = s.global_body_4_inter_list[:cur_count,:]
-		all_body_4_list[i,cur_count:,:] = -1
-		all_body_4_mask[i,:cur_count] = s.global_body_4_inter_list_mask[:cur_count]
-		all_body_4_shift[i,:cur_count,:] = s.global_body_4_inter_shift[:cur_count,:]
+        all_body_4_list[i,:cur_count,:] = s.global_body_4_inter_list[:cur_count,:]
+        all_body_4_list[i,cur_count:,:] = -1
+        all_body_4_mask[i,:cur_count] = s.global_body_4_inter_list_mask[:cur_count]
+        all_body_4_shift[i,:cur_count,:] = s.global_body_4_inter_shift[:cur_count,:]
 
 
 def align_hbond_inter_list(systems,all_hbond_list,all_hbond_mask,all_hbond_shift):
-	for i,s in enumerate(systems):
-		cur_count = s.global_hbond_count
+    for i,s in enumerate(systems):
+        cur_count = s.global_hbond_count
 
-		all_hbond_list[i,:cur_count,:] = s.global_hbond_inter_list[:cur_count,:]
-		all_hbond_list[i,cur_count:,:] = -1
-		all_hbond_mask[i,:cur_count] = s.global_hbond_inter_list_mask[:cur_count]
-		all_hbond_shift[i,:cur_count,:] = s.global_hbond_shift_list[:cur_count,:]
+        all_hbond_list[i,:cur_count,:] = s.global_hbond_inter_list[:cur_count,:]
+        all_hbond_list[i,cur_count:,:] = -1
+        all_hbond_mask[i,:cur_count] = s.global_hbond_inter_list_mask[:cur_count]
+        all_hbond_shift[i,:cur_count,:] = s.global_hbond_shift_list[:cur_count,:]
 
 
 def align_all_shift_combinations(systems, shift_combs):
-	for i,s in enumerate(systems):
-		cur_len = s.all_shift_comb.shape[0]
-		shift_combs[i,:cur_len,:] = s.all_shift_comb[:cur_len,:]
-		shift_combs[i, cur_len:,:] = 999 # so that all the values will be truncated
-	# distance matrices will be recreated in align_atom_counts_and_local_neigh
+    for i,s in enumerate(systems):
+        cur_len = s.all_shift_comb.shape[0]
+        shift_combs[i,:cur_len,:] = s.all_shift_comb[:cur_len,:]
+        shift_combs[i, cur_len:,:] = 999 # so that all the values will be truncated
+    # distance matrices will be recreated in align_atom_counts_and_local_neigh
 
 def cluster_systems_for_aligning(systems,num_cuts=5,max_iterations=100,rep_count=20, print_mode=True):
-	from modified_kmeans import modified_kmeans
+    from modified_kmeans import modified_kmeans
 
-	# from size arrays for clustering
+    # from size arrays for clustering
 
-	labels,min_centr,min_counts,min_cost = modified_kmeans(systems,k=num_cuts,max_iterations=max_iterations, rep_count=rep_count, print_mode=print_mode)
+    labels,min_centr,min_counts,min_cost = modified_kmeans(systems,k=num_cuts,max_iterations=max_iterations, rep_count=rep_count, print_mode=print_mode)
 
-	all_cut_indices = [[] for i in range(num_cuts)]
-	for i,s in enumerate(systems):
-		label = labels[i]
-		all_cut_indices[label].append(i)
+    all_cut_indices = [[] for i in range(num_cuts)]
+    for i,s in enumerate(systems):
+        label = labels[i]
+        all_cut_indices[label].append(i)
 
-	globally_sorted_indices = []
-	for l in all_cut_indices:
-		for ind in l:
-			globally_sorted_indices.append(ind)
+    globally_sorted_indices = []
+    for l in all_cut_indices:
+        for ind in l:
+            globally_sorted_indices.append(ind)
 
 
-	return all_cut_indices, globally_sorted_indices, min_cost
+    return all_cut_indices, globally_sorted_indices, min_cost
 
 def calculate_max_counts(systems):
-	cur_max_dict = dict()
-	list_max_atom_cnt = []
-	list_max_neigh_cnt = []
-	list_max_shift_cnt = []
-	list_max_body_2_cnt = []
-	list_max_body_3_cnt = []
-	list_max_body_4_cnt = []
-	list_max_hbond_cnt = []
+    cur_max_dict = dict()
+    list_max_atom_cnt = []
+    list_max_neigh_cnt = []
+    list_max_shift_cnt = []
+    list_max_body_2_cnt = []
+    list_max_body_3_cnt = []
+    list_max_body_4_cnt = []
+    list_max_hbond_cnt = []
 
-	atom_counts = [s.num_atoms for s in systems]
-	max_num_atoms = max(atom_counts)
-	#list_max_atom_cnt.append(max_num_atoms)
+    atom_counts = [s.num_atoms for s in systems]
+    max_num_atoms = max(atom_counts)
+    #list_max_atom_cnt.append(max_num_atoms)
 
-	neigh_counts = [s.local_body_2_neigh_list.shape[1] for s in systems]
-	max_neigh_count = max(neigh_counts)
-	#list_max_neigh_cnt.append(max_neigh_count)
+    neigh_counts = [s.local_body_2_neigh_list.shape[1] for s in systems]
+    max_neigh_count = max(neigh_counts)
+    #list_max_neigh_cnt.append(max_neigh_count)
 
-	len_shift_combs = [len(s.all_shift_comb) for s in systems]
-	max_len_shift_count = max(len_shift_combs)
-	#list_max_shift_cnt.append(max_len_shift_count)
+    len_shift_combs = [len(s.all_shift_comb) for s in systems]
+    max_len_shift_count = max(len_shift_combs)
+    #list_max_shift_cnt.append(max_len_shift_count)
 
-	body_2_counts = [s.global_body_2_count for s in systems]
-	max_body_2_count = max(body_2_counts)
-	#list_max_body_2_cnt.append(max_body_2_count)
+    body_2_counts = [s.global_body_2_count for s in systems]
+    max_body_2_count = max(body_2_counts)
+    #list_max_body_2_cnt.append(max_body_2_count)
 
-	body_3_counts = [s.global_body_3_count for s in systems]
-	max_body_3_count = max(body_3_counts)
-	#list_max_body_3_cnt.append(max_body_3_count)
+    body_3_counts = [s.global_body_3_count for s in systems]
+    max_body_3_count = max(body_3_counts)
+    #list_max_body_3_cnt.append(max_body_3_count)
 
-	body_4_counts = [s.global_body_4_count for s in systems]
-	max_body_4_count = max(body_4_counts)
-	#list_max_body_4_cnt.append(max_body_4_count)
+    body_4_counts = [s.global_body_4_count for s in systems]
+    max_body_4_count = max(body_4_counts)
+    #list_max_body_4_cnt.append(max_body_4_count)
 
-	hbond_counts = [s.global_hbond_count for s in systems]
-	max_hbond_count = max(hbond_counts)
-	#list_max_hbond_cnt.append(max_hbond_count)
+    hbond_counts = [s.global_hbond_count for s in systems]
+    max_hbond_count = max(hbond_counts)
+    #list_max_hbond_cnt.append(max_hbond_count)
 
-	return max_num_atoms,max_len_shift_count, max_neigh_count,max_body_2_count,max_body_3_count,max_body_4_count,max_hbond_count
+    return max_num_atoms,max_len_shift_count, max_neigh_count,max_body_2_count,max_body_3_count,max_body_4_count,max_hbond_count
 
 
 
 def align_system_inter_lists(systems, all_cut_indices,list_prev_max_dict=None):
 
-	list_all_type = []
-	list_all_mask = []
-	list_all_total_charge = []
-	list_all_dist_mat = []
-	list_all_body_2_list = []
-	list_all_body_2_map = []
-	list_all_body_2_neigh_list = []
-	list_all_body_2_trip_mask = []
-	list_all_body_3_list = []
-	list_all_body_3_map = []
-	list_all_body_3_shift = []
-	list_all_body_4_list = []
-	list_all_body_4_map = []
-	list_all_body_4_shift = []
-	list_all_hbond_list = []
-	list_all_hbond_mask = []
-	list_all_hbond_shift = []
-	list_real_atom_counts = []
-	list_orth_matrices = []
-	list_positions = []
-	list_is_periodic = []
-	list_all_shift_combs = []
-	list_bond_rest = []
-	list_angle_rest = []
-	list_torsion_rest = []
-	list_do_minim = []
-	list_num_minim_steps = []
+    list_all_type = []
+    list_all_mask = []
+    list_all_total_charge = []
+    list_all_dist_mat = []
+    list_all_body_2_list = []
+    list_all_body_2_map = []
+    list_all_body_2_neigh_list = []
+    list_all_body_2_trip_mask = []
+    list_all_body_3_list = []
+    list_all_body_3_map = []
+    list_all_body_3_shift = []
+    list_all_body_4_list = []
+    list_all_body_4_map = []
+    list_all_body_4_shift = []
+    list_all_hbond_list = []
+    list_all_hbond_mask = []
+    list_all_hbond_shift = []
+    list_real_atom_counts = []
+    list_orth_matrices = []
+    list_positions = []
+    list_is_periodic = []
+    list_all_shift_combs = []
+    list_bond_rest = []
+    list_angle_rest = []
+    list_torsion_rest = []
+    list_do_minim = []
+    list_num_minim_steps = []
 
 
-	cur_max_dict = dict()
-	list_max_atom_cnt = []
-	list_max_neigh_cnt = []
-	list_max_shift_cnt = []
-	list_max_body_2_cnt = []
-	list_max_body_3_cnt = []
-	list_max_body_4_cnt = []
-	list_max_hbond_cnt = []
+    cur_max_dict = dict()
+    list_max_atom_cnt = []
+    list_max_neigh_cnt = []
+    list_max_shift_cnt = []
+    list_max_body_2_cnt = []
+    list_max_body_3_cnt = []
+    list_max_body_4_cnt = []
+    list_max_hbond_cnt = []
 
-	num_cuts = len(all_cut_indices)
-	cur_max_dict['max_atom_cnt'] = list_max_atom_cnt
-	cur_max_dict['max_neigh_cnt'] = list_max_neigh_cnt
-	cur_max_dict['max_shift_cnt'] = list_max_shift_cnt
-	cur_max_dict['max_body_2_cnt'] = list_max_body_2_cnt
-	cur_max_dict['max_body_3_cnt'] = list_max_body_3_cnt
-	cur_max_dict['max_body_4_cnt'] = list_max_body_4_cnt
-	cur_max_dict['max_hbond_cnt'] = list_max_hbond_cnt
-	for c in range(num_cuts):
+    num_cuts = len(all_cut_indices)
+    cur_max_dict['max_atom_cnt'] = list_max_atom_cnt
+    cur_max_dict['max_neigh_cnt'] = list_max_neigh_cnt
+    cur_max_dict['max_shift_cnt'] = list_max_shift_cnt
+    cur_max_dict['max_body_2_cnt'] = list_max_body_2_cnt
+    cur_max_dict['max_body_3_cnt'] = list_max_body_3_cnt
+    cur_max_dict['max_body_4_cnt'] = list_max_body_4_cnt
+    cur_max_dict['max_hbond_cnt'] = list_max_hbond_cnt
+    for c in range(num_cuts):
 
-		selected_sys = [systems[i] for i in all_cut_indices[c]]
-		size = len(selected_sys)
-		# align atom count
-		atom_counts = [s.num_atoms for s in selected_sys]
-		max_num_atoms = max(atom_counts)
+        selected_sys = [systems[i] for i in all_cut_indices[c]]
+        size = len(selected_sys)
+        # align atom count
+        atom_counts = [s.num_atoms for s in selected_sys]
+        max_num_atoms = max(atom_counts)
 
-		if list_prev_max_dict != None and 'max_atom_cnt' in list_prev_max_dict:
-			if max_num_atoms > list_prev_max_dict['max_atom_cnt'][c]:
-				print('[WARNING] max_num_atoms_cur > max_num_atoms_prev')
-			else:
-				max_num_atoms = list_prev_max_dict['max_atom_cnt'][c]
+        if list_prev_max_dict != None and 'max_atom_cnt' in list_prev_max_dict:
+            if max_num_atoms > list_prev_max_dict['max_atom_cnt'][c]:
+                print('[WARNING] max_num_atoms_cur > max_num_atoms_prev')
+            else:
+                max_num_atoms = list_prev_max_dict['max_atom_cnt'][c]
 
-		list_max_atom_cnt.append(max_num_atoms)
+        list_max_atom_cnt.append(max_num_atoms)
 
-		neigh_counts = [s.local_body_2_neigh_list.shape[1] for s in selected_sys]
-		max_neigh_count = max(neigh_counts)
-		list_max_neigh_cnt.append(max_neigh_count)
+        neigh_counts = [s.local_body_2_neigh_list.shape[1] for s in selected_sys]
+        max_neigh_count = max(neigh_counts)
+        list_max_neigh_cnt.append(max_neigh_count)
 
-		if list_prev_max_dict != None and 'max_neigh_cnt' in list_prev_max_dict:
-			if max_neigh_count > list_prev_max_dict['max_neigh_cnt'][c]:
-				print('[WARNING] max_neigh_cnt_cur > max_neigh_cnt_prev')
-				list_prev_max_dict['max_neigh_cnt'][c] = max_neigh_count
-			else:
-				max_neigh_count = list_prev_max_dict['max_neigh_cnt'][c]
+        if list_prev_max_dict != None and 'max_neigh_cnt' in list_prev_max_dict:
+            if max_neigh_count > list_prev_max_dict['max_neigh_cnt'][c]:
+                print('[WARNING] max_neigh_cnt_cur > max_neigh_cnt_prev')
+                list_prev_max_dict['max_neigh_cnt'][c] = max_neigh_count
+            else:
+                max_neigh_count = list_prev_max_dict['max_neigh_cnt'][c]
 
-		len_shift_combs = [len(s.all_shift_comb) for s in selected_sys]
-		max_len_shift_comb = max(len_shift_combs)
+        len_shift_combs = [len(s.all_shift_comb) for s in selected_sys]
+        max_len_shift_comb = max(len_shift_combs)
 
-		if list_prev_max_dict != None and 'max_shift_cnt' in list_prev_max_dict:
-			if max_len_shift_comb > list_prev_max_dict['max_shift_cnt'][c]:
-				print('[WARNING] max_shift_cnt_cur > max_shift_cnt_prev')
-			else:
-				max_len_shift_comb = list_prev_max_dict['max_shift_cnt'][c]
+        if list_prev_max_dict != None and 'max_shift_cnt' in list_prev_max_dict:
+            if max_len_shift_comb > list_prev_max_dict['max_shift_cnt'][c]:
+                print('[WARNING] max_shift_cnt_cur > max_shift_cnt_prev')
+            else:
+                max_len_shift_comb = list_prev_max_dict['max_shift_cnt'][c]
 
-		list_max_shift_cnt.append(max_len_shift_comb)
-		#allocate memory
-		shift_combs = onp.zeros(shape=(size, max_len_shift_comb, 3), dtype=onp.int8)
-		align_all_shift_combinations(selected_sys,shift_combs)
+        list_max_shift_cnt.append(max_len_shift_comb)
+        #allocate memory
+        shift_combs = onp.zeros(shape=(size, max_len_shift_comb, 3), dtype=onp.int8)
+        align_all_shift_combinations(selected_sys,shift_combs)
 
-		all_type = onp.zeros(shape=(size, max_num_atoms), dtype=onp.int32)
-		all_mask = onp.zeros(shape=(size, max_num_atoms), dtype=onp.bool)
-		positions = onp.zeros(shape=(size, max_num_atoms, 3), dtype=onp.float32)
-		all_body_2_neigh_list = onp.zeros(shape=(size, max_num_atoms, max_neigh_count,5), dtype=onp.int32)
+        all_type = onp.zeros(shape=(size, max_num_atoms), dtype=onp.int32)
+        all_mask = onp.zeros(shape=(size, max_num_atoms), dtype=onp.bool)
+        positions = onp.zeros(shape=(size, max_num_atoms, 3), dtype=onp.float32)
+        all_body_2_neigh_list = onp.zeros(shape=(size, max_num_atoms, max_neigh_count,5), dtype=onp.int32)
 
-		align_atom_counts_and_local_neigh(selected_sys,all_type,all_mask,positions,all_body_2_neigh_list)
+        align_atom_counts_and_local_neigh(selected_sys,all_type,all_mask,positions,all_body_2_neigh_list)
 
-		# align 2-body
-		body_2_counts = [s.global_body_2_count for s in selected_sys]
-		max_body_2_count = max(body_2_counts)
+        # align 2-body
+        body_2_counts = [s.global_body_2_count for s in selected_sys]
+        max_body_2_count = max(body_2_counts)
 
-		if list_prev_max_dict != None and 'max_body_2_cnt' in list_prev_max_dict:
-			if max_body_2_count > list_prev_max_dict['max_body_2_cnt'][c]:
-				list_prev_max_dict['max_body_2_cnt'][c] = max_body_2_count
-				print('[WARNING] max_body_2_cnt_cur > max_body_2_cnt_prev')
-			else:
-				max_body_2_count = list_prev_max_dict['max_body_2_cnt'][c]
+        if list_prev_max_dict != None and 'max_body_2_cnt' in list_prev_max_dict:
+            if max_body_2_count > list_prev_max_dict['max_body_2_cnt'][c]:
+                list_prev_max_dict['max_body_2_cnt'][c] = max_body_2_count
+                print('[WARNING] max_body_2_cnt_cur > max_body_2_cnt_prev')
+            else:
+                max_body_2_count = list_prev_max_dict['max_body_2_cnt'][c]
 
-		list_max_body_2_cnt.append(max_body_2_count)
+        list_max_body_2_cnt.append(max_body_2_count)
 
-		all_body_2_list = onp.zeros(shape=(size,max_body_2_count,7), dtype=onp.int32)
-		all_body_2_mask = onp.zeros(shape=(size,max_body_2_count), dtype=onp.bool)
-		all_body_2_trip_mask = onp.zeros(shape=(size,max_body_2_count), dtype=onp.bool)
+        all_body_2_list = onp.zeros(shape=(size,max_body_2_count,7), dtype=onp.int32)
+        all_body_2_mask = onp.zeros(shape=(size,max_body_2_count), dtype=onp.bool)
+        all_body_2_trip_mask = onp.zeros(shape=(size,max_body_2_count), dtype=onp.bool)
 
-		align_body_2_inter_list(selected_sys,all_body_2_list,all_body_2_mask,all_body_2_trip_mask)
+        align_body_2_inter_list(selected_sys,all_body_2_list,all_body_2_mask,all_body_2_trip_mask)
 
-		# align 3-body
-		body_3_counts = [s.global_body_3_count for s in selected_sys]
-		max_body_3_count = max(body_3_counts)
+        # align 3-body
+        body_3_counts = [s.global_body_3_count for s in selected_sys]
+        max_body_3_count = max(body_3_counts)
 
-		if list_prev_max_dict != None and 'max_body_3_cnt' in list_prev_max_dict:
-			if max_body_3_count > list_prev_max_dict['max_body_3_cnt'][c]:
-				print('[WARNING] max_body_3_cnt_cur > max_body_3_cnt_prev')
-				list_prev_max_dict['max_body_3_cnt'][c] = max_body_3_count
-			else:
-				max_body_3_count = list_prev_max_dict['max_body_3_cnt'][c]
+        if list_prev_max_dict != None and 'max_body_3_cnt' in list_prev_max_dict:
+            if max_body_3_count > list_prev_max_dict['max_body_3_cnt'][c]:
+                print('[WARNING] max_body_3_cnt_cur > max_body_3_cnt_prev')
+                list_prev_max_dict['max_body_3_cnt'][c] = max_body_3_count
+            else:
+                max_body_3_count = list_prev_max_dict['max_body_3_cnt'][c]
 
-		list_max_body_3_cnt.append(max_body_3_count)
+        list_max_body_3_cnt.append(max_body_3_count)
 
-		all_body_3_list = onp.zeros(shape=(size,max_body_3_count,5), dtype=onp.int32)
-		all_body_3_mask = onp.zeros(shape=(size,max_body_3_count), dtype=onp.bool)
-		all_body_3_shift = onp.zeros(shape=(size,max_body_3_count,2), dtype=onp.bool)
+        all_body_3_list = onp.zeros(shape=(size,max_body_3_count,5), dtype=onp.int32)
+        all_body_3_mask = onp.zeros(shape=(size,max_body_3_count), dtype=onp.bool)
+        all_body_3_shift = onp.zeros(shape=(size,max_body_3_count,2), dtype=onp.bool)
 
-		align_body_3_inter_list(selected_sys,all_body_3_list,all_body_3_mask,all_body_3_shift)
-		# align 4-body
-		body_4_counts = [s.global_body_4_count for s in selected_sys]
-		max_body_4_count = max(body_4_counts)
+        align_body_3_inter_list(selected_sys,all_body_3_list,all_body_3_mask,all_body_3_shift)
+        # align 4-body
+        body_4_counts = [s.global_body_4_count for s in selected_sys]
+        max_body_4_count = max(body_4_counts)
 
-		if list_prev_max_dict != None and 'max_body_4_cnt' in list_prev_max_dict:
-			if max_body_4_count > list_prev_max_dict['max_body_4_cnt'][c]:
-				print('[WARNING] max_body_4_cnt_cur > max_body_4_cnt_prev')
-				list_prev_max_dict['max_body_4_cnt'][c] = max_body_4_count
-			else:
-				max_body_4_count = list_prev_max_dict['max_body_4_cnt'][c]
-
-
-		list_max_body_4_cnt.append(max_body_4_count)
-
-		all_body_4_list = onp.zeros(shape=(size,max_body_4_count,7), dtype=onp.int32)
-		all_body_4_mask = onp.zeros(shape=(size,max_body_4_count), dtype=onp.bool)
-		all_body_4_shift = onp.zeros(shape=(size,max_body_4_count,12), dtype=onp.int8)
-
-		align_body_4_inter_list(selected_sys,all_body_4_list,all_body_4_mask,all_body_4_shift)
-
-		hbond_counts = [s.global_hbond_count for s in selected_sys]
-		max_hbond_count = max(hbond_counts)
-
-		if list_prev_max_dict != None and 'max_hbond_cnt' in list_prev_max_dict:
-			if max_hbond_count > list_prev_max_dict['max_hbond_cnt'][c]:
-				print('[WARNING] max_hbond_cnt_cur > max_hbond_cnt_prev')
-				list_prev_max_dict['max_hbond_cnt'][c] = max_hbond_count
-			else:
-				max_hbond_count = list_prev_max_dict['max_hbond_cnt'][c]
-
-		list_max_hbond_cnt.append(max_hbond_count)
-		all_hbond_list = onp.zeros(shape=(size,max_hbond_count,7), dtype=onp.int32)
-		all_hbond_mask = onp.zeros(shape=(size,max_hbond_count), dtype=onp.bool)
-		all_hbond_shift = onp.zeros(shape=(size,max_hbond_count,6), dtype=onp.int8)
-		align_hbond_inter_list(selected_sys,all_hbond_list,all_hbond_mask,all_hbond_shift)
-
-		orth_matrices = onp.array([s.orth_matrix for s in selected_sys])
-		is_periodic = onp.array([s.is_periodic for s in selected_sys])
-		bond_rest = onp.array([s.bond_restraints for s in selected_sys])
-		angle_rest = onp.array([s.angle_restraints for s in selected_sys])
-		torsion_rest = onp.array([s.torsion_restraints for s in selected_sys])
-		do_minim = onp.array([s.do_minimization for s in selected_sys])
-		minim_steps = onp.array([s.num_min_steps for s in selected_sys])
-
-		counts = onp.array([s.real_atom_count for s in selected_sys])
-
-		all_total_charge = onp.array([s.total_charge for s in selected_sys])
-
-		list_all_type.append(all_type)
-		list_all_mask.append(all_mask)
-		list_all_total_charge.append(all_total_charge)
-		#list_all_dist_mat.append(all_dist_mat)
-		list_all_body_2_list.append(all_body_2_list)
-		list_all_body_2_map.append(all_body_2_mask)
-		list_all_body_2_neigh_list.append(all_body_2_neigh_list)
-		list_all_body_2_trip_mask.append(all_body_2_trip_mask)
-		list_all_body_3_list.append(all_body_3_list)
-		list_all_body_3_map.append(all_body_3_mask)
-		list_all_body_3_shift.append(all_body_3_shift)
-		list_all_body_4_list.append(all_body_4_list)
-		list_all_body_4_map.append(all_body_4_mask)
-		list_all_body_4_shift.append(all_body_4_shift)
-		list_all_hbond_list.append(all_hbond_list)
-		list_all_hbond_mask.append(all_hbond_mask)
-		list_all_hbond_shift.append(all_hbond_shift)
-		list_orth_matrices.append(orth_matrices)
-		list_positions.append(positions)
-		list_is_periodic.append(is_periodic)
-		list_all_shift_combs.append(shift_combs)
-		list_bond_rest.append(bond_rest)
-		list_angle_rest.append(angle_rest)
-		list_torsion_rest.append(torsion_rest)
-		list_do_minim.append(do_minim)
-		list_num_minim_steps.append(minim_steps)
-		list_real_atom_counts.append(counts)
+        if list_prev_max_dict != None and 'max_body_4_cnt' in list_prev_max_dict:
+            if max_body_4_count > list_prev_max_dict['max_body_4_cnt'][c]:
+                print('[WARNING] max_body_4_cnt_cur > max_body_4_cnt_prev')
+                list_prev_max_dict['max_body_4_cnt'][c] = max_body_4_count
+            else:
+                max_body_4_count = list_prev_max_dict['max_body_4_cnt'][c]
 
 
-	cur_max_dict['max_atom_cnt'] = list_max_atom_cnt
-	cur_max_dict['max_neigh_cnt'] = list_max_neigh_cnt
-	cur_max_dict['max_shift_cnt'] = list_max_shift_cnt
-	cur_max_dict['max_body_2_cnt'] = list_max_body_2_cnt
-	cur_max_dict['max_body_3_cnt'] = list_max_body_3_cnt
-	cur_max_dict['max_body_4_cnt'] = list_max_body_4_cnt
-	cur_max_dict['max_hbond_cnt'] = list_max_hbond_cnt
+        list_max_body_4_cnt.append(max_body_4_count)
 
-	return 	[list_all_type,
-			list_all_mask,
-			list_all_total_charge,
-			#list_all_dist_mat,
-			list_all_body_2_list,
-			list_all_body_2_map,
-			list_all_body_2_neigh_list,
-			list_all_body_2_trip_mask,
-			list_all_body_3_list,
-			list_all_body_3_map,
-			list_all_body_3_shift,
-			list_all_body_4_list,
-			list_all_body_4_map,
-			list_all_body_4_shift,
-			list_all_hbond_list,
-			list_all_hbond_mask,
-			list_all_hbond_shift,
-			list_real_atom_counts,
-			list_orth_matrices,
-			list_positions, # should be mutable
-			list_is_periodic,
-			list_all_shift_combs,
-			list_bond_rest,
-			list_angle_rest,
-			list_torsion_rest,
-			list_do_minim,
-			list_num_minim_steps], cur_max_dict
+        all_body_4_list = onp.zeros(shape=(size,max_body_4_count,7), dtype=onp.int32)
+        all_body_4_mask = onp.zeros(shape=(size,max_body_4_count), dtype=onp.bool)
+        all_body_4_shift = onp.zeros(shape=(size,max_body_4_count,12), dtype=onp.int8)
+
+        align_body_4_inter_list(selected_sys,all_body_4_list,all_body_4_mask,all_body_4_shift)
+
+        hbond_counts = [s.global_hbond_count for s in selected_sys]
+        max_hbond_count = max(hbond_counts)
+
+        if list_prev_max_dict != None and 'max_hbond_cnt' in list_prev_max_dict:
+            if max_hbond_count > list_prev_max_dict['max_hbond_cnt'][c]:
+                print('[WARNING] max_hbond_cnt_cur > max_hbond_cnt_prev')
+                list_prev_max_dict['max_hbond_cnt'][c] = max_hbond_count
+            else:
+                max_hbond_count = list_prev_max_dict['max_hbond_cnt'][c]
+
+        list_max_hbond_cnt.append(max_hbond_count)
+        all_hbond_list = onp.zeros(shape=(size,max_hbond_count,7), dtype=onp.int32)
+        all_hbond_mask = onp.zeros(shape=(size,max_hbond_count), dtype=onp.bool)
+        all_hbond_shift = onp.zeros(shape=(size,max_hbond_count,6), dtype=onp.int8)
+        align_hbond_inter_list(selected_sys,all_hbond_list,all_hbond_mask,all_hbond_shift)
+
+        orth_matrices = onp.array([s.orth_matrix for s in selected_sys])
+        is_periodic = onp.array([s.is_periodic for s in selected_sys])
+        bond_rest = onp.array([s.bond_restraints for s in selected_sys])
+        angle_rest = onp.array([s.angle_restraints for s in selected_sys])
+        torsion_rest = onp.array([s.torsion_restraints for s in selected_sys])
+        do_minim = onp.array([s.do_minimization for s in selected_sys])
+        minim_steps = onp.array([s.num_min_steps for s in selected_sys])
+
+        counts = onp.array([s.real_atom_count for s in selected_sys])
+
+        all_total_charge = onp.array([s.total_charge for s in selected_sys])
+
+        list_all_type.append(all_type)
+        list_all_mask.append(all_mask)
+        list_all_total_charge.append(all_total_charge)
+        #list_all_dist_mat.append(all_dist_mat)
+        list_all_body_2_list.append(all_body_2_list)
+        list_all_body_2_map.append(all_body_2_mask)
+        list_all_body_2_neigh_list.append(all_body_2_neigh_list)
+        list_all_body_2_trip_mask.append(all_body_2_trip_mask)
+        list_all_body_3_list.append(all_body_3_list)
+        list_all_body_3_map.append(all_body_3_mask)
+        list_all_body_3_shift.append(all_body_3_shift)
+        list_all_body_4_list.append(all_body_4_list)
+        list_all_body_4_map.append(all_body_4_mask)
+        list_all_body_4_shift.append(all_body_4_shift)
+        list_all_hbond_list.append(all_hbond_list)
+        list_all_hbond_mask.append(all_hbond_mask)
+        list_all_hbond_shift.append(all_hbond_shift)
+        list_orth_matrices.append(orth_matrices)
+        list_positions.append(positions)
+        list_is_periodic.append(is_periodic)
+        list_all_shift_combs.append(shift_combs)
+        list_bond_rest.append(bond_rest)
+        list_angle_rest.append(angle_rest)
+        list_torsion_rest.append(torsion_rest)
+        list_do_minim.append(do_minim)
+        list_num_minim_steps.append(minim_steps)
+        list_real_atom_counts.append(counts)
+
+
+    cur_max_dict['max_atom_cnt'] = list_max_atom_cnt
+    cur_max_dict['max_neigh_cnt'] = list_max_neigh_cnt
+    cur_max_dict['max_shift_cnt'] = list_max_shift_cnt
+    cur_max_dict['max_body_2_cnt'] = list_max_body_2_cnt
+    cur_max_dict['max_body_3_cnt'] = list_max_body_3_cnt
+    cur_max_dict['max_body_4_cnt'] = list_max_body_4_cnt
+    cur_max_dict['max_hbond_cnt'] = list_max_hbond_cnt
+
+    return     [list_all_type,
+            list_all_mask,
+            list_all_total_charge,
+            #list_all_dist_mat,
+            list_all_body_2_list,
+            list_all_body_2_map,
+            list_all_body_2_neigh_list,
+            list_all_body_2_trip_mask,
+            list_all_body_3_list,
+            list_all_body_3_map,
+            list_all_body_3_shift,
+            list_all_body_4_list,
+            list_all_body_4_map,
+            list_all_body_4_shift,
+            list_all_hbond_list,
+            list_all_hbond_mask,
+            list_all_hbond_shift,
+            list_real_atom_counts,
+            list_orth_matrices,
+            list_positions, # should be mutable
+            list_is_periodic,
+            list_all_shift_combs,
+            list_bond_rest,
+            list_angle_rest,
+            list_torsion_rest,
+            list_do_minim,
+            list_num_minim_steps], cur_max_dict
 
 
 def gradient_list_nan_detection(grads, print_extra=True):
-	total = 0
-	for i,g in enumerate(grads):
-		count = np.sum(np.isnan(g))
-		count_inf = np.sum(np.isinf(g))
-		maxx = np.max(g)
-		minn =np.min(g)
-		total = total + count
-		if print_extra and count > 0 or count_inf > 0:
-			print("Nan detected at index: {}, count: {}, count_inf: {}, shape:{}, min: {}, max:{}".format(i,count,count_inf, g.shape, minn, maxx))
-	print('Total:{}'.format(total))
+    total = 0
+    for i,g in enumerate(grads):
+        count = np.sum(np.isnan(g))
+        count_inf = np.sum(np.isinf(g))
+        maxx = np.max(g)
+        minn =np.min(g)
+        total = total + count
+        if print_extra and count > 0 or count_inf > 0:
+            print("Nan detected at index: {}, count: {}, count_inf: {}, shape:{}, min: {}, max:{}".format(i,count,count_inf, g.shape, minn, maxx))
+    print('Total:{}'.format(total))
 
 
 def read_charges(filename):
@@ -1042,194 +1042,194 @@ def read_train_set(train_in):
     return training_items,training_items_str
 
 def structure_energy_training_data(name_dict, training_items):
-	import copy
-	max_len = 5
+    import copy
+    max_len = 5
 
-	all_weights = []
-	all_energy_vals = []
+    all_weights = []
+    all_energy_vals = []
 
-	sys_list_of_lists = []
-	multip_list_of_lists = []
-	for i, item in enumerate(training_items):
+    sys_list_of_lists = []
+    multip_list_of_lists = []
+    for i, item in enumerate(training_items):
 
-		w, name_list, multiplier_list, energy = item
-		# deep copy not to affect the orig. data structures
-		multiplier_list = copy.deepcopy(multiplier_list)
-		index_list = []
-		new_energy = energy
-		exist = True
-		for multip,name in zip(multiplier_list,name_list):
-			if name not in name_dict:
-				exist = False
-				print("{} does not exist in the geo file, skipping!", name)
-				break
-		if exist:
-			for multip,name in zip(multiplier_list,name_list):
-				ind = name_dict[name]
+        w, name_list, multiplier_list, energy = item
+        # deep copy not to affect the orig. data structures
+        multiplier_list = copy.deepcopy(multiplier_list)
+        index_list = []
+        new_energy = energy
+        exist = True
+        for multip,name in zip(multiplier_list,name_list):
+            if name not in name_dict:
+                exist = False
+                print("{} does not exist in the geo file, skipping!", name)
+                break
+        if exist:
+            for multip,name in zip(multiplier_list,name_list):
+                ind = name_dict[name]
 
 
-				index_list.append(ind)
-				# just to have fixed size length, filler ones will be zeroed out
-			if len(index_list) <= max_len:
-				cur_len = len(index_list)
-				for _ in range(max_len - cur_len):
-					index_list.append(0)
-					multiplier_list.append(0)
-				sys_list_of_lists.append(index_list)
-				multip_list_of_lists.append(multiplier_list)
-			all_weights.append(w)
-			all_energy_vals.append(new_energy)
-	return onp.array(sys_list_of_lists,dtype=onp.int32), onp.array(multip_list_of_lists,dtype=TYPE), onp.array(all_weights,dtype=TYPE), onp.array(all_energy_vals,dtype=TYPE)
+                index_list.append(ind)
+                # just to have fixed size length, filler ones will be zeroed out
+            if len(index_list) <= max_len:
+                cur_len = len(index_list)
+                for _ in range(max_len - cur_len):
+                    index_list.append(0)
+                    multiplier_list.append(0)
+                sys_list_of_lists.append(index_list)
+                multip_list_of_lists.append(multiplier_list)
+            all_weights.append(w)
+            all_energy_vals.append(new_energy)
+    return onp.array(sys_list_of_lists,dtype=onp.int32), onp.array(multip_list_of_lists,dtype=TYPE), onp.array(all_weights,dtype=TYPE), onp.array(all_energy_vals,dtype=TYPE)
 
 def structure_charge_training_data(name_dict,training_items):
-	all_weights = []
-	all_charge_vals = []
+    all_weights = []
+    all_charge_vals = []
 
-	sys_index_list = []
-	atom_index_list = []
-	for i, item in enumerate(training_items):
-		name,weight,atom_index,charge = item
-		if name in name_dict:
-			ind = name_dict[name]
-		else:
-			print("{} does not exist in the geo file, skipping!", name)
-			continue
-		sys_index_list.append(ind)
-		all_weights.append(weight)
-		atom_index_list.append(atom_index - 1)
-		all_charge_vals.append(charge)
+    sys_index_list = []
+    atom_index_list = []
+    for i, item in enumerate(training_items):
+        name,weight,atom_index,charge = item
+        if name in name_dict:
+            ind = name_dict[name]
+        else:
+            print("{} does not exist in the geo file, skipping!", name)
+            continue
+        sys_index_list.append(ind)
+        all_weights.append(weight)
+        atom_index_list.append(atom_index - 1)
+        all_charge_vals.append(charge)
 
-	return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_charge_vals,dtype=TYPE)
+    return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_charge_vals,dtype=TYPE)
 
 def structure_geo2_training_data(name_dict,training_items):
-	all_weights = []
-	all_target_vals = []
-	sys_index_list = []
-	atom_index_list = []
-	for i, item in enumerate(training_items):
-		name,weight,atom_index1,atom_index2,target = item
-		if name in name_dict:
-			ind = name_dict[name]
-		else:
-			print("{} does not exist in the geo file, skipping!", name)
-			continue
-		sys_index_list.append(ind)
-		all_weights.append(weight)
-		atom_index_list.append((atom_index1 - 1, atom_index2 - 1))
-		all_target_vals.append(target)
+    all_weights = []
+    all_target_vals = []
+    sys_index_list = []
+    atom_index_list = []
+    for i, item in enumerate(training_items):
+        name,weight,atom_index1,atom_index2,target = item
+        if name in name_dict:
+            ind = name_dict[name]
+        else:
+            print("{} does not exist in the geo file, skipping!", name)
+            continue
+        sys_index_list.append(ind)
+        all_weights.append(weight)
+        atom_index_list.append((atom_index1 - 1, atom_index2 - 1))
+        all_target_vals.append(target)
 
-	return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
+    return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
 
 def structure_geo3_training_data(name_dict,training_items):
-	all_weights = []
-	all_target_vals = []
-	sys_index_list = []
-	atom_index_list = []
-	for i, item in enumerate(training_items):
-		name,weight,atom_index1,atom_index2,atom_index3,target = item
-		if name in name_dict:
-			ind = name_dict[name]
-		else:
-			print("{} does not exist in the geo file, skipping!", name)
-			continue
-		sys_index_list.append(ind)
-		all_weights.append(weight)
-		atom_index_list.append((atom_index1 - 1, atom_index2 - 1,atom_index3 - 1))
-		all_target_vals.append(target)
+    all_weights = []
+    all_target_vals = []
+    sys_index_list = []
+    atom_index_list = []
+    for i, item in enumerate(training_items):
+        name,weight,atom_index1,atom_index2,atom_index3,target = item
+        if name in name_dict:
+            ind = name_dict[name]
+        else:
+            print("{} does not exist in the geo file, skipping!", name)
+            continue
+        sys_index_list.append(ind)
+        all_weights.append(weight)
+        atom_index_list.append((atom_index1 - 1, atom_index2 - 1,atom_index3 - 1))
+        all_target_vals.append(target)
 
-	return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
+    return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
 
 def structure_geo4_training_data(name_dict,training_items):
-	all_weights = []
-	all_target_vals = []
-	sys_index_list = []
-	atom_index_list = []
-	for i, item in enumerate(training_items):
-		name,weight,atom_index1,atom_index2,atom_index3,atom_index4,target = item
-		if name in name_dict:
-			ind = name_dict[name]
-		else:
-			print("{} does not exist in the geo file, skipping!", name)
-			continue
-		sys_index_list.append(ind)
-		all_weights.append(weight)
-		atom_index_list.append((atom_index1 - 1, atom_index2 - 1,atom_index3 - 1,atom_index4 - 1))
-		all_target_vals.append(target)
+    all_weights = []
+    all_target_vals = []
+    sys_index_list = []
+    atom_index_list = []
+    for i, item in enumerate(training_items):
+        name,weight,atom_index1,atom_index2,atom_index3,atom_index4,target = item
+        if name in name_dict:
+            ind = name_dict[name]
+        else:
+            print("{} does not exist in the geo file, skipping!", name)
+            continue
+        sys_index_list.append(ind)
+        all_weights.append(weight)
+        atom_index_list.append((atom_index1 - 1, atom_index2 - 1,atom_index3 - 1,atom_index4 - 1))
+        all_target_vals.append(target)
 
-	return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
+    return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
 
 def structure_geo_RMSG_training_data(name_dict,training_items):
-	sys_index_list = []
-	all_weights = []
-	all_target_vals = []
-	for i, item in enumerate(training_items):
-		name,weight,target = item
-		if name in name_dict:
-			ind = name_dict[name]
-		else:
-			print("{} does not exist in the geo file, skipping!", name)
-			continue
-		sys_index_list.append(ind)
-		all_weights.append(weight)
-		all_target_vals.append(target)
-	return onp.array(sys_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
+    sys_index_list = []
+    all_weights = []
+    all_target_vals = []
+    for i, item in enumerate(training_items):
+        name,weight,target = item
+        if name in name_dict:
+            ind = name_dict[name]
+        else:
+            print("{} does not exist in the geo file, skipping!", name)
+            continue
+        sys_index_list.append(ind)
+        all_weights.append(weight)
+        all_target_vals.append(target)
+    return onp.array(sys_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
 
 def structure_force_training_data(name_dict,training_items):
-	all_weights = []
-	all_target_vals = []
-	sys_index_list = []
-	atom_index_list = []
-	for i, item in enumerate(training_items):
-		name,weight,atom_index,f1,f2,f3 = item
-		if name in name_dict:
-			ind = name_dict[name]
-		else:
-			print("{} does not exist in the geo file, skipping!", name)
-			continue
-		sys_index_list.append(ind)
-		all_weights.append(weight)
-		atom_index_list.append(atom_index-1)
-		all_target_vals.append((f1,f2,f3))
+    all_weights = []
+    all_target_vals = []
+    sys_index_list = []
+    atom_index_list = []
+    for i, item in enumerate(training_items):
+        name,weight,atom_index,f1,f2,f3 = item
+        if name in name_dict:
+            ind = name_dict[name]
+        else:
+            print("{} does not exist in the geo file, skipping!", name)
+            continue
+        sys_index_list.append(ind)
+        all_weights.append(weight)
+        atom_index_list.append(atom_index-1)
+        all_target_vals.append((f1,f2,f3))
 
-	return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
+    return onp.array(sys_index_list,dtype=onp.int32), onp.array(atom_index_list,dtype=onp.int32), onp.array(all_weights,dtype=TYPE), onp.array(all_target_vals,dtype=TYPE)
 
 def structure_training_data(sim_systems, all_training_items):
-	name_dict = {}
-	for i,s in enumerate(sim_systems):
-		name_dict[s.name] = i
+    name_dict = {}
+    for i,s in enumerate(sim_systems):
+        name_dict[s.name] = i
 
-	structured_training_data = dict()
-	if 'ENERGY' in all_training_items and len(all_training_items['ENERGY']) > 0:
-		energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals =  structure_energy_training_data(name_dict, all_training_items['ENERGY'])
-		structured_training_data['ENERGY'] = [energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals]
+    structured_training_data = dict()
+    if 'ENERGY' in all_training_items and len(all_training_items['ENERGY']) > 0:
+        energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals =  structure_energy_training_data(name_dict, all_training_items['ENERGY'])
+        structured_training_data['ENERGY'] = [energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals]
 
-	if 'CHARGE' in all_training_items and len(all_training_items['CHARGE']) > 0:
-		chg_sys_index_list, chg_atom_index_list, chg_all_weights, chg_all_charge_vals = structure_charge_training_data(name_dict,all_training_items['CHARGE'])
-		structured_training_data['CHARGE'] = [chg_sys_index_list, chg_atom_index_list, chg_all_weights, chg_all_charge_vals]
+    if 'CHARGE' in all_training_items and len(all_training_items['CHARGE']) > 0:
+        chg_sys_index_list, chg_atom_index_list, chg_all_weights, chg_all_charge_vals = structure_charge_training_data(name_dict,all_training_items['CHARGE'])
+        structured_training_data['CHARGE'] = [chg_sys_index_list, chg_atom_index_list, chg_all_weights, chg_all_charge_vals]
 
-	if 'GEOMETRY-2' in all_training_items and len(all_training_items['GEOMETRY-2']) > 0:
-		geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals = structure_geo2_training_data(name_dict,all_training_items['GEOMETRY-2'])
-		structured_training_data['GEOMETRY-2'] = [geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals]
+    if 'GEOMETRY-2' in all_training_items and len(all_training_items['GEOMETRY-2']) > 0:
+        geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals = structure_geo2_training_data(name_dict,all_training_items['GEOMETRY-2'])
+        structured_training_data['GEOMETRY-2'] = [geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals]
 
-	if 'GEOMETRY-3' in all_training_items and len(all_training_items['GEOMETRY-3']) > 0:
-		geo3_sys_index_list, geo3_atom_index_list, geo3_all_weights, geo3_all_target_vals = structure_geo3_training_data(name_dict,all_training_items['GEOMETRY-3'])
-		structured_training_data['GEOMETRY-3'] = [geo3_sys_index_list, geo3_atom_index_list, geo3_all_weights, geo3_all_target_vals]
+    if 'GEOMETRY-3' in all_training_items and len(all_training_items['GEOMETRY-3']) > 0:
+        geo3_sys_index_list, geo3_atom_index_list, geo3_all_weights, geo3_all_target_vals = structure_geo3_training_data(name_dict,all_training_items['GEOMETRY-3'])
+        structured_training_data['GEOMETRY-3'] = [geo3_sys_index_list, geo3_atom_index_list, geo3_all_weights, geo3_all_target_vals]
 
-	if 'GEOMETRY-4' in all_training_items and len(all_training_items['GEOMETRY-4']) > 0:
-		geo4_sys_index_list, geo4_atom_index_list, geo4_all_weights, geo4_all_target_vals = structure_geo4_training_data(name_dict,all_training_items['GEOMETRY-4'])
-		structured_training_data['GEOMETRY-4'] = [geo4_sys_index_list, geo4_atom_index_list, geo4_all_weights, geo4_all_target_vals]
+    if 'GEOMETRY-4' in all_training_items and len(all_training_items['GEOMETRY-4']) > 0:
+        geo4_sys_index_list, geo4_atom_index_list, geo4_all_weights, geo4_all_target_vals = structure_geo4_training_data(name_dict,all_training_items['GEOMETRY-4'])
+        structured_training_data['GEOMETRY-4'] = [geo4_sys_index_list, geo4_atom_index_list, geo4_all_weights, geo4_all_target_vals]
 
-	if 'FORCE-RMSG' in all_training_items and len(all_training_items['FORCE-RMSG']) > 0:
-		force_sys_index_list, force_all_weights, force_all_target_vals = structure_geo_RMSG_training_data(name_dict,all_training_items['FORCE-RMSG'])
-		structured_training_data['FORCE-RMSG'] = [force_sys_index_list, force_all_weights, force_all_target_vals]
-	if 'RMSG-NEW' in all_training_items and len(all_training_items['RMSG-NEW']) > 0:
-		force_sys_index_list, force_all_weights, force_all_target_vals = structure_geo_RMSG_training_data(name_dict,all_training_items['RMSG-NEW'])
-		structured_training_data['RMSG-NEW'] = [force_sys_index_list, force_all_weights, force_all_target_vals]
-	if 'FORCE-ATOM' in all_training_items and len(all_training_items['FORCE-ATOM']) > 0:
-		force_sys_index_list, force_atom_index_list, force_all_weights, force_all_target_vals = structure_force_training_data(name_dict,all_training_items['FORCE-ATOM'])
-		structured_training_data['FORCE-ATOM'] = [force_sys_index_list, force_atom_index_list, force_all_weights, force_all_target_vals]
+    if 'FORCE-RMSG' in all_training_items and len(all_training_items['FORCE-RMSG']) > 0:
+        force_sys_index_list, force_all_weights, force_all_target_vals = structure_geo_RMSG_training_data(name_dict,all_training_items['FORCE-RMSG'])
+        structured_training_data['FORCE-RMSG'] = [force_sys_index_list, force_all_weights, force_all_target_vals]
+    if 'RMSG-NEW' in all_training_items and len(all_training_items['RMSG-NEW']) > 0:
+        force_sys_index_list, force_all_weights, force_all_target_vals = structure_geo_RMSG_training_data(name_dict,all_training_items['RMSG-NEW'])
+        structured_training_data['RMSG-NEW'] = [force_sys_index_list, force_all_weights, force_all_target_vals]
+    if 'FORCE-ATOM' in all_training_items and len(all_training_items['FORCE-ATOM']) > 0:
+        force_sys_index_list, force_atom_index_list, force_all_weights, force_all_target_vals = structure_force_training_data(name_dict,all_training_items['FORCE-ATOM'])
+        structured_training_data['FORCE-ATOM'] = [force_sys_index_list, force_atom_index_list, force_all_weights, force_all_target_vals]
 
-	return structured_training_data
+    return structured_training_data
 
 
 
@@ -1826,7 +1826,7 @@ def parse_force_field(force_field_file, cutoff2):
         rsig = float(split_line[5])
         rpi = float(split_line[6])
         rpi2 = float(split_line[7])
-		#TODO: handle the mapping of the "params" later
+        #TODO: handle the mapping of the "params" later
         nodm1 = nodm1 - 1 #index starts from 0
         nodm2 = nodm2 - 1 #index starts from 0
         if nodm1 in MY_ATOM_INDICES and nodm2 in MY_ATOM_INDICES:
@@ -2071,184 +2071,184 @@ def parse_force_field(force_field_file, cutoff2):
     return force_field
 
 def parse_geo_file(geo_file):
-	import copy
-	if not os.path.exists(geo_file):
-		print("Path {} does not exist!".format(geo_file))
-		return []
-	list_systems = []
-	f = open(geo_file,'r')
-	run_str = ''
-	name = ''
-	atoms_positions = []
-	bond_restraints = []
-	angle_restraints = []
-	torsion_restraints = []
-	molcharge_items = []
-	atom_names = []
-	system_str = ''
-	box = []
-	box_angles = []
-	is_periodic = False
-	do_minimization = True
-	max_it = 99999
-	for line in f:
-		if len(line.strip()) > 2:
-			system_str = system_str + line
-		line = line.split('#', 1)[0]
-		if line.strip().startswith('#') or len(line) < 1:
-			continue
-		if line.startswith('END'):
-			#add the filler atoms
-			num_atoms = len(atom_names)
-			new_pos = [10000,10000,10000]
-			incr = [1000,1000,1000]
-			# 1 filler atom needed to use for padded inter.
-			for i in range(1):
-				#TODO: masking things out is better than this way
-				atom_names.append('FILLER')
-				new_pos[0] = new_pos[0] + incr[0]
-				new_pos[1] = new_pos[1] + incr[1]
-				new_pos[2] = new_pos[2] + incr[2]
-				atoms_positions.append(copy.deepcopy(new_pos))
+    import copy
+    if not os.path.exists(geo_file):
+        print("Path {} does not exist!".format(geo_file))
+        return []
+    list_systems = []
+    f = open(geo_file,'r')
+    run_str = ''
+    name = ''
+    atoms_positions = []
+    bond_restraints = []
+    angle_restraints = []
+    torsion_restraints = []
+    molcharge_items = []
+    atom_names = []
+    system_str = ''
+    box = []
+    box_angles = []
+    is_periodic = False
+    do_minimization = True
+    max_it = 99999
+    for line in f:
+        if len(line.strip()) > 2:
+            system_str = system_str + line
+        line = line.split('#', 1)[0]
+        if line.strip().startswith('#') or len(line) < 1:
+            continue
+        if line.startswith('END'):
+            #add the filler atoms
+            num_atoms = len(atom_names)
+            new_pos = [10000,10000,10000]
+            incr = [1000,1000,1000]
+            # 1 filler atom needed to use for padded inter.
+            for i in range(1):
+                #TODO: masking things out is better than this way
+                atom_names.append('FILLER')
+                new_pos[0] = new_pos[0] + incr[0]
+                new_pos[1] = new_pos[1] + incr[1]
+                new_pos[2] = new_pos[2] + incr[2]
+                atoms_positions.append(copy.deepcopy(new_pos))
 
-			# currently only total charge for all of the atom is supported, no partial charges
-			if len(molcharge_items) > 1 or (len(molcharge_items) == 1 and (molcharge_items[0][1] - molcharge_items[0][0] + 1) < num_atoms):
-				print("[ERROR] error in {}, MOLCHARGE is only supported for the total system charge!".format(name))
-				sys.exit()
+            # currently only total charge for all of the atom is supported, no partial charges
+            if len(molcharge_items) > 1 or (len(molcharge_items) == 1 and (molcharge_items[0][1] - molcharge_items[0][0] + 1) < num_atoms):
+                print("[ERROR] error in {}, MOLCHARGE is only supported for the total system charge!".format(name))
+                sys.exit()
 
-			total_charge = 0
+            total_charge = 0
 
-			if len(molcharge_items) == 1:
-				total_charge = molcharge_items[0][2]
+            if len(molcharge_items) == 1:
+                total_charge = molcharge_items[0][2]
 
-			new_system = SimulationSystem(name, num_atoms, onp.array(atoms_positions),[], atom_names,total_charge,is_periodic,do_minimization,max_it, onp.array(box),onp.array(box_angles),onp.array(bond_restraints),onp.array(angle_restraints),onp.array(torsion_restraints))
-			new_system.bgf_file = system_str
-			list_systems.append(new_system)
-			atoms_positions = []
-			atom_names = []
-			bond_restraints = []
-			angle_restraints = []
-			torsion_restraints = []
-			molcharge_items = []
-			system_str = ''
-			box = []
-			box_angles = []
-			is_periodic = False
-			do_minimization = True
-			max_it = 99999
-		else:
-			if line.startswith('DESCRP'):
-				name = line.strip().split()[1]
-			elif line.startswith('CRYSTX'):
-				line = line.strip().split()
-				x = float(line[1])
-				y = float(line[2])
-				z = float(line[3])
-				x_ang = float(line[4])
-				y_ang = float(line[5])
-				z_ang = float(line[6])
-				box = [x,y,z]
-				box_angles = [x_ang,y_ang,z_ang]
-				is_periodic = True
-			elif line.startswith('RUTYPE'):
+            new_system = SimulationSystem(name, num_atoms, onp.array(atoms_positions),[], atom_names,total_charge,is_periodic,do_minimization,max_it, onp.array(box),onp.array(box_angles),onp.array(bond_restraints),onp.array(angle_restraints),onp.array(torsion_restraints))
+            new_system.bgf_file = system_str
+            list_systems.append(new_system)
+            atoms_positions = []
+            atom_names = []
+            bond_restraints = []
+            angle_restraints = []
+            torsion_restraints = []
+            molcharge_items = []
+            system_str = ''
+            box = []
+            box_angles = []
+            is_periodic = False
+            do_minimization = True
+            max_it = 99999
+        else:
+            if line.startswith('DESCRP'):
+                name = line.strip().split()[1]
+            elif line.startswith('CRYSTX'):
+                line = line.strip().split()
+                x = float(line[1])
+                y = float(line[2])
+                z = float(line[3])
+                x_ang = float(line[4])
+                y_ang = float(line[5])
+                z_ang = float(line[6])
+                box = [x,y,z]
+                box_angles = [x_ang,y_ang,z_ang]
+                is_periodic = True
+            elif line.startswith('RUTYPE'):
 
-				if line.find('SINGLE') > -1:
-					do_minimization = False
-					max_it = 0 # means full minimization
+                if line.find('SINGLE') > -1:
+                    do_minimization = False
+                    max_it = 0 # means full minimization
 
-				elif line.find('NORMAL RUN') > -1:
-					do_minimization = True
-					max_it = 99999 # means full minimization
-				#for now assume all of them are the same
-				#TODO: fix this
-				elif line.find('MAXIT') > -1:
-					max_it = int(line.strip().split()[-1])
+                elif line.find('NORMAL RUN') > -1:
+                    do_minimization = True
+                    max_it = 99999 # means full minimization
+                #for now assume all of them are the same
+                #TODO: fix this
+                elif line.find('MAXIT') > -1:
+                    max_it = int(line.strip().split()[-1])
 
-					if max_it < 5:
-						max_it = 0
-						do_minimization = False
+                    if max_it < 5:
+                        max_it = 0
+                        do_minimization = False
 
-			elif line.startswith('MOLCHARGE'):
-				#Ex. MOLCHARGE   1  30  1.00
-				split_line = line.split()[1:]
-				at1, at2 = split_line[:2]
-				total_charge = float(split_line[2])
-				molcharge_items.append([int(at1)-1,int(at2)-1,total_charge])
+            elif line.startswith('MOLCHARGE'):
+                #Ex. MOLCHARGE   1  30  1.00
+                split_line = line.split()[1:]
+                at1, at2 = split_line[:2]
+                total_charge = float(split_line[2])
+                molcharge_items.append([int(at1)-1,int(at2)-1,total_charge])
 
-			elif line.startswith('BOND RESTRAINT'):
-				split_line = line.split()[2:]
-				at1,at2 = split_line[:2]
-				dist = split_line[2]
-				force1,force2 = split_line[3:5]
-				d_dist = split_line[5]
-				bond_restraints.append([int(at1)-1,int(at2)-1,float(force1),float(force2),float(dist),float(d_dist), 1])
-			elif line.startswith('ANGLE RESTRAINT'):
-				split_line = line.split()[2:]
-				at1,at2,at3 = split_line[:3]
-				angle = split_line[3]
-				force1,force2 = split_line[4:6]
-				d_angle = split_line[6]
-				angle_restraints.append([int(at1)-1,int(at2)-1,float(at3)-1,float(force1),float(force2),float(angle),float(d_angle),1])
-			elif line.startswith('TORSION RESTRAINT'):
-				split_line = line.split()[2:]
-				at1,at2,at3,at4 = split_line[:4]
-				torsion = split_line[4]
-				force1,force2 = split_line[5:7]
-				d_torsion = split_line[7]
-				torsion_restraints.append([int(at1)-1,int(at2)-1,int(at3)-1,int(at4)-1,float(force1),float(force2),float(torsion),float(d_torsion),1])
-			elif line.startswith('HETATM'):
-				line = line.strip().split()
-				atom_index = int(line[1])
-				atom_name = line[2]
-				x = float(line[3])
-				y = float(line[4])
-				z = float(line[5])
-				atom_pos = [x,y,z]
-				atoms_positions.append(atom_pos)
-				atom_names.append(atom_name)
+            elif line.startswith('BOND RESTRAINT'):
+                split_line = line.split()[2:]
+                at1,at2 = split_line[:2]
+                dist = split_line[2]
+                force1,force2 = split_line[3:5]
+                d_dist = split_line[5]
+                bond_restraints.append([int(at1)-1,int(at2)-1,float(force1),float(force2),float(dist),float(d_dist), 1])
+            elif line.startswith('ANGLE RESTRAINT'):
+                split_line = line.split()[2:]
+                at1,at2,at3 = split_line[:3]
+                angle = split_line[3]
+                force1,force2 = split_line[4:6]
+                d_angle = split_line[6]
+                angle_restraints.append([int(at1)-1,int(at2)-1,float(at3)-1,float(force1),float(force2),float(angle),float(d_angle),1])
+            elif line.startswith('TORSION RESTRAINT'):
+                split_line = line.split()[2:]
+                at1,at2,at3,at4 = split_line[:4]
+                torsion = split_line[4]
+                force1,force2 = split_line[5:7]
+                d_torsion = split_line[7]
+                torsion_restraints.append([int(at1)-1,int(at2)-1,int(at3)-1,int(at4)-1,float(force1),float(force2),float(torsion),float(d_torsion),1])
+            elif line.startswith('HETATM'):
+                line = line.strip().split()
+                atom_index = int(line[1])
+                atom_name = line[2]
+                x = float(line[3])
+                y = float(line[4])
+                z = float(line[5])
+                atom_pos = [x,y,z]
+                atoms_positions.append(atom_pos)
+                atom_names.append(atom_name)
 
-	f.close()
+    f.close()
 
-	return list_systems
+    return list_systems
 
 def parse_modified_params(params_file, ignore_sensitivity=1):
 
-	# section indices sensitivity low_end high_end !comments
-	if not os.path.exists(params_file):
-		return
-	params = []
-	f = open(params_file,'r')
+    # section indices sensitivity low_end high_end !comments
+    if not os.path.exists(params_file):
+        return
+    params = []
+    f = open(params_file,'r')
 
-	for line in f:
-		# remove comments
-		line = line.split('!')[0]
-		line = line.split('#')[0]
-		split_line = line.strip().split()
-		if len(split_line) < 6:
-			continue
-		section = int(split_line[0])
+    for line in f:
+        # remove comments
+        line = line.split('!')[0]
+        line = line.split('#')[0]
+        split_line = line.strip().split()
+        if len(split_line) < 6:
+            continue
+        section = int(split_line[0])
 
-		index1 = int(split_line[1])
-		index2 = int(split_line[2])
-		sensitivity = float(split_line[3])
-		low_end = float(split_line[4])
-		high_end = float(split_line[5])
-		if ignore_sensitivity:
-			sensitivity = 1
-		if low_end > high_end:
-			temp = low_end
-			low_end = high_end
-			high_end = temp
-		item = (section,index1,index2,sensitivity, low_end, high_end)
-		params.append(item)
+        index1 = int(split_line[1])
+        index2 = int(split_line[2])
+        sensitivity = float(split_line[3])
+        low_end = float(split_line[4])
+        high_end = float(split_line[5])
+        if ignore_sensitivity:
+            sensitivity = 1
+        if low_end > high_end:
+            temp = low_end
+            low_end = high_end
+            high_end = temp
+        item = (section,index1,index2,sensitivity, low_end, high_end)
+        params.append(item)
 
-	return params
+    return params
 
 def map_params(params, index_map):
-	new_params = []
-	for p in params:
-		key = (p[0],p[1],p[2])
-		value = index_map[key]
-		new_item = (value, p[3],p[4],p[5])
-		new_params.append(new_item)
-	return new_params
+    new_params = []
+    for p in params:
+        key = (p[0],p[1],p[2])
+        value = index_map[key]
+        new_item = (value, p[3],p[4],p[5])
+        new_params.append(new_item)
+    return new_params
