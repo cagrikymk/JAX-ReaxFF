@@ -25,11 +25,20 @@ def vectorized_cond(pred, true_fun, false_fun, operand):
   return np.where(pred, true_fun(true_op), false_fun(false_op))
 
 
-#from: https://github.com/google/jax/issues/1052
-@jax.custom_transforms
+#https://jax.readthedocs.io/en/latest/notebooks/Custom_derivative_rules_for_Python_code.html
+@jax.custom_jvp
 def safe_sqrt(x):
   return np.sqrt(x)
-jax.defjvp(safe_sqrt, lambda g, ans, x: 0.5 * g / np.where(x > 0, ans, np.inf) )
+
+@safe_sqrt.defjvp
+def safe_sqrt_jvp(primals, tangents):
+  x = primals[0]
+  x_dot = tangents[0]
+  #print(x[0])
+  primal_out = safe_sqrt(x)
+  tangent_out = 0.5 * x_dot / np.where(x > 0, primal_out, np.inf)
+  return primal_out, tangent_out
+  
 
 def calculate_total_energy_single(flattened_force_field, flattened_non_dif_params, system):
     #body_2_distances = Structure.calculate_2_body_distances(system.atom_positions,system.box_size, system.global_body_2_inter_list,system.global_body_2_inter_list_mask)
@@ -38,7 +47,7 @@ def calculate_total_energy_single(flattened_force_field, flattened_non_dif_param
     #dist_matrices = Structure.create_distance_matrices(system.is_periodic, system.atom_positions,system.box_size)
 
 
-    return jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_params,
+    return calculate_total_energy(flattened_force_field,flattened_non_dif_params,
                                                     system.atom_types,system.atom_mask, system.total_charge, system.local_body_2_neigh_list, system.distance_matrices,
                                                     system.global_body_2_inter_list,system.global_body_2_inter_list_mask,system.triple_bond_body_2_mask,system.global_body_2_distances,
                                                     system.global_body_3_inter_list,system.global_body_3_inter_list_mask,system.global_body_3_angles,
@@ -61,8 +70,8 @@ def calculate_total_energy_multi(flattened_force_field, flattened_non_dif_params
     flattened_force_field = preprocess_force_field(flattened_force_field,flattened_non_dif_params)
     list_counts = [len(l) for l in list_all_type]
     total_num_systems = sum(list_counts)
-    pot_func = jax.vmap(jax_calculate_total_energy_vmap,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
-    pot_func_pmap = jax.vmap(jax_calculate_total_energy_vmap,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
+    pot_func = jax.vmap(calculate_total_energy,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
+    pot_func_pmap = jax.vmap(calculate_total_energy,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
     all_pots = np.zeros(total_num_systems,dtype=TYPE)
     all_bo = []
     all_tors = []
@@ -84,9 +93,9 @@ def calculate_total_energy_multi(flattened_force_field, flattened_non_dif_params
                                       list_all_body_4_list[i],list_all_body_4_map[i],list_all_body_4_angles[i],
                                       list_all_hbond_inter_list[i],list_all_hbond_inter_list_mask[i],list_all_angles_and_dist[i])
 
-        bond_rest_pot = jax.vmap(jax_calculate_bond_restraint_energy)(list_all_atom_pos[i], list_bond_rest[i])
-        angle_rest_pot = jax.vmap(jax_calculate_angle_restraint_energy)(list_all_atom_pos[i], list_angle_rest[i])
-        torsion_rest_pot = jax.vmap(jax_calculate_torsion_restraint_energy)(list_all_atom_pos[i], list_torsion_rest[i])
+        bond_rest_pot = jax.vmap(calculate_bond_restraint_energy)(list_all_atom_pos[i], list_bond_rest[i])
+        angle_rest_pot = jax.vmap(calculate_angle_restraint_energy)(list_all_atom_pos[i], list_angle_rest[i])
+        torsion_rest_pot = jax.vmap(calculate_torsion_restraint_energy)(list_all_atom_pos[i], list_torsion_rest[i])
 
         all_pots = jax.ops.index_update(all_pots, jax.ops.index[start:end], pots)
         #all_pots = jax.ops.index_update(all_pots, jax.ops.index[start:end], pots + bond_rest_pot + angle_rest_pot + torsion_rest_pot)
@@ -96,7 +105,7 @@ def calculate_total_energy_multi(flattened_force_field, flattened_non_dif_params
     return all_pots #,all_bo
 
 
-def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_params, types,atom_mask,total_charge,
+def calculate_total_energy(flattened_force_field,flattened_non_dif_params, types,atom_mask,total_charge,
                                     local_body_2_neigh_list,
                                     dist_matrices,
                                     global_body_2_inter_list,global_body_2_inter_list_mask,triple_bond_body_2_mask,global_body_2_distances,
@@ -121,7 +130,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
     #   cov_pot + lone_pot + val_pot + total_penalty + total_conj + overunder_pot + tor_conj + torsion_pot)
     # shared accross charge calc, coulomb, and vdw
     dist_matrices = dist_matrices + 1e-15 # for numerical issues
-    tapering_matrices = jax_taper(dist_matrices, 0.0, 10.0)
+    tapering_matrices = taper(dist_matrices, 0.0, 10.0)
     tapering_matrices = np.where((dist_matrices > 10.0) | (dist_matrices < 0.001), 0.0, tapering_matrices)
 
     # shared accross charge calc and coulomb
@@ -130,7 +139,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
 
     hulp1_mat = dist_matrices ** 3 + (1/gamma_mat**3)
 
-    charges = jax_calculate_eem_charges(types,
+    charges = calculate_eem_charges(types,
                                   atom_mask,
                                   total_charge,
                                   hulp1_mat,
@@ -140,21 +149,21 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                                   flattened_force_field[2] #electronegativity
                                   )
 
-    cou_pot = jax_calculate_coulomb_pot(types,
+    cou_pot = calculate_coulomb_pot(types,
                                   hulp1_mat,
                                   tapering_matrices,
                                   charges[:-1],
                                   flattened_force_field[0]) # gamma
 
 
-    charge_pot = jax_calculate_charge_energy(types,
+    charge_pot = calculate_charge_energy(types,
                                        charges[:-1] * atom_mask,
                                        flattened_force_field[1], #idempotential
                                        flattened_force_field[2]) #electronegativity
 
 
 
-    vdw_pot = jax_calculate_vdw_pot(types,
+    vdw_pot = calculate_vdw_pot(types,
                               atom_mask,
                               dist_matrices,
                               tapering_matrices,
@@ -166,7 +175,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                               )
 
 
-    [cov_pot, bo, bopi,bopi2, abo] = jax_calculate_covbon_pot(types,
+    [cov_pot, bo, bopi,bopi2, abo] = calculate_covbon_pot(types,
                                                global_body_2_inter_list,
                                                global_body_2_inter_list_mask,
                                                global_body_2_distances,
@@ -182,7 +191,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                                                flattened_non_dif_params[8]
                                                )
 
-    [lone_pot, vlp] = jax_calculate_lonpar_pot(types,
+    [lone_pot, vlp] = calculate_lonpar_pot(types,
                                            atom_mask,
                                            abo,
                                            flattened_force_field[26],
@@ -191,7 +200,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                                            flattened_force_field[55]
                                            )
 
-    overunder_pot = jax_calculate_ovcor_pot(types,
+    overunder_pot = calculate_ovcor_pot(types,
                                       flattened_non_dif_params[18],
                                       atom_mask,
                                       global_body_2_inter_list,
@@ -207,7 +216,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                                       flattened_force_field[59],
                                       *flattened_force_field[60:66])
 
-    [val_pot,total_penalty,total_conj] = jax_calculate_valency_pot(types,
+    [val_pot,total_penalty,total_conj] = calculate_valency_pot(types,
                                                           global_body_3_inter_list,
                                                           global_body_3_inter_list_mask,
                                                           global_body_3_angles,
@@ -221,7 +230,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                                                           flattened_non_dif_params[11])
 
 
-    [torsion_pot, tor_conj] = jax_calculate_torsion_pot(types,
+    [torsion_pot, tor_conj] = calculate_torsion_pot(types,
                                                   global_body_4_inter_list,
                                                   global_body_4_inter_list_mask,
                                                   global_body_4_angles,
@@ -232,7 +241,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
                                                   )
 
 
-    h_pot = jax_calculate_hb_pot(types,bo,global_hbond_inter_list,global_hbond_inter_list_mask,hbond_angles_and_dist, *flattened_force_field[87:91])
+    h_pot = calculate_hb_pot(types,bo,global_hbond_inter_list,global_hbond_inter_list_mask,hbond_angles_and_dist, *flattened_force_field[87:91])
 
     #print(torsion_pot, tor_conj)
     #print(overunder_pot)
@@ -241,7 +250,7 @@ def jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_para
     return (cou_pot + vdw_pot + charge_pot +
          cov_pot + lone_pot + val_pot + total_penalty + total_conj + overunder_pot + tor_conj + torsion_pot + h_pot),charges[:-1]
 
-def jax_calculate_total_energy_for_minim_vmap(atom_positions,flattened_force_field,flattened_non_dif_params,all_shift_comb,
+def calculate_total_energy_for_minim(atom_positions,flattened_force_field,flattened_non_dif_params,all_shift_comb,
                                  orth_matrix, types,atom_mask,list_all_total_charge,
                                  local_body_2_neigh_list,global_body_2_inter_list,global_body_2_inter_list_mask,
                                  triple_bond_body_2_mask,global_body_3_inter_list,
@@ -264,23 +273,23 @@ def jax_calculate_total_energy_for_minim_vmap(atom_positions,flattened_force_fie
     bond_rest_pot = 0.0
     angle_rest_pot = 0.0
     torsion_rest_pot = 0.0
-    reax_pot,_ = jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_params, types,atom_mask,list_all_total_charge,
+    reax_pot,_ = calculate_total_energy(flattened_force_field,flattened_non_dif_params, types,atom_mask,list_all_total_charge,
                                  local_body_2_neigh_list,dist_matrices,
                                  global_body_2_inter_list,global_body_2_inter_list_mask,triple_bond_body_2_mask, body_2_distances,
                                  global_body_3_inter_list,global_body_3_inter_list_mask,body_3_angles,
                                  global_body_4_inter_list,global_body_4_inter_list_mask,body_4_angles,
                                  global_hbond_inter_list,global_hbond_inter_list_mask,hbond_angles_and_dist
                                  ) # return only the energy
-    bond_rest_pot = jax_calculate_bond_restraint_energy(atom_positions, bond_restraints)
-    angle_rest_pot = jax_calculate_angle_restraint_energy(atom_positions, angle_restraints)
-    torsion_rest_pot = jax_calculate_torsion_restraint_energy(atom_positions, torsion_restraints)
+    bond_rest_pot = calculate_bond_restraint_energy(atom_positions, bond_restraints)
+    angle_rest_pot = calculate_angle_restraint_energy(atom_positions, angle_restraints)
+    torsion_rest_pot = calculate_torsion_restraint_energy(atom_positions, torsion_restraints)
 
 
     return reax_pot + bond_rest_pot + angle_rest_pot + torsion_rest_pot
 
 
 
-def jax_calculate_bond_restraint_energy(atom_positions, bond_restraints):
+def calculate_bond_restraint_energy(atom_positions, bond_restraints):
     atom_indices = bond_restraints[:,:2].astype(np.int32)
     forces = bond_restraints[:,2:4]
     target_dist = bond_restraints[:,4]
@@ -298,7 +307,7 @@ def jax_calculate_bond_restraint_energy(atom_positions, bond_restraints):
     #en_restraint = np.sum(bond_restrait_mask * forces_1 * (cur_dist - target_dist)**2)
     return en_restraint
 
-def jax_calculate_angle_restraint_energy(atom_positions, angle_restraints):
+def calculate_angle_restraint_energy(atom_positions, angle_restraints):
     atom_indices = angle_restraints[:,:3].astype(np.int32)
     forces = angle_restraints[:,3:5]
     target_angle = angle_restraints[:,5] * dgrrdn # TODO:double check
@@ -318,7 +327,7 @@ def jax_calculate_angle_restraint_energy(atom_positions, angle_restraints):
 
     return en_restraint
 
-def jax_calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
+def calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
     atom_indices = torsion_restraints[:,:4].astype(np.int32)
     forces = torsion_restraints[:,4:6]
     target_torsion = torsion_restraints[:,6] * dgrrdn # TODO:double check
@@ -340,7 +349,7 @@ def jax_calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
 
     return en_restraint
 
-def jax_calculate_torsion_pot(atom_types, global_body_4_inter_list, global_body_4_inter_list_mask,global_body_4_angles,
+def calculate_torsion_pot(atom_types, global_body_4_inter_list, global_body_4_inter_list_mask,global_body_4_angles,
                               bo, bopi, abo,
                               valf,
                               v1, v2, v3,v4, vconj,
@@ -466,7 +475,7 @@ def jax_calculate_torsion_pot(atom_types, global_body_4_inter_list, global_body_
 
 
 #@jax.jit
-def jax_calculate_ovcor_pot(atom_types,
+def calculate_ovcor_pot(atom_types,
                             name_to_index,
                             atom_mask,
                             global_body_2_inter_list,
@@ -581,14 +590,14 @@ def smooth_lone_pair_casting(number, p_lambda=0.9999, l1=-1.3, l2=-0.3, r1=0.3, 
                       (p_lambda * np.cos(2*np.pi * number) - 1)))
 
     result = np.where(number < l1, f_L,
-                    np.where(number < l2, f_L * jax_taper(number,l1,l2),
+                    np.where(number < l2, f_L * taper(number,l1,l2),
                     np.where(number < r1, 0,
-                    np.where(number <= r2, f_R * jax_taper2(number,r1,r2),f_R))))
+                    np.where(number <= r2, f_R * taper2(number,r1,r2),f_R))))
 
     return result
 
 
-def jax_calculate_lonpar_pot(atom_types,
+def calculate_lonpar_pot(atom_types,
                              atom_mask,
                              abo,
                              aval, stlp,
@@ -617,7 +626,7 @@ def jax_calculate_lonpar_pot(atom_types,
 
 
 #@jax.jit
-def jax_calculate_valency_pot(atom_types, global_body_3_inter_list,
+def calculate_valency_pot(atom_types, global_body_3_inter_list,
                               global_body_3_inter_list_mask,
                               global_body_3_angles,
                               body_2_local_list,
@@ -901,7 +910,7 @@ def calculate_boncor_pot(num_atoms,body_2_global_list,body_2_global_list_mask,bo
     return bo, abo, bopi, bopi2
 
 
-def jax_calculate_covbon_pot(atom_types,
+def calculate_covbon_pot(atom_types,
                             body_2_global_list, body_2_global_list_mask,
                             global_body_2_distances,
                                 body_2_local_list,
@@ -1142,7 +1151,7 @@ def calculate_bo(body_2_global_list, body_2_global_list_mask,
 
     return bor * body_2_global_list_mask # if < cutoff, will be ignored
 
-def jax_calculate_vdw_pot(atom_types,atom_mask,distance_matrices,tapering_matrices, p1co, p2co, p3co, vop, vdw_shiedling):
+def calculate_vdw_pot(atom_types,atom_mask,distance_matrices,tapering_matrices, p1co, p2co, p3co, vop, vdw_shiedling):
     num_atoms = len(atom_types)
     my_vop = vop[atom_types]
     gamwh_mat = np.sqrt(my_vop.reshape(-1,1).dot(my_vop.reshape(1,-1)))
@@ -1179,7 +1188,7 @@ def jax_calculate_vdw_pot(atom_types,atom_mask,distance_matrices,tapering_matric
 
 
 
-def jax_calculate_coulomb_pot(atom_types, hulp1_mat,tapering_matrices, charges, gamma):
+def calculate_coulomb_pot(atom_types, hulp1_mat,tapering_matrices, charges, gamma):
     num_atoms = len(atom_types)
     charge_mat = charges.reshape(-1,1).dot(charges.reshape(1,-1))
     di = np.diag_indices(num_atoms)
@@ -1194,13 +1203,13 @@ def jax_calculate_coulomb_pot(atom_types, hulp1_mat,tapering_matrices, charges, 
     total_pot = np.sum(np.triu(np.sum(ephtap_mat,axis=0)))
 
     return total_pot
-def jax_calculate_charge_energy(atom_types, charges, idempotential, electronegativity):
+def calculate_charge_energy(atom_types, charges, idempotential, electronegativity):
 
     ech = onp.sum(23.02 * (electronegativity[atom_types] * charges +
                  idempotential[atom_types] * np.square(charges)))
     return ech
 
-def jax_calculate_eem_charges(atom_types,atom_mask,total_charge,hulp1_mat,tapering_matrices, gamma, idempotential, electronegativity):
+def calculate_eem_charges(atom_types,atom_mask,total_charge,hulp1_mat,tapering_matrices, gamma, idempotential, electronegativity):
 
     num_atoms = len(atom_types)
 
@@ -1237,7 +1246,7 @@ def jax_calculate_eem_charges(atom_types,atom_mask,total_charge,hulp1_mat,taperi
     return atom_charges
 
 
-def jax_calculate_hb_pot(atom_types,bo,global_hbond_inter_list,global_hbond_inter_list_mask,hbond_angles_and_dist, rhb, dehb, vhb1, vhb2):
+def calculate_hb_pot(atom_types,bo,global_hbond_inter_list,global_hbond_inter_list_mask,hbond_angles_and_dist, rhb, dehb, vhb1, vhb2):
 
     type_indices = global_hbond_inter_list[:,[1,3,5]].transpose()
 
@@ -1265,7 +1274,7 @@ def jax_calculate_hb_pot(atom_types,bo,global_hbond_inter_list,global_hbond_inte
 
     return np.sum(ehbh)
 
-def jax_taper(dist, low_tap_rad, up_tap_rad):
+def taper(dist, low_tap_rad, up_tap_rad):
 
     dist = dist - low_tap_rad
     up_tap_rad = up_tap_rad - low_tap_rad
@@ -1301,12 +1310,12 @@ def jax_taper(dist, low_tap_rad, up_tap_rad):
 
     return SW
 
-def jax_taper2(dist, low_tap_rad=-2, up_tap_rad=2):
+def taper2(dist, low_tap_rad=-2, up_tap_rad=2):
 
-    return 1 - jax_taper(dist, low_tap_rad, up_tap_rad)
+    return 1 - taper(dist, low_tap_rad, up_tap_rad)
 
 
-def jax_taper_BO(x,low_dist, high_dist):
+def taper_BO(x,low_dist, high_dist):
     x_r = high_dist - low_dist
     S1 =  140.0 / x_r
     S2 = -210.0 / np.power(x_r,2)
@@ -1324,5 +1333,5 @@ def jax_taper_BO(x,low_dist, high_dist):
 def S(x,low_dist, high_dist):
     return np.where(x <= low_dist, 0.0,
                 (np.where(x <= high_dist,
-                  jax_taper(x, low_dist, high_dist),
+                  taper(x, low_dist, high_dist),
                   1.0)))

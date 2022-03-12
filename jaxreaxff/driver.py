@@ -7,29 +7,11 @@ Author: Mehmet Cagri Kaymak
 """
 import jax.profiler
 import  os
-# setting up some environment variables
-# might help to accelerate the cpu computation
-num_threads = str(os.cpu_count())
-os.environ['MKL_NUM_THREADS']=num_threads
-os.environ['OPENBLAS_NUM_THREADS']=num_threads
-
-os.environ["NUM_INTER_THREADS"]="1"
-os.environ["NUM_INTRA_THREADS"]=num_threads
-
-if "XLA_FLAGS" not in os.environ:
-    os.environ["XLA_FLAGS"] = ""
-
-os.environ["XLA_FLAGS"] = (os.environ["XLA_FLAGS"] +
-                           "--xla_cpu_multi_thread_eigen=true " +
-                           "intra_op_parallelism_threads={}".format(num_threads) +
-                           "inter_op_parallelism_threads=1")
-
-
 from jaxreaxff.forcefield import preprocess_force_field, TYPE
-from jaxreaxff.reaxffpotential import jax_calculate_total_energy_for_minim_vmap
+from jaxreaxff.reaxffpotential import calculate_total_energy_for_minim
 from jaxreaxff.optimizer import use_selected_parameters,add_noise_to_params
 from jaxreaxff.optimizer import select_energy_minim,get_minim_lists
-from jaxreaxff.optimizer import train_FF,jax_loss_vmap_new_test
+from jaxreaxff.optimizer import train_FF,loss_w_sel_params
 from jaxreaxff.helper import process_and_cluster_geos
 from jaxreaxff.helper import parse_modified_params,map_params,filter_geo_items
 from jaxreaxff.helper import structure_training_data,parse_geo_file,read_train_set
@@ -44,6 +26,8 @@ import copy
 import argparse, textwrap
 from jaxreaxff.smartformatter import SmartFormatter
 from jaxreaxff.helper import DEVICE_NAME
+
+from jaxreaxff.myjit import my_jit
 
 def main():
     # create parser for command-line arguments
@@ -124,18 +108,44 @@ def main():
         type=float,
         default=0.001,
         help='BO-cutoff for valency angles and torsion angles')
+    parser.add_argument('--max_num_clusters', metavar='max # clusters',
+        type=int,
+        default=10,
+        choices=range(1, 16),
+        help='R|Max number of clusters that can be used\n' +
+             'High number of clusters lowers the memory cost\n' +
+             'However, it increases compilation time,especially for cpus')
     parser.add_argument('--num_threads', metavar='# threads',
         type=int,
         default=-1,
         help='R|Number of threads to use to preprocess the data\n' +
              '-1: # threads = # available cpu cores * 2')
+    parser.add_argument('--backend', metavar='backend',
+        type=str,
+        choices=['gpu', 'cpu', 'tpu'],
+        default='gpu',
+        help='Backend for JAX')
+
     parser.add_argument('--seed', metavar='seed',
         type=int,
         default=0,
         help='Seed value')
 
+
+
     #parse arguments
     args = parser.parse_args()
+    global DEVICE_NAME
+    DEVICE_NAME = args.backend.lower()
+
+    print("Selected backend for JAX:",DEVICE_NAME.upper())
+    default_backend = jax.default_backend().lower()
+
+    if DEVICE_NAME == 'gpu' and default_backend=='cpu':
+        print("[WARNING] selected backend({}) is not available!".format(DEVICE_NAME.upper()))
+        print("[WARNING] Falling back to CPU")
+        print("To use the GPU version, jaxlib with CUDA support needs to installed!")
+        DEVICE_NAME = default_backend
 
     # advanced options
     advanced_opts = {"perc_err_change_thr":0.01,       # if change in error is less than this threshold, add noise
@@ -165,6 +175,7 @@ def main():
     param_indices=[]
     for par in params_list:
         param_indices.append(par[0])
+    param_indices = tuple(param_indices)
 
     bounds = []
     for p in params_list:
@@ -234,7 +245,11 @@ def main():
                      list_all_body_2_distances,
                      list_all_body_3_angles,
                      list_all_body_4_angles,
-                     list_all_angles_and_dist]) = process_and_cluster_geos(systems,force_field,param_indices,bounds,num_threads=num_threads)
+                     list_all_angles_and_dist]) = process_and_cluster_geos(systems,force_field,
+                                                                           param_indices,
+                                                                           bounds,
+                                                                           max_num_clusters=args.max_num_clusters,
+                                                                           num_threads=num_threads)
     ###########################################################################
 
 
@@ -257,14 +272,16 @@ def main():
 
 
 
-    loss_func = jax.jit(jax_loss_vmap_new_test,static_argnums=(1,3,34),backend=DEVICE_NAME)
-    grad_func = jax.jit(jax.grad(jax_loss_vmap_new_test),static_argnums=(1,3,34),backend=DEVICE_NAME)
-    loss_and_grad = jax.jit(jax.value_and_grad(jax_loss_vmap_new_test),static_argnums=(1,3,34),backend=DEVICE_NAME)
+    loss_func = my_jit(loss_w_sel_params,static_argnums=(1,34),
+                        static_list_of_array_argnums=(6,),backend=DEVICE_NAME)
+    grad_func = my_jit(jax.grad(loss_w_sel_params),static_argnums=(1,34),
+                        static_list_of_array_argnums=(6,),backend=DEVICE_NAME)
+    loss_and_grad = my_jit(jax.value_and_grad(loss_w_sel_params),static_argnums=(1,34),
+                            static_list_of_array_argnums=(6,),backend=DEVICE_NAME)
 
-
-    grad_and_loss_func = energy_minim_loss_and_grad_function = jax.jit(jax.vmap(jax.value_and_grad(jax_calculate_total_energy_for_minim_vmap),
+    energy_minim_loss_and_grad_function = my_jit(jax.vmap(jax.value_and_grad(calculate_total_energy_for_minim),
                                                            in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),
-                                                           static_argnums=(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22),backend=DEVICE_NAME)
+                                                 backend=DEVICE_NAME)
 
     def new_grad(*x):
         grads = grad_func(*x)
@@ -280,7 +297,8 @@ def main():
     # indices that require energy minimization
     minim_index_lists = select_energy_minim(list_do_minim)
 
-    subsets_with_en_minim = jax.jit(get_minim_lists, static_argnums=(0,), backend=DEVICE_NAME)(minim_index_lists,list_do_minim, list_num_minim_steps,
+    subsets_with_en_minim = my_jit(get_minim_lists, static_list_of_array_argnums=(0,), 
+                                    backend=DEVICE_NAME)(minim_index_lists,list_do_minim, list_num_minim_steps,
                                          list_real_atom_counts,
                                          orig_list_all_pos,list_all_pos, list_all_shift_combs,list_orth_matrices,
                                          list_all_type,list_all_mask,

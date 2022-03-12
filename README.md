@@ -11,7 +11,8 @@ Paper: [Jax-ReaxFF](https://chemrxiv.org/engage/chemrxiv/article-details/61cecad
 
 
 ## How to Install
-Jax-ReaxFF requires JAX 0.1.76 and jaxlib 0.1.73 ([Jax Repo](https://github.com/google/jax)). <br>
+Jax-ReaxFF requires JAX and jaxlib ([Jax Repo](https://github.com/google/jax)). <br>
+The code is tested with JAX 0.3.0 and jaxlib 0.1.74+.
 Since the optimizer is highly more performant on GPUs, GPU version of jaxlib needs to be installed (GPU version supports both CPU and GPU execution). <br>
 
 **1-** Before the installation, a supported version of CUDA and CuDNN are needed (for jaxlib). <br>
@@ -25,34 +26,52 @@ cd Jax-ReaxFF
 **3-** The installation can be done in a conda environment:
 ```
 conda create -n jax-env python=3.8
+conda activate jax-env
 ```
-**4-** Then jaxlib competible with CUDA-11 and cuDNN-8.05 can be installed:
-```
-# install jaxlib-0.1.73 with Python 3.8, CUDA-11 and cuDNN-8.05 support
-pip install https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.1.73+cuda11.cudnn805-cp38-none-manylinux2010_x86_64.whl
-```
-Other precompilations of jaxlib-0.1.73 compatible with different cuda, cudnn and Python versions can be found here: [Jax Releases](https://storage.googleapis.com/jax-releases/jax_releases.html) <br>
-
-**5-** Finally, Jax-ReaxFF is installed:
+**4-** Jax-ReaxFF is installed with the following command:
 ```
 python setup.py install
 ```
 After the setup, Jax-ReaxFF can be accessed via command line interface(CLI) with **jaxreaxff**
 
-To test the installation:
+To test the installation on a CPU (The JIT compilation time for CPUs drastically higher):
 ```
-jaxreaxff --init_FF Datasets/cobalt/ffield_lit
-		  --params Datasets/cobalt/params 
-          --geo Datasets/cobalt/geo 
-          --train_file Datasets/cobalt/trainset.in 
-          --num_e_minim_steps 200 
-          --e_minim_LR 1e-3 
-          --out_folder ffields 
-          --save_opt all 
-          --num_trials 1 
-          --num_steps 20
-          --init_FF_type fixed
+jaxreaxff --init_FF Datasets/cobalt/ffield_lit             \
+          --params Datasets/cobalt/params                  \
+          --geo Datasets/cobalt/geo                        \
+          --train_file Datasets/cobalt/trainset.in         \
+          --num_e_minim_steps 200                          \
+          --e_minim_LR 1e-3                                \
+          --out_folder ffields                             \
+          --save_opt all                                   \
+          --num_trials 1                                   \
+          --num_steps 20                                   \
+          --init_FF_type fixed                             \
+          --backend cpu
+```          
+**5-** To have the GPU support, jaxlib with CUDA support needs to be installed, otherwise the code can only run on CPUs.
 ```
+# install jaxlib-0.3.0 with Python 3.8, CUDA-11 and cuDNN-8.05 support
+pip install https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.3.0+cuda11.cudnn805-cp38-none-manylinux2010_x86_64.whl
+```
+Other precompilations of jaxlib compatible with different cuda, cudnn and Python versions can be found here: [Jax Releases](https://storage.googleapis.com/jax-releases/jax_releases.html) <br>
+
+To test the GPU version:
+```
+jaxreaxff --init_FF Datasets/cobalt/ffield_lit             \
+          --params Datasets/cobalt/params                  \
+          --geo Datasets/cobalt/geo                        \
+          --train_file Datasets/cobalt/trainset.in         \
+          --num_e_minim_steps 200                          \
+          --e_minim_LR 1e-3                                \
+          --out_folder ffields                             \
+          --save_opt all                                   \
+          --num_trials 1                                   \
+          --num_steps 20                                   \
+          --init_FF_type fixed                             \
+          --backend gpu
+```   
+
 #### Potential Issues
 
 On a HPC cluster, CUDA might be loaded somewhere different than /usr/local/cuda-xx.x. In this case, XLA compiler might not locate CUDA installation. 
@@ -70,4 +89,5 @@ and it can be solved by changing XLA_FLAGS to:
 export XLA_FLAGS="$XLA_FLAGS --xla_gpu_force_compilation_parallelism=1"
 ```
 This flag can increase the compilation time drastically.
+
 

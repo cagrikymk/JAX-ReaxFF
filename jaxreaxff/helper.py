@@ -120,6 +120,7 @@ def produce_error_report(filename, tranining_items, tranining_items_str, indiv_e
     table = tabulate(data_to_print, headers, floatfmt=".2f")
     print(table, file=fptr)
     fptr.close()
+    
 
 def generate_BGF_file(file_name, geo_name, num_atoms, positions, str_types, box_dim, box_ang):
     lines =  ["XTLGRF 200"]
@@ -235,7 +236,7 @@ def find_all_cutoffs(flattened_force_field,flattened_non_dif_params,cutoff,atom_
                 cutoff_dict[(type_j,type_i)] = CLOSE_NEIGH_CUTOFF
     return cutoff_dict
 
-def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_indices=None, num_threads=1):
+def process_and_cluster_geos(systems,force_field,param_indices,bounds,max_num_clusters=10,all_cut_indices=None, num_threads=1):
     start = time.time()
     saved_all_pots = []
     saved_all_total_pots = []
@@ -267,8 +268,7 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_in
         all_costs_old = []
         prev = -1
         selected_n_cut = 0
-        max_cut = 15
-        for n_cut in range(1,max_cut+1):
+        for n_cut in range(1,max_num_clusters+1):
             all_cut_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
             #print("Cost with {} clusters: {}".format(n_cut, cost_total))
             all_costs_old.append(cost_total)
@@ -278,8 +278,8 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_in
             prev = cost_total
         #sys.exit()
         if selected_n_cut == 0:
-            selected_n_cut = max_cut
-        all_cut_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=selected_n_cut,max_iterations=100,rep_count=1000,print_mode=True)
+            selected_n_cut = max_num_clusters
+        all_cut_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=selected_n_cut,max_iterations=1000,rep_count=1000,print_mode=True)
     
     globally_sorted_indices = []
     for l in all_cut_indices:
@@ -328,6 +328,7 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_in
     list_all_body_3_angles = [jax.vmap(Structure.calculate_3_body_angles)(list_all_pos[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_3_list[i],list_all_body_3_map[i],list_all_body_3_shift[i]) for i in range(len(list_all_type))]
     list_all_body_4_angles = [jax.vmap(Structure.calculate_body_4_angles_new)(list_all_pos[i],list_orth_matrices[i],list_all_body_4_list[i],list_all_body_4_map[i],list_all_body_4_shift[i]) for i in range(len(list_all_type))]
     list_all_angles_and_dist = [jax.vmap(Structure.calculate_global_hbond_angles_and_dist)(list_all_pos[i],list_orth_matrices[i],list_all_hbond_list[i],list_all_hbond_shift[i],list_all_hbond_mask[i]) for i in range(len(list_all_type))]
+    
 
     return (ordered_systems,[list_all_type,
                             list_all_mask,
@@ -1656,6 +1657,11 @@ def parse_force_field(force_field_file, cutoff2):
     num_params = int(f.readline().strip().split()[0])
     general_params = onp.zeros(shape=(num_params,1), dtype=np.float64)
 
+    body_3_indices_src = [[],[],[]]
+    body_3_indices_dst = [[],[],[]]
+    body_4_indices_src = [[],[],[],[]]
+    body_4_indices_dst = [[],[],[],[]]
+
     for i in range(num_params):
         line = f.readline().strip()
         #to seperate the comment
@@ -2113,8 +2119,8 @@ def parse_force_field(force_field_file, cutoff2):
             force_field.params_to_indices[(6,tors+1, 4)] = (69, (sel_ind, ind2, ind3, sel_ind))
             force_field.params_to_indices[(6,tors+1, 5)] = (70, (sel_ind, ind2, ind3, sel_ind))
 
-            for i in MY_ATOM_INDICES:
-                for j in MY_ATOM_INDICES:
+            for i in range(num_atom_types):
+                for j in range(num_atom_types):
                     if (i,ind2,ind3,j) not in torsion_param_sets:
 
                         body_4_indices_src[0].append(sel_ind)
@@ -2175,7 +2181,18 @@ def parse_force_field(force_field_file, cutoff2):
 
     f.close()
 
+    for i in range(3):
+        body_3_indices_src[i] = onp.array(body_3_indices_src[i],dtype=onp.int32)
+        body_3_indices_dst[i] = onp.array(body_3_indices_dst[i],dtype=onp.int32)
 
+    for i in range(4):
+        body_4_indices_src[i] = onp.array(body_4_indices_src[i],dtype=onp.int32)
+        body_4_indices_dst[i] = onp.array(body_4_indices_dst[i],dtype=onp.int32)       
+
+    force_field.body_3_indices_src = tuple(body_3_indices_src)
+    force_field.body_3_indices_dst = tuple(body_3_indices_dst)
+    force_field.body_4_indices_src = tuple(body_4_indices_src)
+    force_field.body_4_indices_dst = tuple(body_4_indices_dst)
     return force_field
 
 def parse_geo_file(geo_file):

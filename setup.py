@@ -4,7 +4,7 @@ import os
 import subprocess
 import re
 import sys
-
+'''
 def get_cuda_version():
   try:
     result = subprocess.run(['nvcc', '--version'], stdout=subprocess.PIPE)
@@ -30,11 +30,11 @@ print("Detected cuda version: ", cuda_version)
 
 cuda_version = "cuda{}".format(cuda_version.replace(".",""))
 #TODO: Automate installation for cuda dependent jaxlib
-
+'''
 
 INSTALL_REQUIRES = [
-  f'jax==0.1.76',
-  f'jaxlib==0.1.73',
+  'jax>=0.2.16,<=0.3.1',
+  'jaxlib>=0.1.70,<=0.3.0',
   'numba>=0.51.2',
   'numpy>=1.18.0,<1.22.0',
   'scipy>=1.2.1',

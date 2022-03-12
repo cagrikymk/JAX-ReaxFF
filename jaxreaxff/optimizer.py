@@ -8,8 +8,8 @@ Includes steepest descent-like energy minimizer (with dynamic LR)
 Author: Mehmet Cagri Kaymak
 """
 
-from jaxreaxff.reaxffpotential import jax_calculate_total_energy_vmap
-from jaxreaxff.reaxffpotential import jax_calculate_total_energy_for_minim_vmap,safe_sqrt
+from jaxreaxff.reaxffpotential import calculate_total_energy
+from jaxreaxff.reaxffpotential import calculate_total_energy_for_minim,safe_sqrt
 from jaxreaxff.forcefield import preprocess_force_field,rdndgr,TYPE
 from jaxreaxff.structure import Structure
 import numpy as onp
@@ -20,7 +20,7 @@ import time
 import copy
 from scipy.optimize import minimize
 from jaxreaxff.helper import DEVICE_NAME
-
+from jaxreaxff.myjit import my_jit
 
 def calculate_dist_and_angles(list_positions,list_orth_matrices,list_all_shift_combs,
                               list_all_body_2_list,list_all_body_2_map,
@@ -44,7 +44,7 @@ def learning_rate_search(LR_list,selected_params, grads, flattened_force_field,f
                      list_all_body_3_list,list_all_body_3_map,list_all_body_3_angles,
                      list_all_body_4_list,list_all_body_4_map,list_all_body_4_angles):
 
-    loss_func = jax.jit(jax_loss_vmap_new_test,backend=DEVICE_NAME)
+    loss_func = jax.jit(loss_w_sel_params,backend=DEVICE_NAME)
 
     best_LR_ind = 0
     best_loss = 9999999999999999
@@ -121,7 +121,7 @@ def select_energy_minim(list_do_minim):
     for minim_list in list_do_minim:
         index_list = np.argwhere(minim_list == True).reshape(-1)
         index_lists.append(index_list)
-    return index_lists
+    return tuple(index_lists)
 
 def get_minim_lists(minim_index_lists,list_do_minim, list_num_minim_steps,
                      list_real_atom_counts,
@@ -271,7 +271,8 @@ def energy_minim_with_subs(list_all_pos,minim_index_lists,flattened_force_field,
                                                              list_all_hbond_list_sub,list_all_hbond_mask_sub,list_all_hbond_shift_sub,
                                                              list_bond_rest_sub,list_angle_rest_sub,list_torsion_rest_sub)
 
-    list_all_pos = jax.jit(replace_pos_with_subs, static_argnums=(0,), backend=DEVICE_NAME)(minim_index_lists, list_all_pos, list_positions_sub)
+    list_all_pos = my_jit(replace_pos_with_subs, static_list_of_array_argnums=(0,),
+                         backend=DEVICE_NAME)(minim_index_lists, list_all_pos, list_positions_sub)
 
     return list_all_pos,loss_vals,min_loss,minn_loss_vals,list_RMSG
 
@@ -408,7 +409,7 @@ def use_selected_parameters(params,param_indices, flattened_force_field):
         flattened_force_field[ind[0]] = jax.ops.index_update(flattened_force_field[ind[0]], ind[1], params[i])
     return flattened_force_field
 
-def jax_loss_vmap_new_test(selected_params, param_indices, flattened_force_field, flattened_non_dif_params,
+def loss_w_sel_params(selected_params, param_indices, flattened_force_field, flattened_non_dif_params,
                structured_training_data,
                list_all_positions,
                list_all_type,list_all_mask,
@@ -427,7 +428,7 @@ def jax_loss_vmap_new_test(selected_params, param_indices, flattened_force_field
     flattened_force_field = use_selected_parameters(selected_params,param_indices, flattened_force_field)
     flattened_force_field = preprocess_force_field(flattened_force_field,flattened_non_dif_params)
 
-    return jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
+    return loss(flattened_force_field,flattened_non_dif_params,
                structured_training_data,
                list_all_positions,
                list_all_type,list_all_mask,
@@ -443,7 +444,7 @@ def jax_loss_vmap_new_test(selected_params, param_indices, flattened_force_field
                list_bond_rest,list_angle_rest,list_torsion_rest,return_indiv_error=return_indiv_error)
 
 
-def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
+def loss(flattened_force_field,flattened_non_dif_params,
                structured_training_data,
                list_all_positions,
                list_all_type,list_all_mask,
@@ -464,20 +465,20 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
     geo_items_flag = 'GEOMETRY-2' in structured_training_data or 'GEOMETRY-3' in structured_training_data or 'GEOMETRY-4' in structured_training_data
     force_items_flag = 'FORCE-ATOM' in structured_training_data or 'FORCE-RMSG' in structured_training_data or 'RMSG-NEW' in structured_training_data
 
-    list_counts = [len(l) for l in list_all_type]
+    list_counts = onp.array([len(l) for l in list_all_type])
     # max atom count
-    total_num_systems = sum(list_counts)
-    pot_func = jax.vmap(jax_calculate_total_energy_vmap,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
+    total_num_systems = onp.sum(list_counts)
+    pot_func = jax.vmap(calculate_total_energy,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
     all_pots = np.zeros(total_num_systems,dtype=TYPE)
-    atom_counts = np.array([l.shape[1] for l in list_all_type])
-    max_atom_count = np.max(atom_counts)
+    atom_counts = onp.array([l.shape[1] for l in list_all_type])
+    max_atom_count = onp.max(atom_counts)
     if charge_items_flag:
         all_charges = np.zeros(shape=(total_num_systems,max_atom_count),dtype=TYPE)
     if geo_items_flag:
         all_positions = np.zeros(shape=(total_num_systems,max_atom_count,3),dtype=TYPE)
     if force_items_flag:
         all_forces = np.zeros(shape=(total_num_systems,max_atom_count,3),dtype=TYPE)
-        force_func = jax.vmap(jax.grad(jax_calculate_total_energy_for_minim_vmap),
+        force_func = jax.vmap(jax.grad(calculate_total_energy_for_minim),
                                                        in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
     start = 0
     end = 0
@@ -787,8 +788,8 @@ def train_FF(orig_loss_func,loss_and_grad_func,grad_func,minim_index_lists,subs,
 
     total_f_ev = 0
     total_grad_ev = 0
-    prev_loss = 99999999999
-    current_loss = 99999999999
+    prev_loss = float('inf')
+    current_loss = float('inf')
     orig_list_pos = []
     f_ev_list = []
     g_ev_list = []
@@ -892,7 +893,7 @@ def train_FF(orig_loss_func,loss_and_grad_func,grad_func,minim_index_lists,subs,
 
         all_loss_values.append(current_loss)
         all_params.append(selected_params)
-        print("True loss value (after energy minim): {:.2f}".format(current_loss))
+        print("True loss value: {:.2f}".format(current_loss))
         if current_loss < global_min:
             global_min = current_loss
             global_min_params = np.array(copy.deepcopy(selected_params))

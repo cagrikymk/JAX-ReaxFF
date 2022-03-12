@@ -21,12 +21,19 @@ def vectorized_cond(pred, true_fun, false_fun, operand):
   return np.where(pred, true_fun(true_op), false_fun(false_op))
 
 
-#from: https://github.com/google/jax/issues/1052
-@jax.custom_transforms
+#https://jax.readthedocs.io/en/latest/notebooks/Custom_derivative_rules_for_Python_code.html
+@jax.custom_jvp
 def safe_sqrt(x):
   return np.sqrt(x)
-jax.defjvp(safe_sqrt, lambda g, ans, x: 0.5 * g / np.where(x > 0, ans, np.inf) )
 
+@safe_sqrt.defjvp
+def safe_sqrt_jvp(primals, tangents):
+  x = primals[0]
+  x_dot = tangents[0]
+  #print(x[0])
+  primal_out = safe_sqrt(x)
+  tangent_out = 0.5 * x_dot / np.where(x > 0, primal_out, np.inf)
+  return primal_out, tangent_out
 
 
 #TODO: this part needs to be improved for faster execution
@@ -222,6 +229,11 @@ class ForceField:
         self.vhb2 = onp.zeros(shape=(self.total_num_atom_types,self.total_num_atom_types,self.total_num_atom_types), dtype=TYPE)
         self.hbond_params_mask = onp.zeros(shape=(self.total_num_atom_types,self.total_num_atom_types,self.total_num_atom_types), dtype=onp.int32)
 
+        # these will be part of non_dif and their type will be onp.array or np.array
+        self.body_3_indices_src = []
+        self.body_3_indices_dst = []
+        self.body_4_indices_src = []
+        self.body_4_indices_dst = []
 
         # array for flattened force field
         self.flattened_force_field = []
@@ -509,7 +521,6 @@ class ForceField:
 
 
     def flatten_non_dif_params(self):
-
         rob1_mask = np.where(self.rob1 > 0.0, 1.0, 0.0)
         rob1_mask = rob1_mask + np.triu(rob1_mask, k=1).transpose()
         rob2_mask = np.where(self.rob2 > 0.0, 1.0, 0.0)
@@ -536,7 +547,12 @@ class ForceField:
                               self.rob1_off_mask,
                               self.rob2_off_mask,
                               self.rob3_off_mask,
-                              self.name_2_index
+                              self.name_2_index, #18
+
+                              self.body_3_indices_src, #19
+                              self.body_3_indices_dst,
+                              self.body_4_indices_src,
+                              self.body_4_indices_dst
                               ]
 
         for i in range(len(self.non_dif_params)):
@@ -553,10 +569,14 @@ class ForceField:
         with open(name, "rb") as input_file:
             self.flattened_force_field = pickle.load(input_file)
 
-def jax_symm_force_field(flattened_force_field):
+def symm_force_field(flattened_force_field,flattened_non_dif_params):
     # 2 body-params
     # for now global
     body_2_indices = np.tril_indices(len(flattened_force_field[0]),k=-1)
+    body_3_indices_src = flattened_non_dif_params[19]
+    body_3_indices_dst = flattened_non_dif_params[20]
+    body_4_indices_src = flattened_non_dif_params[21]
+    body_4_indices_dst = flattened_non_dif_params[22]
     #off diag. ones
     for i in range(3, 6):
         flattened_force_field[i] = jax.ops.index_update(flattened_force_field[i],
@@ -575,20 +595,20 @@ def jax_symm_force_field(flattened_force_field):
 
     # 3-body parameters
     flattened_force_field[36] = jax.ops.index_update(flattened_force_field[36],
-                                body_3_indices_dst, flattened_force_field[36][tuple(body_3_indices_src)])
+                                body_3_indices_dst, flattened_force_field[36][body_3_indices_src])
 
 
     for i in range(38, 44):
         flattened_force_field[i] = jax.ops.index_update(flattened_force_field[i],
-                                    body_3_indices_dst, flattened_force_field[i][tuple(body_3_indices_src)])
+                                    body_3_indices_dst, flattened_force_field[i][body_3_indices_src])
     #4-body params
     for i in range(66, 71):
         flattened_force_field[i] = jax.ops.index_update(flattened_force_field[i],
-                                    body_4_indices_dst, flattened_force_field[i][tuple(body_4_indices_src)])
+                                    body_4_indices_dst, flattened_force_field[i][body_4_indices_src])
 
     return     flattened_force_field
 
-def jax_handle_offdiag(flattened_force_field,flattened_non_dif_params):
+def handle_offdiag(flattened_force_field,flattened_non_dif_params):
     '''
                           self.p1co_off_mask, #12
                               self.p2co_off_mask,
@@ -637,7 +657,7 @@ def jax_handle_offdiag(flattened_force_field,flattened_non_dif_params):
     return flattened_force_field
 
 def preprocess_force_field(flattened_force_field, flattened_non_dif_params):
-    return jax_symm_force_field(jax_handle_offdiag(flattened_force_field,flattened_non_dif_params))
+    return symm_force_field(handle_offdiag(flattened_force_field,flattened_non_dif_params),flattened_non_dif_params)
 
 def generate_random_value(low_limit, high_limit):
     diff = high_limit - low_limit
