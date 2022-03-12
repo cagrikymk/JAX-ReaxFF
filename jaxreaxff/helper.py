@@ -235,7 +235,7 @@ def find_all_cutoffs(flattened_force_field,flattened_non_dif_params,cutoff,atom_
                 cutoff_dict[(type_j,type_i)] = CLOSE_NEIGH_CUTOFF
     return cutoff_dict
 
-def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_indices=None):
+def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_indices=None, num_threads=1):
     start = time.time()
     saved_all_pots = []
     saved_all_total_pots = []
@@ -255,13 +255,13 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_in
     copy_ff = preprocess_force_field(copy_ff, force_field.non_dif_params)
 
     end = time.time()
-    pool = Pool(os.cpu_count() * 4)
+    pool = Pool(num_threads)
     start = time.time()
     pool_handler_for_inter_list_generation(systems,copy_ff,force_field,pool)
     end = time.time()
     pool.terminate()
 
-    print("Multithreaded interaction list generation took {} secs".format(end-start))
+    print("Multithreaded interaction list generation took {:.2f} secs with {} threads".format(end-start,num_threads))
 
     if all_cut_indices == None:
         all_costs_old = []
@@ -270,7 +270,7 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_in
         max_cut = 15
         for n_cut in range(1,max_cut+1):
             all_cut_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
-            print("Cost with {} clusters: {}".format(n_cut, cost_total))
+            #print("Cost with {} clusters: {}".format(n_cut, cost_total))
             all_costs_old.append(cost_total)
             if prev != -1 and cost_total > prev or (prev-cost_total) / prev < 0.15:
                 selected_n_cut = n_cut - 1

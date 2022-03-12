@@ -124,10 +124,16 @@ def main():
         type=float,
         default=0.001,
         help='BO-cutoff for valency angles and torsion angles')
+    parser.add_argument('--num_threads', metavar='# threads',
+        type=int,
+        default=-1,
+        help='R|Number of threads to use to preprocess the data\n' +
+             '-1: # threads = # available cpu cores * 2')
     parser.add_argument('--seed', metavar='seed',
         type=int,
         default=0,
         help='Seed value')
+
     #parse arguments
     args = parser.parse_args()
 
@@ -193,6 +199,9 @@ def main():
     print("After removing geometries that are not used in the trainset file:")
     print("[INFO] Geometry file is read, there are {} geometries and {} require energy minimization!".format(len(systems), do_minim_count))
     ###########################################################################
+    num_threads = os.cpu_count() * 2 # twice the number of availabe cores
+    if args.num_threads > 0:
+        num_threads = args.num_threads
 
     (ordered_systems,[list_all_type,
                     list_all_mask,
@@ -225,7 +234,7 @@ def main():
                      list_all_body_2_distances,
                      list_all_body_3_angles,
                      list_all_body_4_angles,
-                     list_all_angles_and_dist]) = process_and_cluster_geos(systems,force_field,param_indices,bounds)
+                     list_all_angles_and_dist]) = process_and_cluster_geos(systems,force_field,param_indices,bounds,num_threads=num_threads)
     ###########################################################################
 
 
@@ -342,7 +351,7 @@ def main():
             best_fitness = global_min
             best_FF = result
 
-        print("Trial-{} ended, error value: {}".format(i+1, global_min))
+        print("Trial-{} ended, error value: {:.2f}".format(i+1, global_min))
 
     if not os.path.exists(args.out_folder):
         os.makedirs(args.out_folder)
