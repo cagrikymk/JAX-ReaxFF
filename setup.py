@@ -36,7 +36,7 @@ INSTALL_REQUIRES = [
   f'jax==0.1.76',
   f'jaxlib==0.1.73',
   'numba>=0.51.2',
-  'numpy>=1.19.0',
+  'numpy>=1.18.0,<1.22.0',
   'scipy>=1.2.1',
   'tabulate>=0.8.9'
 ]
