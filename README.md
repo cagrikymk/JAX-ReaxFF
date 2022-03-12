@@ -18,7 +18,7 @@ Since the optimizer is highly more performant on GPUs, GPU version of jaxlib nee
 
 **2-** Cloning the Jax-ReaxFF repo:
 ```
-git clone https://github.com/cagrikymk
+git clone https://github.com/cagrikymk/Jax-ReaxFF
 cd Jax-ReaxFF
 ```
 
