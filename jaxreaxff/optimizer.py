@@ -1,31 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Aug  4 14:13:36 2020
+Implementation of gradient based ReaxFF optimizer using JAX
+Includes steepest descent-like energy minimizer (with dynamic LR)
+         and scipy-optimizer dependent force field training function
 
-@author: cagri
+Author: Mehmet Cagri Kaymak
 """
 
-from reaxFF_potential import jax_calculate_total_energy_vmap
-from reaxFF_potential import jax_calculate_total_energy_for_minim_vmap,safe_sqrt
-from force_field import preprocess_force_field,dgrrdn,rdndgr,TYPE
-from helper import parse_and_save_force_field
-from simulation_system import SimulationSystem
+from jaxreaxff.reaxffpotential import jax_calculate_total_energy_vmap
+from jaxreaxff.reaxffpotential import jax_calculate_total_energy_for_minim_vmap,safe_sqrt
+from jaxreaxff.forcefield import preprocess_force_field,rdndgr,TYPE
+from jaxreaxff.structure import Structure
 import numpy as onp
 import jax.numpy as np
 import jax
 
-import pickle
 import time
-from jax.experimental import optimizers
-import sys
-import matplotlib.pyplot as plt
-import re
 import copy
 from scipy.optimize import minimize
-
-DEVICE_NAME = 'gpu'
-# global param, will be filled while reading "params" file
+from jaxreaxff.helper import DEVICE_NAME
 
 
 def calculate_dist_and_angles(list_positions,list_orth_matrices,list_all_shift_combs,
@@ -33,11 +27,11 @@ def calculate_dist_and_angles(list_positions,list_orth_matrices,list_all_shift_c
                               list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
                               list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
                               list_all_hbond_list,list_all_hbond_shift,list_all_hbond_mask):
-    list_all_dist_mat = [jax.vmap(SimulationSystem.create_distance_matrices)(list_positions[i],list_orth_matrices[i],list_all_shift_combs[i])  for i in range(len(list_positions))]
-    list_all_body_2_distances = [jax.vmap(SimulationSystem.calculate_2_body_distances)(list_positions[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_2_map[i]) for i in range(len(list_positions))]
-    list_all_body_3_angles = [jax.vmap(SimulationSystem.calculate_3_body_angles)(list_positions[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_3_list[i],list_all_body_3_map[i],list_all_body_3_shift[i]) for i in range(len(list_positions))]
-    list_all_body_4_angles = [jax.vmap(SimulationSystem.calculate_body_4_angles_new)(list_positions[i],list_orth_matrices[i],list_all_body_4_list[i],list_all_body_4_map[i],list_all_body_4_shift[i]) for i in range(len(list_positions))]
-    list_all_angles_and_dist = [jax.vmap(SimulationSystem.calculate_global_hbond_angles_and_dist)(list_positions[i],list_orth_matrices[i],list_all_hbond_list[i],list_all_hbond_shift[i],list_all_hbond_mask[i]) for i in range(len(list_positions))]
+    list_all_dist_mat = [jax.vmap(Structure.create_distance_matrices)(list_positions[i],list_orth_matrices[i],list_all_shift_combs[i])  for i in range(len(list_positions))]
+    list_all_body_2_distances = [jax.vmap(Structure.calculate_2_body_distances)(list_positions[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_2_map[i]) for i in range(len(list_positions))]
+    list_all_body_3_angles = [jax.vmap(Structure.calculate_3_body_angles)(list_positions[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_3_list[i],list_all_body_3_map[i],list_all_body_3_shift[i]) for i in range(len(list_positions))]
+    list_all_body_4_angles = [jax.vmap(Structure.calculate_body_4_angles_new)(list_positions[i],list_orth_matrices[i],list_all_body_4_list[i],list_all_body_4_map[i],list_all_body_4_shift[i]) for i in range(len(list_positions))]
+    list_all_angles_and_dist = [jax.vmap(Structure.calculate_global_hbond_angles_and_dist)(list_positions[i],list_orth_matrices[i],list_all_hbond_list[i],list_all_hbond_shift[i],list_all_hbond_mask[i]) for i in range(len(list_positions))]
 
     return [list_all_dist_mat,list_all_body_2_distances, list_all_body_3_angles, list_all_body_4_angles, list_all_angles_and_dist]
 
@@ -474,7 +468,6 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
     # max atom count
     total_num_systems = sum(list_counts)
     pot_func = jax.vmap(jax_calculate_total_energy_vmap,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
-    pot_func_pmap = jax.pmap(jax_calculate_total_energy_vmap,in_axes=(None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),backend=DEVICE_NAME)
     all_pots = np.zeros(total_num_systems,dtype=TYPE)
     atom_counts = np.array([l.shape[1] for l in list_all_type])
     max_atom_count = np.max(atom_counts)
@@ -486,8 +479,6 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
         all_forces = np.zeros(shape=(total_num_systems,max_atom_count,3),dtype=TYPE)
         force_func = jax.vmap(jax.grad(jax_calculate_total_energy_for_minim_vmap),
                                                        in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))
-        force_func_pmap = jax.pmap(jax.grad(jax_calculate_total_energy_for_minim_vmap),
-                                                       in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),backend=DEVICE_NAME)
     start = 0
     end = 0
 
@@ -548,7 +539,7 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
         geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals = structured_training_data['GEOMETRY-2']
         pos1s = all_positions[geo2_sys_index_list, geo2_atom_index_list[:,0]]
         pos2s = all_positions[geo2_sys_index_list, geo2_atom_index_list[:,1]]
-        calc_dist = jax.vmap(SimulationSystem.calculate_2_body_distance)(pos1s,pos2s)
+        calc_dist = jax.vmap(Structure.calculate_2_body_distance)(pos1s,pos2s)
         geo2_error = np.sum(((geo2_all_target_vals - calc_dist) / geo2_all_weights) ** 2)
         total_error = total_error  + geo2_error
         if return_indiv_error:
@@ -561,7 +552,7 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
         pos2s = all_positions[geo3_sys_index_list, geo3_atom_index_list[:,1]]
         pos3s = all_positions[geo3_sys_index_list, geo3_atom_index_list[:,2]]
         geo3_all_target_vals = geo3_all_target_vals #* dgrrdn # degree to radian
-        calc_ang = jax.vmap(SimulationSystem.calculate_valence_angle)(pos1s,pos2s,pos3s) * rdndgr
+        calc_ang = jax.vmap(Structure.calculate_valence_angle)(pos1s,pos2s,pos3s) * rdndgr
         # to have periodicity, Ex. diff between 170 and -170 is 20 degree.
         calc_ang = np.where(calc_ang < 0.0, calc_ang+360.0, calc_ang)
         geo3_all_target_vals = np.where(geo3_all_target_vals < 0.0, geo3_all_target_vals+360.0, geo3_all_target_vals)
@@ -579,44 +570,22 @@ def jax_loss_vmap(flattened_force_field,flattened_non_dif_params,
         pos3s = all_positions[geo4_sys_index_list, geo4_atom_index_list[:,2]]
         pos4s = all_positions[geo4_sys_index_list, geo4_atom_index_list[:,3]]
         geo4_all_target_vals = geo4_all_target_vals #* dgrrdn# degree to radian
-        calc_ang = jax.vmap(SimulationSystem.calculate_body_4_angle_single)(pos1s,pos2s,pos3s,pos4s).reshape(-1)
+        calc_ang = jax.vmap(Structure.calculate_body_4_angle_single)(pos1s,pos2s,pos3s,pos4s).reshape(-1)
         calc_ang = calc_ang * rdndgr
-        #print(geo4_all_target_vals)
-        #print(calc_ang)
-        #print('**********')
-        #calc_ang = np.where(calc_ang < 0.0, calc_ang+360, calc_ang)
-        #geo4_all_target_vals = np.where(geo4_all_target_vals < 0.0, geo4_all_target_vals+360, geo4_all_target_vals)
-        # fix later
         geo4_all_target_vals = np.abs(geo4_all_target_vals)
         geo4_error = np.sum(((geo4_all_target_vals - calc_ang) / geo4_all_weights) ** 2)
         total_error = total_error  + geo4_error
         if return_indiv_error:
             all_errors['GEOMETRY-4'] = [calc_ang, geo4_all_target_vals, geo4_all_weights, ((geo4_all_target_vals - calc_ang) / geo4_all_weights) ** 2]
-        #print(geo4_all_target_vals)
-        #print(calc_ang)
-        #print('geo4_error',geo4_error)
     if 'FORCE-ATOM' in structured_training_data:
         force_sys_index_list, force_all_atom_indices, force_all_weights, force_list_target_vals = structured_training_data['FORCE-ATOM']
-        calc_forces = all_forces[:, :, :] *-1 #TODO: needed dont know why???
-        #remove later
-
-        #force_list_target_vals = force_sys_index_list
-        #print(force_list_target_vals[0,0])
-        #diff = force_list_target_vals.flatten() - calc_forces.flatten()
-        #calc_forces_abs = np.abs(calc_forces)
-        #diff = force_list_target_vals - calc_forces_abs.flatten()
-        #diff = 450.0 - calc_forces_abs
-        #diff = np.where(calc_forces_abs > 450.0, diff, 0.0)
+        calc_forces = all_forces[:, :, :] *-1
         ###############################
         calc_forces = all_forces[force_sys_index_list, force_all_atom_indices, :] *-1 #TODO: needed dont know why???
         force_error = np.sum(((force_list_target_vals - calc_forces) / force_all_weights.reshape(-1,1)) ** 2)
-        #force_all_weights = np.where(np.abs(force_list_target_vals)==450.0, 5.0, 100.0).flatten()
-        #force_all_weights = np.where(np.abs(force_list_target_vals).flatten()<40.0, 5.0, force_all_weights).flatten()
-        #force_error = np.sum(((diff) / force_all_weights) ** 2) # force_all_weights.reshape(-1,1)
         total_error = total_error  + force_error
         if return_indiv_error:
             all_errors['FORCE-ATOM'] = [calc_forces, force_list_target_vals, force_all_weights, ((force_list_target_vals - calc_forces) / force_all_weights.reshape(-1,1)) ** 2]
-        #(calc_forces[:20])
     if 'FORCE-RMSG' in structured_training_data:
         force_sys_index_list, force_all_weights, all_target = structured_training_data['FORCE-RMSG']
         calc_rmsg = safe_sqrt(np.mean(all_forces[force_sys_index_list, :, :]**2,axis=(1,2))).reshape(-1)
@@ -639,46 +608,12 @@ def calculate_params_from_grad(selected_params, grads, learning_rate):
 
 
 def update_parameters(old_params,new_params, bounds):
-    #diff = high_limit - low_limit
-    #max_change = diff * 5/100
-    #truncated_params = np.clip(new_params,old_params-max_change,old_params+max_change)
-
-    truncated_params = np.clip(new_params,bounds[:,0],bounds[:,1]) #jax.vmap(controlled_update)(new_params ,low_limit,high_limit)
-    # dont let params to change more than 5% of the range
-
-    '''
-    for i in range(len(PARAM_INDICES)):
-        p = PARAM_INDICES[i]
-        ind1 = p[0]
-        ind2 = p[1]
-        new_val =  new_params[i]
-        #print(new_val, p)
-        new_val = Simulator.controlled_update(new_val, params_list[i][2], params_list[i][3])
-
-        truncated_params = jax.ops.index_update(truncated_params, i, new_val)
-        #flattened_force_field[ind][param_indices] = new_val
-        #print(ind, param_indices, new_val)
-    '''
+    truncated_params = np.clip(new_params,bounds[:,0],bounds[:,1])
     return truncated_params
 
 
 
 def controlled_update(new_val, low_limit, high_limit):
-    #noise = onp.random.random() * diff/10000
-    #noise = noise - 0.5 * diff/10000
-    #new_val = new_val + onp.random.normal(0, 0.0005, 1)[0]
-    '''
-    if new_val < low_limit:
-        new_val = low_limit
-        #new_val = low_limit
-    elif new_val > high_limit:
-        new_val = high_limit
-        #new_val = high_limit
-    '''
-    #new_val = np.clip(new_val,low_limit,high_limit)
-    # dont let value to be 0
-    #close_zero = np.where(high_limit > 0, 0.001, -0.001)
-    #new_val = np.where(new_val == 0, close_zero, new_val)
     return np.clip(new_val,low_limit,high_limit)
 
 def create_random_order(size):
@@ -749,10 +684,11 @@ def minimize_coordinate_descent(num_iters,bounds, selected_params, args, grad_fu
         print(max_ind,selected_params[max_ind], grads[max_ind])
     return selected_params
 
-def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_loss_and_grad_function,energy_minim_count,
+def train_FF(orig_loss_func,loss_and_grad_func,grad_func,minim_index_lists,subs,energy_minim_loss_and_grad_function,energy_minim_count,
                energy_minim_init_LR,energy_minim_multip_LR,list_do_minim,list_num_minim_steps,end_RMSG,
                selected_params,param_indices,bounds,flattened_force_field,flattened_non_dif_params,
-               min_weight, structured_training_data, params_list, epoch_count,
+               structured_training_data, params_list, iteration_count,
+               advanced_opts,
                list_real_atom_counts,
                list_positions_init,
                list_all_shift_combs,
@@ -775,7 +711,7 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
     global_min = 99999999999
     global_min_params = np.array(copy.deepcopy(selected_params))
 
-    def new_loss(selected_params,param_indices,flattened_force_field,flattened_non_dif_params,
+    def new_loss_and_grad_func(selected_params,param_indices,flattened_force_field,flattened_non_dif_params,
                                  structured_training_data,
                                  list_positions,
                                  list_all_type,list_all_mask,
@@ -813,16 +749,20 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
                              list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,
                              list_bond_rest,list_angle_rest,list_torsion_rest)
 
-            [list_all_dist_mat,list_all_body_2_distances, list_all_body_3_angles, list_all_body_4_angles, list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=DEVICE_NAME)(list_positions,list_orth_matrices,list_all_shift_combs,
-                                                                                                                              list_all_body_2_list,list_all_body_2_map,
-                                                                                                                              list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
-                                                                                                                              list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
-                                                                                                                              list_all_hbond_list,list_all_hbond_shift,list_all_hbond_mask)
+            [list_all_dist_mat,list_all_body_2_distances,
+             list_all_body_3_angles,
+             list_all_body_4_angles,
+             list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=DEVICE_NAME)(list_positions,
+                                                                                            list_orth_matrices,list_all_shift_combs,
+                                                                                            list_all_body_2_list,list_all_body_2_map,
+                                                                                            list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
+                                                                                            list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
+                                                                                            list_all_hbond_list,list_all_hbond_shift,list_all_hbond_mask)
 
 
 
 
-        loss,grads = loss_func(selected_params,param_indices,flattened_force_field,flattened_non_dif_params,
+        loss,grads = loss_and_grad_func(selected_params,param_indices,flattened_force_field,flattened_non_dif_params,
                                  structured_training_data,
                                  list_positions,
                                  list_all_type,list_all_mask,
@@ -838,23 +778,13 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
                                  list_bond_rest,list_angle_rest,list_torsion_rest,
                                  list_do_minim,orig_list_pos,False)
 
-        #is_in_bound = onp.all(selected_params >= bounds[:,0]) and onp.all(selected_params <= bounds[:,1])
-
-        #if is_in_bound == False:
-        #    loss = 9999999999
 
         return onp.asarray(loss,dtype=onp.float64), onp.asarray(np.nan_to_num(grads),dtype=onp.float64)
 
-    #new_grad = lambda *x:onp.asarray(np.nan_to_num(grad_func(*x)),dtype=onp.float64)
-    #new_loss = lambda *x:onp.asarray(loss_func(*x),dtype=onp.float64)
-    minim_flag = sum([np.sum(l) for l in list_do_minim]) != 0 and energy_minim_count > 0
-    bounds = []
-    for p in params_list:
-        bounds.append((p[2],p[3]))
-    bounds = onp.array(bounds)
 
-    #list_positions = copy.deepcopy(list_positions_init)
-    #list_positions = [np.array(p) for p in list_positions]
+    minim_flag = sum([np.sum(l) for l in list_do_minim]) != 0 and energy_minim_count > 0
+
+
     total_f_ev = 0
     total_grad_ev = 0
     prev_loss = 99999999999
@@ -864,36 +794,52 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
     g_ev_list = []
     all_f_optim = []
     ep = 0
+    restricted_flag = False
     args = (param_indices,flattened_force_field,flattened_non_dif_params,
-                                 structured_training_data,
-                                 list_positions_init,
-                                 list_all_type,list_all_mask,
-                                 list_all_total_charge,
-                                  list_all_shift_combs,
-                                 list_orth_matrices,
-                                 list_all_body_2_neigh_list,
-                                 list_all_dist_mat,
-                                 list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
-                                 list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
-                                 list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
-                                 list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
-                                 list_bond_rest,list_angle_rest,list_torsion_rest,
-                                 energy_minim_loss_and_grad_function,
-                                 energy_minim_count,energy_minim_init_LR,
-                                 energy_minim_multip_LR,list_do_minim,list_num_minim_steps)
+            structured_training_data,
+            list_positions_init,
+            list_all_type,list_all_mask,
+            list_all_total_charge,
+            list_all_shift_combs,
+            list_orth_matrices,
+            list_all_body_2_neigh_list,
+            list_all_dist_mat,
+            list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
+            list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
+            list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
+            list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
+            list_bond_rest,list_angle_rest,list_torsion_rest,
+            energy_minim_loss_and_grad_function,
+            energy_minim_count,energy_minim_init_LR,
+            energy_minim_multip_LR,list_do_minim,list_num_minim_steps)
 
-    #def callback(x):
-    #    all_f_optim.append(ep, new_loss(x, *args)[0])
 
-    #to scale the weights
-#print('before training')
     list_positions = list_positions_init
     orig_list_pos = copy.deepcopy(list_positions_init)
     orig_list_pos = [np.array(p) for p in orig_list_pos]
-    for i in range(epoch_count+1):
+    for e in range(iteration_count+1):
+        print("*" * 40)
+        print("Iteration: {}".format(e))
+        iteration_start = time.time()
 
+        if advanced_opts['rest_search_start'] > 0 and e > advanced_opts['rest_search_start']:
+            print("Restrict the search")
+            bounds = []
+            if restricted_flag == True:
+                selected_params = global_min_params
+                restricted_flag = False
+            for j,p in enumerate(params_list):
+                size = (p[3] - p[2]) * advanced_opts['perc_width_rest_search']
+                par = float(selected_params[j])
+                lower_bound = p[2]
+                if par - size >= lower_bound:
+                    lower_bound = par - size
+                upper_bound = p[3]
+                if par + size <= upper_bound:
+                    upper_bound = par + size
+                bounds.append((lower_bound, upper_bound))
+            bounds = onp.array(bounds)
 
-        epoch_start = time.time()
         #list_positions_init_mod = [l + onp.random.normal(scale=0.01,    size=l.shape) for l in list_positions_init]
         if minim_flag:
             flattened_force_field = jax.jit(use_selected_parameters,backend=DEVICE_NAME, static_argnums=(1))(selected_params,param_indices, flattened_force_field)
@@ -906,11 +852,15 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
                                                                                         energy_minim_loss_and_grad_function, energy_minim_count,
                                                                                         energy_minim_init_LR,energy_minim_multip_LR,end_RMSG)
 
-            [list_all_dist_mat,list_all_body_2_distances, list_all_body_3_angles, list_all_body_4_angles, list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=DEVICE_NAME)(list_positions,list_orth_matrices,list_all_shift_combs,
-                                                                                                                          list_all_body_2_list,list_all_body_2_map,
-                                                                                                                          list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
-                                                                                                                          list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
-                                                                                                                          list_all_hbond_list,list_all_hbond_shift,list_all_hbond_mask)
+            [list_all_dist_mat,list_all_body_2_distances, 
+            list_all_body_3_angles, list_all_body_4_angles, 
+            list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=DEVICE_NAME)(list_positions,
+                                                                                              list_orth_matrices,
+                                                                                              list_all_shift_combs,
+                                                                                              list_all_body_2_list,list_all_body_2_map,
+                                                                                              list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
+                                                                                              list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
+                                                                                              list_all_hbond_list,list_all_hbond_shift,list_all_hbond_mask)
             minim_end = time.time()
             print("minim. took {}".format(minim_end-minim_start))
             print('Energy minim loss: {}'.format(min_loss))
@@ -920,16 +870,11 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
             print('RMSG > {} count:{}'.format(2.5,count))
             count = sum([onp.sum((l.reshape(-1)>5.0) * (minim_steps.reshape(-1) > 50)) for l,minim_steps in zip(list_RMSG,subs[1])])
             print('RMSG > {} count:{}'.format(5.0,count))
-            '''
-            for i in range(len(list_RMSG)):
-                for j in range(len(list_RMSG[i])):
-                    if list_RMSG[i][j] > end_RMSG and list_do_minim[i][j]:
-                        print(i,j,list_RMSG[i][j])
-            '''
+
         else:
             list_positions = list_positions_init
         prev_loss = current_loss
-        current_loss = orig_loss(selected_params,param_indices,flattened_force_field,flattened_non_dif_params,
+        current_loss = orig_loss_func(selected_params,param_indices,flattened_force_field,flattened_non_dif_params,
                                  structured_training_data,
                                  list_positions,
                                  list_all_type,list_all_mask,
@@ -947,17 +892,16 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
 
         all_loss_values.append(current_loss)
         all_params.append(selected_params)
-        print("current_loss", current_loss)
+        print("True loss value (after energy minim): {:.2f}".format(current_loss))
         if current_loss < global_min:
             global_min = current_loss
             global_min_params = np.array(copy.deepcopy(selected_params))
-            print("global_min", global_min)
+            print("Lowest loss value so far: {:.2f}".format(global_min))
 
-        if abs(current_loss-prev_loss) / current_loss < 0.001: #or current_loss > global_min * 1.5:
-            selected_params = add_noise_to_params(global_min_params, bounds, scale=0.01)
-            print('noise added')
+        if abs(current_loss-prev_loss) / max(current_loss,prev_loss) < advanced_opts['perc_err_change_thr']:
+            selected_params = add_noise_to_params(global_min_params, bounds, scale=advanced_opts['perc_noise_when_stuck'])
+            print('noise is added to the best parameter set so far')
             continue
-        ep = i
         args = (param_indices,flattened_force_field,flattened_non_dif_params,
                                      structured_training_data,
                                      list_positions,
@@ -976,9 +920,9 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
                                      energy_minim_count,energy_minim_init_LR,
                                      energy_minim_multip_LR,list_do_minim,list_num_minim_steps)
 
-        if True and i < epoch_count:
+        if e < iteration_count:
 
-            min_state = minimize(new_loss, selected_params,jac=True,
+            min_state = minimize(new_loss_and_grad_func, selected_params,jac=True,
                             args=(param_indices,flattened_force_field,flattened_non_dif_params,
                                  structured_training_data,
                                  list_positions,
@@ -997,7 +941,7 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
                                  energy_minim_count,energy_minim_init_LR,
                                  energy_minim_multip_LR,list_do_minim,list_num_minim_steps),
                             method=optimizer,bounds=bounds,options=optim_options) #dict(maxiter=1000, disp=True,iprint = 1,maxls=40,maxcor=100))
-            print("funv.ev {}, fun: {}".format(min_state.nfev,min_state.fun))
+            print("funv.ev {}, loss value after loss minim.: {:.2f}".format(min_state.nfev,min_state.fun))
             f_ev_list.append(min_state.nfev)
             #g_ev_list.append(min_state.njev)
 
@@ -1006,12 +950,12 @@ def train_FF(orig_loss,loss_func,grad_func,minim_index_lists,subs,energy_minim_l
 
             selected_params = np.array(min_state.x)
 
-        epoch_end = time.time()
-        print("Epoch-{} took {} sec".format(i,epoch_end-epoch_start))
+        iteration_end = time.time()
+        print("Iteration-{} took {:.2f} sec".format(e,iteration_end-iteration_start))
 
 
     flattened_force_field = jax.jit(use_selected_parameters,backend=DEVICE_NAME, static_argnums=(1))(global_min_params,param_indices, flattened_force_field)
-    print("total funv.ev {}".format(total_f_ev))
+    print("total func. ev {}".format(total_f_ev))
 
 
     return flattened_force_field,global_min_params,global_min,all_params,all_loss_values,f_ev_list,g_ev_list #,all_f_optim

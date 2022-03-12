@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Aug 30 04:02:24 2020
+K-means like clustering code to cluster similar structures together
+to minimize memory and computational cost
 
-@author: cagri
+accelerated using numba
+
+Author: Mehmet Cagri Kaymak
 """
 from scipy.spatial import distance
 import numpy as onp

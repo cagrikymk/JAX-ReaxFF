@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Aug  4 14:04:16 2020
+Implementation of ReaxFF potential using JAX
+Ported from the standalone ReaxFF(Fortran)
 
-@author: cagri
+Author: Mehmet Cagri Kaymak
 """
 
-from simulation_system import SimulationSystem
-from force_field import TYPE,c1c,rdndgr,dgrrdn,preprocess_force_field,TYPE
+from jaxreaxff.structure import Structure
+from jaxreaxff.forcefield import TYPE,c1c,dgrrdn,preprocess_force_field
 
 import numpy as onp
 import jax.numpy as np
@@ -31,10 +32,10 @@ def safe_sqrt(x):
 jax.defjvp(safe_sqrt, lambda g, ans, x: 0.5 * g / np.where(x > 0, ans, np.inf) )
 
 def calculate_total_energy_single(flattened_force_field, flattened_non_dif_params, system):
-    #body_2_distances = SimulationSystem.calculate_2_body_distances(system.atom_positions,system.box_size, system.global_body_2_inter_list,system.global_body_2_inter_list_mask)
-    #body_3_angles = SimulationSystem.calculate_3_body_angles(system.atom_positions,system.box_size,system.global_body_2_inter_list,system.global_body_3_inter_list,system.global_body_3_inter_list_mask, system.global_body_3_inter_shift_map)
-    #body_4_angles = SimulationSystem.calculate_body_4_angles_new(system.atom_positions,system.box_size,system.global_body_4_inter_list,system.global_body_4_inter_shift,system.global_body_4_inter_list_mask)
-    #dist_matrices = SimulationSystem.create_distance_matrices(system.is_periodic, system.atom_positions,system.box_size)
+    #body_2_distances = Structure.calculate_2_body_distances(system.atom_positions,system.box_size, system.global_body_2_inter_list,system.global_body_2_inter_list_mask)
+    #body_3_angles = Structure.calculate_3_body_angles(system.atom_positions,system.box_size,system.global_body_2_inter_list,system.global_body_3_inter_list,system.global_body_3_inter_list_mask, system.global_body_3_inter_shift_map)
+    #body_4_angles = Structure.calculate_body_4_angles_new(system.atom_positions,system.box_size,system.global_body_4_inter_list,system.global_body_4_inter_shift,system.global_body_4_inter_list_mask)
+    #dist_matrices = Structure.create_distance_matrices(system.is_periodic, system.atom_positions,system.box_size)
 
 
     return jax_calculate_total_energy_vmap(flattened_force_field,flattened_non_dif_params,
@@ -252,11 +253,11 @@ def jax_calculate_total_energy_for_minim_vmap(atom_positions,flattened_force_fie
     #flattened_force_field = use_selected_parameters(selected_params,selected_inds, flattened_force_field)
     #flattened_force_field = preprocess_force_field(flattened_force_field, flattened_non_dif_params)
 
-    body_2_distances = SimulationSystem.calculate_2_body_distances(atom_positions,orth_matrix, global_body_2_inter_list,global_body_2_inter_list_mask)
-    body_3_angles = SimulationSystem.calculate_3_body_angles(atom_positions,orth_matrix,global_body_2_inter_list,global_body_3_inter_list,global_body_3_inter_list_mask, global_body_3_inter_shift_map)
-    body_4_angles = SimulationSystem.calculate_body_4_angles_new(atom_positions,orth_matrix,global_body_4_inter_list,global_body_4_inter_list_mask,global_body_4_inter_shift)
-    dist_matrices = SimulationSystem.create_distance_matrices( atom_positions,orth_matrix, all_shift_comb)
-    hbond_angles_and_dist = SimulationSystem.calculate_global_hbond_angles_and_dist(atom_positions,orth_matrix,global_hbond_inter_list,hbond_shift,global_hbond_inter_list_mask)
+    body_2_distances = Structure.calculate_2_body_distances(atom_positions,orth_matrix, global_body_2_inter_list,global_body_2_inter_list_mask)
+    body_3_angles = Structure.calculate_3_body_angles(atom_positions,orth_matrix,global_body_2_inter_list,global_body_3_inter_list,global_body_3_inter_list_mask, global_body_3_inter_shift_map)
+    body_4_angles = Structure.calculate_body_4_angles_new(atom_positions,orth_matrix,global_body_4_inter_list,global_body_4_inter_list_mask,global_body_4_inter_shift)
+    dist_matrices = Structure.create_distance_matrices( atom_positions,orth_matrix, all_shift_comb)
+    hbond_angles_and_dist = Structure.calculate_global_hbond_angles_and_dist(atom_positions,orth_matrix,global_hbond_inter_list,hbond_shift,global_hbond_inter_list_mask)
 
     #dist_matrices = 0
     reax_pot = 0.0
@@ -312,7 +313,7 @@ def jax_calculate_angle_restraint_energy(atom_positions, angle_restraints):
     pos2 = atom_positions[atoms_j]
     pos3 = atom_positions[atoms_k]
 
-    cur_angle = jax.vmap(SimulationSystem.calculate_valence_angle)(pos1,pos2,pos3) # TODO: double check this part
+    cur_angle = jax.vmap(Structure.calculate_valence_angle)(pos1,pos2,pos3) # TODO: double check this part
     en_restraint = np.sum(angle_restraint_mask * forces_1 * (1.0 - np.exp(-forces_2 * (cur_angle - target_angle)**2)))
 
     return en_restraint
@@ -334,7 +335,7 @@ def jax_calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
     pos3 = atom_positions[atoms_3]
     pos4 = atom_positions[atoms_4]
 
-    cur_torsion = jax.vmap(SimulationSystem.calculate_body_4_angles_single)(pos1,pos2,pos3,pos4)[:,-1].reshape(-1)  # TODO: double check this part
+    cur_torsion = jax.vmap(Structure.calculate_body_4_angles_single)(pos1,pos2,pos3,pos4)[:,-1].reshape(-1)  # TODO: double check this part
     en_restraint = np.sum(torsion_restraint_mask * forces_1 * (1.0 - np.exp(-forces_2 * (cur_torsion - target_torsion)**2)))
 
     return en_restraint
@@ -796,72 +797,6 @@ def jax_calculate_valency_pot(atom_types, global_body_3_inter_list,
     return [total_pot,total_penalty,total_conj]
 
 
-
-def jax_calculate_valency_pot_NNP(atom_types, global_body_3_inter_list,
-                              global_body_3_inter_list_mask,
-                              global_body_3_angles,
-                              global_body_2_distances,
-                              global_body_2_mask,
-                              body_2_local_list,
-                              bo, cutoff, cutoff2, qs_vals, power_vals,dist_par_vals, embeddings, NN_layer_params1, b1, NN_layer_params2, b2, NN_layer_params3, b3):
-    MAX_VAL = 5
-    ##[ind1, type1, ind2, type2, ind3, type3, bond_ind1,bond_ind2]
-    type_indices = global_body_3_inter_list[:,[1,3,5]]
-    atom_indices = global_body_3_inter_list[:,[0,2,4]]
-    type_indices = type_indices.transpose()
-    atom_indices = atom_indices.transpose()
-
-    my_qs = qs_vals[type_indices[1]]
-    my_power = power_vals[type_indices[1]]
-    my_dist_par_vals = dist_par_vals[type_indices[1]]
-
-    val_angles = global_body_3_angles
-    num_atoms = len(atom_types)
-    #my_valency_param_mask = valency_param_mask[atom_types,:,:][:,atom_types,:][:,:,atom_types]
-    #complete_mask = valency_system_mask * my_valency_param_mask
-    # first create the required data structures
-    #bo_new = bo - cutoff2
-    #bo_new = bo
-    #boa = bo_new[global_body_3_inter_list[:, -2]]
-    #bob = bo_new[global_body_3_inter_list[:, -1]]
-
-    # thresholding
-    #boa = np.clip(boa, a_min=0) #if (boa.lt.zero.or.bob.lt.zero) then skip
-    #bob = np.clip(bob, a_min=0)
-    #new_mask = np.where(boa * bob < 0.00001, 0, 1) #!Scott Habershon recommendation March 2009
-    #complete_mask = global_body_3_inter_list_mask * new_mask
-
-    dist1 = global_body_2_distances[global_body_3_inter_list[:, -2]]
-    dist2 = global_body_2_distances[global_body_3_inter_list[:, -1]]
-
-    embed1 = embeddings[type_indices[0]]
-    embed2 = embeddings[type_indices[2]]
-
-    fc1 = np.where(dist1 < cutoff, 0.5 * np.cos(np.pi * dist1/cutoff) + 0.5, 0)
-    fc2 = np.where(dist2 < cutoff, 0.5 * np.cos(np.pi * dist2/cutoff) + 0.5, 0)
-    neigh_indices = body_2_local_list[:,:,1].astype(np.int32)
-    sum_embeds = (embed1 + embed2)/2
-    sum_embeds = sum_embeds * (np.power(2, 1-my_power) * (1 + np.power(np.cos(val_angles - my_qs), my_power)) * (np.exp((dist1 + dist2)/2.0 -my_dist_par_vals)**2) * fc1 * fc2).reshape(-1,1)
-    #print(val_angles.shape)
-    # NN evaluation
-
-    matmul_res = jax.vmap(np.matmul, in_axes=(0,0))(sum_embeds, NN_layer_params1[type_indices[1]])
-    layer1_out = np.tanh(matmul_res + b1[type_indices[1]])
-
-    matmul_res = jax.vmap(np.matmul, in_axes=(0,0))(layer1_out, NN_layer_params2[type_indices[1]])
-    layer2_out = np.tanh(matmul_res + b2[type_indices[1]])
-
-    matmul_res = jax.vmap(np.matmul, in_axes=(0,0))(layer2_out, NN_layer_params3[type_indices[1]])
-    layer3_out = (jax.nn.sigmoid(matmul_res + b3[type_indices[1]]) - 0.5)
-
-    #print(layer1_out.shape)
-    #print(layer2_out.shape)
-    #print(layer3_out.shape)
-    return np.sum(layer3_out * global_body_3_inter_list_mask)
-
-
-
-
 def calculate_boncor_pot(num_atoms,body_2_global_list,body_2_global_list_mask,body_2_local_list, bo, bopi, bopi2, abo, aval,vval3, bo131, bo132, bo133, ovc, v13cor, ov_coord_1, ov_coord_2):
     #Content of the body_2_global_list:
     #[ind1, type1, ind2, type2, shift[0], shift[1], shift[2]]
@@ -979,19 +914,7 @@ def jax_calculate_covbon_pot(atom_types,
                             ov_coord_1, ov_coord_2,
                                 bond_params_mask, cutoff,
                                 rob1_mask,rob2_mask,rob3_mask,ovc, v13cor):
-    #Content of the body_2_global_list:
-    #[ind1, type1, ind2, type2, shift[0], shift[1], shift[2]]
 
-    '''
-    #bop1,bop2.bop3
-    Anlayze which parameters increase the bond energy:
-    bor = ehulp + ehulpp + ehulppp (all of them increases the energy)
-    bo = bor - cutoff
-
-    ehulp = (1 + cutoff) * np.exp(my_bop1 * rh2)--->
-    rh2 = rhulp ** my_bop2--->(bop2++)
-    rhulp = distance / my_rob1
-    '''
     num_atoms = len(atom_types)
     type_indices = body_2_global_list[:,[1,3]]
     type_indices = type_indices.transpose()
@@ -1002,26 +925,14 @@ def jax_calculate_covbon_pot(atom_types,
     symm = (atom_indices[0] == atom_indices[1]).astype(TYPE) + 1
     symm = 1.0 / symm
     distance = global_body_2_distances
-    #print('distance', distance[15])
-    # decide if there is a bond
+
     my_rob1 = rob1[type_indices[0], type_indices[1]]
-    #print('my_rob1', my_rob1[15])
-    #my_rob1 = my_rob1 + np.triu(my_rob1, k=1).transpose()
-    #my_rob1_mask = rob1_mask[type_indices[0], type_indices[1]]
     my_rob2 = rob2[type_indices[0], type_indices[1]]
-    #print('my_rob2', my_rob2[15])
-    #my_rob2 = my_rob2 + np.triu(my_rob2, k=1).transpose()
-    #my_rob2_mask = rob2_mask[type_indices[0], type_indices[1]]
     my_rob3 = rob3[type_indices[0], type_indices[1]]
-    #print('my_rob3', my_rob3[15])
-    #my_rob3 = my_rob3 + np.triu(my_rob3, k=1).transpose()
-    #my_rob3_mask = rob3_mask[type_indices[0], type_indices[1]]
     my_ptp = ptp[type_indices[0], type_indices[1]]
     my_pdp = pdp[type_indices[0], type_indices[1]]
     my_popi = popi[type_indices[0], type_indices[1]]
-    #print('my_popi', my_popi[15])
     my_pdo = pdo[type_indices[0], type_indices[1]]
-    #print('my_pdo', my_pdo[15])
     my_bop1 = bop1[type_indices[0], type_indices[1]]
     my_bop2 = bop2[type_indices[0], type_indices[1]]
     my_de1 = de1[type_indices[0], type_indices[1]]
@@ -1032,34 +943,16 @@ def jax_calculate_covbon_pot(atom_types,
 
     #rhulp = distance / my_rob1
     rhulp = vectorized_cond(my_rob1 == 0, lambda x: 0.,lambda x: distance / (x+1e-10), my_rob1)
-    #rhulp = np.where(my_rob1 == 0, 0.0, distance / my_rob1)
-    #rhulp = jax.ops.index_update(rhulp, mask_rob1, 1.0)
     rhulp2 = vectorized_cond(my_rob2 == 0, lambda x: 0., lambda x: distance / (x+1e-10), my_rob2)
-    #rhulp2 = np.where(my_rob2 == 0, 0.0, distance / my_rob2)
-    #rhulp2 = distance / my_rob2
-    #rhulp2 = jax.ops.index_update(rhulp2, mask_rob2, 1.0)
     rh2p = np.clip(rhulp2 ** my_ptp, -1e15,1e15)
-    #rh2p = rhulp2 ** my_ptp
-    #gradient non issue fix
     ehulpp = np.exp(np.clip(my_pdp * rh2p,CLIP_MIN,CLIP_MAX))
-    #ehulpp = np.exp(my_pdp * rh2p)
-
     ehulpp = np.where(my_rob2 == 0, 0.0, ehulpp)
 
-    #ehulpp = ehulpp * my_rob2_mask
-    #ehulpp = jax.ops.index_update(ehulpp, mask_rob2, 0.0)
-    #print(ehulpp)
-    #print(type_indices[0][15], type_indices[1][15])
-    # to not get nan during calculations
-    #rhulp3 = np.where(my_rob3 == 0, 0.0, distance / my_rob3)
     rhulp3 = vectorized_cond(my_rob3 == 0, lambda x: 0., lambda x: distance / (x+1e-10), my_rob3)
     #rhulp3 = distance / my_rob3
     rh2pp = np.clip((rhulp3+1e-30) ** my_popi, -1e15,1e15) # problem: if rhulp3 is 0, ln(0) is not defined
-    #print('rh2pp',rh2pp[15])
-    #ehulppp = np.exp(my_pdo*rh2pp)
     #gradient non issue fix
     ehulppp = np.exp(my_pdo*rh2pp)
-    #ehulppp = jax.ops.index_update(ehulppp, mask_rob3, 0.0)
     ehulppp = np.where(my_rob3 == 0, 0.0, ehulppp)
     #ehulppp = ehulppp * my_rob3_mask
 
@@ -1070,19 +963,6 @@ def jax_calculate_covbon_pot(atom_types,
     ehulp = (1 + cutoff) * np.exp(np.clip(my_bop1 * rh2,CLIP_MIN,CLIP_MAX))
     #ehulp = jax.ops.index_update(ehulp, mask_rob1, 0.0)
     ehulp = np.where(my_rob1 == 0, 0.0, ehulp)
-    #ehulp = ehulp * my_rob1_mask
-    #print(ehulp)
-    #my_mask = bond_params_mask[atom_types,:][:,atom_types]
-    #my_mask = jax.ops.index_update(my_mask, np.diag_indices(num_atoms), 0)
-    #my_de1 = de1[atom_types,:][:,atom_types] line 5148 in reax.f, wrong
-
-
-    #ehulp = ehulp * my_mask
-    #ehulpp = ehulpp * my_mask
-    #ehulppp = ehulppp * my_mask
-    #print('ehulp',ehulp[15])
-    #print('ehulpp',ehulpp[15])
-    #print('ehulppp',ehulppp[15])
     bor = ehulp + ehulpp + ehulppp
     bopi = ehulpp
     bopi2 = ehulppp
@@ -1151,9 +1031,7 @@ def jax_calculate_covbon_pot(atom_types,
     #print("ovoab", ovoab)
     #gradient nan issue fix
     exphuov = np.exp(np.clip(trip_stab5 * ovoab,CLIP_MIN,CLIP_MAX))
-    #exphuov = np.exp(trip_stab5 * ovoab)
-    #print("exphuov",exphuov)
-    #print("trip_stab5", trip_stab5)
+
     hulpov=1.0/(1.0+25.0*exphuov)
     #print("hulpov",hulpov)
 

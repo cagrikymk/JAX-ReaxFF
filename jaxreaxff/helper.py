@@ -1,35 +1,125 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri May  8 05:36:42 2020
+Contains helper functions for I/O and training
 
-@author: cagri
+Author: Mehmet Cagri Kaymak
 """
 
 import  os
-from force_field import ForceField
-from force_field import body_3_indices_src,body_3_indices_dst,body_4_indices_src,body_4_indices_dst,hbond_indices_src,hbond_indices_dst,TYPE
-from simulation_system import SimulationSystem,CLOSE_NEIGH_CUTOFF,BUFFER_DIST,orthogonalization_matrix
-from reaxFF_potential import calculate_bo
-from force_field import MY_ATOM_INDICES,preprocess_force_field
-
+from jaxreaxff.forcefield import ForceField
+from jaxreaxff.forcefield import body_3_indices_src,body_3_indices_dst,body_4_indices_src,body_4_indices_dst,TYPE
+from jaxreaxff.structure import Structure,CLOSE_NEIGH_CUTOFF,BUFFER_DIST
+from jaxreaxff.reaxffpotential import calculate_bo
+from jaxreaxff.forcefield import MY_ATOM_INDICES,preprocess_force_field
 import jax
-from jax.lib import xla_bridge
 #for multicore
 import jax.numpy as np
 import numpy as onp
-import pickle
 import time
-from jax.experimental import optimizers
 import sys
-import matplotlib.pyplot as plt
-import re
 from functools import partial
 import copy
 from multiprocessing import Pool
+from jaxreaxff.clustering import modified_kmeans
+from tabulate import tabulate
 
-#import interaction_list_generator as gen
+# default device is gpu
+DEVICE_NAME = 'gpu'
 
+# Produces a report with item based error (similar to what the standalone code does)
+def produce_error_report(filename, tranining_items, tranining_items_str, indiv_error):
+    fptr = open(filename, 'w')
+    headers = ["Item Text", "Weight", "Target", "Prediction", "Error", "Cum. Sum."]
+    data_to_print = []
+    cumulative_err = 0.0
+    if "ENERGY" in tranining_items:
+
+        [preds,error_vals] = [indiv_error['ENERGY'][0], indiv_error['ENERGY'][-1]]
+        for i,strr in enumerate(tranining_items_str['ENERGY']):
+            parts = strr.strip().split()
+            weight = parts[0]
+            target = parts[-1]
+            rest = " ".join(parts[1:-1])
+            cumulative_err += error_vals[i]
+            row = [rest, weight, target, preds[i], round(error_vals[i],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+
+    if "CHARGE" in tranining_items:
+
+        [preds,error_vals] = [indiv_error['CHARGE'][0], indiv_error['CHARGE'][-1]]
+        for i,strr in enumerate(tranining_items_str['CHARGE']):
+            parts = strr.strip().split()
+            weight = parts[1]
+            target = parts[-1]
+            rest = " ".join([parts[0],] + parts[2:-1])
+            cumulative_err += error_vals[i]
+            row = [rest, weight, target, preds[i], round(error_vals[i],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+
+    if "GEOMETRY-2" in tranining_items:
+
+        [preds,error_vals] = [indiv_error['GEOMETRY-2'][0], indiv_error['GEOMETRY-2'][-1]]
+        for i,strr in enumerate(tranining_items_str['GEOMETRY-2']):
+            parts = strr.strip().split()
+            weight = parts[1]
+            target = parts[-1]
+            rest = " ".join([parts[0],] + parts[2:-1])
+            cumulative_err += error_vals[i]
+            row = [rest, weight, target, preds[i], round(error_vals[i],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+
+    if "GEOMETRY-3" in tranining_items:
+        [preds,error_vals] = [indiv_error['GEOMETRY-3'][0], indiv_error['GEOMETRY-3'][-1]]
+        for i,strr in enumerate(tranining_items_str['GEOMETRY-3']):
+            parts = strr.strip().split()
+            weight = parts[1]
+            target = parts[-1]
+            rest = " ".join([parts[0],] + parts[2:-1])
+            cumulative_err += error_vals[i]
+            row = [rest, weight, target, preds[i], round(error_vals[i],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+
+    if "GEOMETRY-4" in tranining_items:
+        [preds,error_vals] = [indiv_error['GEOMETRY-4'][0], indiv_error['GEOMETRY-4'][-1]]
+        for i,strr in enumerate(tranining_items_str['GEOMETRY-4']):
+            parts = strr.strip().split()
+            weight = parts[1]
+            target = parts[-1]
+            rest = " ".join([parts[0],] + parts[2:-1])
+            cumulative_err += error_vals[i]
+            row = [rest, weight, target, preds[i], round(error_vals[i],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+
+    if "FORCE-RMSG" in tranining_items:
+        [preds,error_vals] = [indiv_error['FORCE-RMSG'][0], indiv_error['FORCE-RMSG'][-1]]
+        for i,strr in enumerate(tranining_items_str['FORCE-RMSG']):
+            parts = strr.strip().split()
+            weight = parts[1]
+            target = parts[-1]
+            rest = " ".join([parts[0],] + parts[2:-1])
+            cumulative_err += error_vals[i]
+            row = [rest, weight, target, preds[i], round(error_vals[i],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+    if "FORCE-ATOM" in tranining_items:
+        [preds,error_vals] = [indiv_error['FORCE-ATOM'][0], indiv_error['FORCE-ATOM'][-1]]
+        for i,strr in enumerate(tranining_items_str['FORCE-ATOM']):
+            parts = strr.strip().split()
+            weight = parts[1]
+            targets = parts[3:6] # x-y-z
+            rest = " ".join([parts[0],parts[2]])
+            cumulative_err += error_vals[i][0]
+            row = [rest + " X", weight, targets[0], preds[i][0], round(error_vals[i][0],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+            cumulative_err += error_vals[i][1]
+            row = [rest + " Y", weight, targets[1], preds[i][1], round(error_vals[i][1],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+            cumulative_err += error_vals[i][2]
+            row = [rest + " Z", weight, targets[2], preds[i][2], round(error_vals[i][2],2), round(cumulative_err,2)]
+            data_to_print.append(row)
+    table = tabulate(data_to_print, headers, floatfmt=".2f")
+    print(table, file=fptr)
+    fptr.close()
 
 def generate_BGF_file(file_name, geo_name, num_atoms, positions, str_types, box_dim, box_ang):
     lines =  ["XTLGRF 200"]
@@ -145,7 +235,7 @@ def find_all_cutoffs(flattened_force_field,flattened_non_dif_params,cutoff,atom_
                 cutoff_dict[(type_j,type_i)] = CLOSE_NEIGH_CUTOFF
     return cutoff_dict
 
-def process_and_cluster_geos(systems,force_field,param_indices,bounds):
+def process_and_cluster_geos(systems,force_field,param_indices,bounds,all_cut_indices=None):
     start = time.time()
     saved_all_pots = []
     saved_all_total_pots = []
@@ -171,24 +261,30 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds):
     end = time.time()
     pool.terminate()
 
-    print("Multithreaded inter. list generation took {} secs".format(end-start))
+    print("Multithreaded interaction list generation took {} secs".format(end-start))
 
-    all_costs_old = []
-    prev = -1
-    selected_n_cut = 0
-    max_cut = 15
-    for n_cut in range(1,max_cut+1):
-        all_cut_indices,globally_sorted_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
-        print("Cost with {} clusters: {}".format(n_cut, cost_total))
-        all_costs_old.append(cost_total)
-        if prev != -1 and cost_total > prev or (prev-cost_total) / prev < 0.15:
-            selected_n_cut = n_cut - 1
-            break
-        prev = cost_total
-    #sys.exit()
-    if selected_n_cut == 0:
-        selected_n_cut = max_cut
-    all_cut_indices,globally_sorted_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=selected_n_cut,max_iterations=100,rep_count=1000,print_mode=True)
+    if all_cut_indices == None:
+        all_costs_old = []
+        prev = -1
+        selected_n_cut = 0
+        max_cut = 15
+        for n_cut in range(1,max_cut+1):
+            all_cut_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
+            print("Cost with {} clusters: {}".format(n_cut, cost_total))
+            all_costs_old.append(cost_total)
+            if prev != -1 and cost_total > prev or (prev-cost_total) / prev < 0.15:
+                selected_n_cut = n_cut - 1
+                break
+            prev = cost_total
+        #sys.exit()
+        if selected_n_cut == 0:
+            selected_n_cut = max_cut
+        all_cut_indices,cost_total = cluster_systems_for_aligning(systems,num_cuts=selected_n_cut,max_iterations=100,rep_count=1000,print_mode=True)
+    
+    globally_sorted_indices = []
+    for l in all_cut_indices:
+        for ind in l:
+            globally_sorted_indices.append(ind)
 
 
     [list_all_type,
@@ -227,11 +323,11 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds):
 
     ##############################################################################
 
-    list_all_dist_mat = [jax.vmap(SimulationSystem.create_distance_matrices)(list_all_pos[i],list_orth_matrices[i],list_all_shift_combs[i])  for i in range(len(list_all_type))]
-    list_all_body_2_distances = [jax.vmap(SimulationSystem.calculate_2_body_distances)(list_all_pos[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_2_map[i]) for i in range(len(list_all_type))]
-    list_all_body_3_angles = [jax.vmap(SimulationSystem.calculate_3_body_angles)(list_all_pos[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_3_list[i],list_all_body_3_map[i],list_all_body_3_shift[i]) for i in range(len(list_all_type))]
-    list_all_body_4_angles = [jax.vmap(SimulationSystem.calculate_body_4_angles_new)(list_all_pos[i],list_orth_matrices[i],list_all_body_4_list[i],list_all_body_4_map[i],list_all_body_4_shift[i]) for i in range(len(list_all_type))]
-    list_all_angles_and_dist = [jax.vmap(SimulationSystem.calculate_global_hbond_angles_and_dist)(list_all_pos[i],list_orth_matrices[i],list_all_hbond_list[i],list_all_hbond_shift[i],list_all_hbond_mask[i]) for i in range(len(list_all_type))]
+    list_all_dist_mat = [jax.vmap(Structure.create_distance_matrices)(list_all_pos[i],list_orth_matrices[i],list_all_shift_combs[i])  for i in range(len(list_all_type))]
+    list_all_body_2_distances = [jax.vmap(Structure.calculate_2_body_distances)(list_all_pos[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_2_map[i]) for i in range(len(list_all_type))]
+    list_all_body_3_angles = [jax.vmap(Structure.calculate_3_body_angles)(list_all_pos[i],list_orth_matrices[i],list_all_body_2_list[i],list_all_body_3_list[i],list_all_body_3_map[i],list_all_body_3_shift[i]) for i in range(len(list_all_type))]
+    list_all_body_4_angles = [jax.vmap(Structure.calculate_body_4_angles_new)(list_all_pos[i],list_orth_matrices[i],list_all_body_4_list[i],list_all_body_4_map[i],list_all_body_4_shift[i]) for i in range(len(list_all_type))]
+    list_all_angles_and_dist = [jax.vmap(Structure.calculate_global_hbond_angles_and_dist)(list_all_pos[i],list_orth_matrices[i],list_all_hbond_list[i],list_all_hbond_shift[i],list_all_hbond_mask[i]) for i in range(len(list_all_type))]
 
     return (ordered_systems,[list_all_type,
                             list_all_mask,
@@ -311,12 +407,12 @@ def create_inter_lists(is_periodic,
                     force_field):
 
     #start = time.time()
-    distance_matrices = SimulationSystem.create_distance_matrices_onp(atom_positions,orth_matrix, all_shift_comb)
+    distance_matrices = Structure.create_distance_matrices_onp(atom_positions,orth_matrix, all_shift_comb)
     #end = time.time()
     #print("distance_matrices", end-start)
     #start = time.time()
     local_neigh_arrays = [local_body_2_neigh_list,
-                        local_body_2_neigh_counts] = SimulationSystem.create_local_neigh_list(num_atoms,
+                        local_body_2_neigh_counts] = Structure.create_local_neigh_list(num_atoms,
                                                         real_atom_count,
                                                         atom_types,
                                                         distance_matrices,
@@ -328,7 +424,7 @@ def create_inter_lists(is_periodic,
     #start = time.time()
     body_2_arrays = [global_body_2_inter_list,global_body_2_inter_list_mask,
     triple_bond_body_2_mask,global_body_2_distances,
-    global_body_2_count] = SimulationSystem.create_global_body_2_inter_list(real_atom_count,
+    global_body_2_count] = Structure.create_global_body_2_inter_list(real_atom_count,
                             atom_types,atom_names,
                             atom_positions,orth_matrix,
                             local_body_2_neigh_counts,local_body_2_neigh_list,
@@ -355,7 +451,7 @@ def create_inter_lists(is_periodic,
     body_3_arrays = [global_body_3_inter_list,
      global_body_3_inter_list_mask,
      global_body_3_inter_shift_map,
-     global_body_3_count] = SimulationSystem.create_body_3_inter_list(is_periodic,
+     global_body_3_count] = Structure.create_body_3_inter_list(is_periodic,
                             real_atom_count,atom_types,atom_names,atom_positions,orth_matrix,
                             local_body_2_neigh_counts,local_body_2_neigh_list,
                             global_body_2_inter_list,global_body_2_distances,bo,
@@ -368,7 +464,7 @@ def create_inter_lists(is_periodic,
     body_4_arrays = [global_body_4_inter_list,
      global_body_4_inter_shift,
      global_body_4_inter_list_mask,
-     global_body_4_count]= SimulationSystem.create_body_4_inter_list_fast(is_periodic,
+     global_body_4_count]= Structure.create_body_4_inter_list_fast(is_periodic,
                                real_atom_count,atom_types,atom_names,atom_positions,orth_matrix,
                                local_body_2_neigh_counts,local_body_2_neigh_list,
                                global_body_2_inter_list,global_body_2_distances,bo,global_body_2_count,
@@ -381,7 +477,7 @@ def create_inter_lists(is_periodic,
     body_h_arrays = [global_hbond_inter_list,
      global_hbond_shift_list,
      global_hbond_inter_list_mask,
-     global_hbond_count] = SimulationSystem.create_global_hbond_inter_list(is_periodic,do_minim,
+     global_hbond_count] = Structure.create_global_hbond_inter_list(is_periodic,do_minim,
                                real_atom_count,atom_types,atom_names,
                                atom_positions,orth_matrix,
                                distance_matrices,all_shift_comb,
@@ -427,7 +523,7 @@ def align_atom_counts_and_local_neigh(systems,all_type,all_mask,positions,all_bo
 
 
         #distance matrices need to be created again
-        #s.distance_matrices = SimulationSystem.create_distance_matrices(s.atom_positions,s.box_size, s.all_shift_comb)
+        #s.distance_matrices = Structure.create_distance_matrices(s.atom_positions,s.box_size, s.all_shift_comb)
 
 def align_body_2_inter_list(systems,all_body_2_list,all_body_2_mask,all_body_2_trip_mask):
     for i,s in enumerate(systems):
@@ -476,8 +572,6 @@ def align_all_shift_combinations(systems, shift_combs):
     # distance matrices will be recreated in align_atom_counts_and_local_neigh
 
 def cluster_systems_for_aligning(systems,num_cuts=5,max_iterations=100,rep_count=20, print_mode=True):
-    from modified_kmeans import modified_kmeans
-
     # from size arrays for clustering
 
     labels,min_centr,min_counts,min_cost = modified_kmeans(systems,k=num_cuts,max_iterations=max_iterations, rep_count=rep_count, print_mode=print_mode)
@@ -487,13 +581,7 @@ def cluster_systems_for_aligning(systems,num_cuts=5,max_iterations=100,rep_count
         label = labels[i]
         all_cut_indices[label].append(i)
 
-    globally_sorted_indices = []
-    for l in all_cut_indices:
-        for ind in l:
-            globally_sorted_indices.append(ind)
-
-
-    return all_cut_indices, globally_sorted_indices, min_cost
+    return all_cut_indices, min_cost
 
 def calculate_max_counts(systems):
     cur_max_dict = dict()
@@ -842,7 +930,27 @@ def preprocess_trainset_line(line):
 
     return line
 
+def filter_geo_items(systems, trainset_items):
+    name_index_dict = dict()
+    for i,s in enumerate(systems):
+        name_index_dict[s.name] = i
+    all_trainset_geo_names = set()
+    for key, sub_items in trainset_items.items():
+        for item in sub_items:
+            if key == "ENERGY":
+                names = item[0]
+            else:
+                names = [item[0],]
+            for n in names:
+                all_trainset_geo_names.add(n)
+    final_systems = []
+    for n in all_trainset_geo_names:
+        if n not in name_index_dict:
+            print(f"[INFO] {n} does not exist!")
+        else:
+            final_systems.append(systems[name_index_dict[n]])
 
+    return final_systems
 
 def read_train_set(train_in):
     f = open(train_in, 'r')
@@ -937,7 +1045,7 @@ def read_train_set(train_in):
 
             energy = float(split_line[-1])
 
-            energy_items.append((w, name_list,multiplier_list, energy))
+            energy_items.append((name_list,w,multiplier_list, energy))
             energy_items_str.append(line)
 
         elif charge_flag == 1:
@@ -1052,7 +1160,7 @@ def structure_energy_training_data(name_dict, training_items):
     multip_list_of_lists = []
     for i, item in enumerate(training_items):
 
-        w, name_list, multiplier_list, energy = item
+        name_list, w, multiplier_list, energy = item
         # deep copy not to affect the orig. data structures
         multiplier_list = copy.deepcopy(multiplier_list)
         index_list = []
@@ -2121,7 +2229,7 @@ def parse_geo_file(geo_file):
             if len(molcharge_items) == 1:
                 total_charge = molcharge_items[0][2]
 
-            new_system = SimulationSystem(name, num_atoms, onp.array(atoms_positions),[], atom_names,total_charge,is_periodic,do_minimization,max_it, onp.array(box),onp.array(box_angles),onp.array(bond_restraints),onp.array(angle_restraints),onp.array(torsion_restraints))
+            new_system = Structure(name, num_atoms, onp.array(atoms_positions),[], atom_names,total_charge,is_periodic,do_minimization,max_it, onp.array(box),onp.array(box_angles),onp.array(bond_restraints),onp.array(angle_restraints),onp.array(torsion_restraints))
             new_system.bgf_file = system_str
             list_systems.append(new_system)
             atoms_positions = []

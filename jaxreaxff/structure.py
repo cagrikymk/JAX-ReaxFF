@@ -1,28 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Aug  4 13:56:24 2020
+Contains structure related logic:
+Structure class and interaction list generation
 
-@author: cagri
+Author: Mehmet Cagri Kaymak
 """
 import numpy as onp
 import jax.numpy as np
 import jax
-import pickle
-from jax.experimental import loops
-import functools
-import time
-from numba import jit
-import numba
-from force_field import TYPE
+from jaxreaxff.forcefield import TYPE
 import math
 
 CLOSE_NEIGH_CUTOFF = 5.0 #A
 BUFFER_DIST = 0.5
 FAR_NEIGH_CUTOFF = 10.0#A
 
-BODY_4_BOND_CUTOFF = 4.0
-BODY_3_BOND_CUTOFF = 4.5
+BODY_4_BOND_CUTOFF = 3.5
+BODY_3_BOND_CUTOFF = 4.0
 HBOND_CUTOFF = 7.5
 
 BOND_RESTRAINTS_MAX_SIZE = 10
@@ -94,7 +89,7 @@ def project_onto_orth_box(box_size,box_angles,positions):
     return new_box_size,new_positions
 
 
-class SimulationSystem:
+class Structure:
     def __init__(self,name, real_atom_count,positions,atom_types, atom_names,total_charge, is_periodic, do_minimization,num_min_steps, sim_box,box_angles, bond_restraints, angle_restraints, torsion_restraints):
         self.name = name
         self.atom_names = atom_names
@@ -217,7 +212,7 @@ class SimulationSystem:
         shift_pos = np.dot(orth_matrix,all_shift_comb.transpose()).transpose() #np.dot(orth_matrix,shift)
         tiled_atom_pos1 = np.tile(atom_pos,(1,num_atoms,1))
 
-        distance_matrices = jax.vmap(SimulationSystem.create_distance_matrices_single, in_axes=(0,None,None))(shift_pos,tiled_atom_pos1,orth_matrix)
+        distance_matrices = jax.vmap(Structure.create_distance_matrices_single, in_axes=(0,None,None))(shift_pos,tiled_atom_pos1,orth_matrix)
 
         return distance_matrices
 
@@ -237,7 +232,7 @@ class SimulationSystem:
         tiled_atom_pos1 = onp.tile(atom_pos,(1,num_atoms,1))
 
         #shift_pos = np.matmul(orth_matrix,all_shift_comb)
-        distance_matrices = onp.stack([SimulationSystem.create_distance_matrices_single_onp(pos,tiled_atom_pos1,orth_matrix) for pos in shift_pos])
+        distance_matrices = onp.stack([Structure.create_distance_matrices_single_onp(pos,tiled_atom_pos1,orth_matrix) for pos in shift_pos])
         return distance_matrices
 
 
@@ -379,12 +374,12 @@ class SimulationSystem:
 
                     #distance = distances[neigh]
                     # if the bond passes the filtering
-                    if SimulationSystem.body_2_check(type1, type2, bond_params_mask):
+                    if Structure.body_2_check(type1, type2, bond_params_mask):
                         local_body_2_neigh_list[ind1][neigh][1] = inter_ctr # store the bond id in the local neigh. list as well
                         #we should also update the neighborhood list of the other atom (if it is real)
                         #if is_real_ind2:
                         # from j->i, the sign if flipped for shift
-                        SimulationSystem.find_and_update_inter_id(local_body_2_neigh_list,local_body_2_neigh_counts,ind2,ind1,-shift,inter_ctr)
+                        Structure.find_and_update_inter_id(local_body_2_neigh_list,local_body_2_neigh_counts,ind2,ind1,-shift,inter_ctr)
                         # if there is triple bond, update the mask
                         # TODO: can this part be improved later?
                         trip_bond_cond = (atom_names[ind1] == 'C' and atom_names[ind2] == 'O') or (atom_names[ind2] == 'C' and atom_names[ind1] == 'O')
@@ -408,7 +403,7 @@ class SimulationSystem:
         global_body_2_inter_list = onp.array(temp_global_body_2_inter_list,dtype=onp.int32)
         triple_bond_body_2_mask = onp.array(temp_triple_bond_body_2_mask)
 
-        global_body_2_distances = SimulationSystem.calculate_2_body_distances_onp(atom_positions,orth_matrix,
+        global_body_2_distances = Structure.calculate_2_body_distances_onp(atom_positions,orth_matrix,
                                                                                      global_body_2_inter_list,global_body_2_inter_list_mask)
 
         #self.global_body_2_inter_list[self.global_body_2_count:,0] = 9999
@@ -502,12 +497,12 @@ class SimulationSystem:
 
                             # pos2 is the center
                             cos_angle =0
-                            #cos_angle = SimulationSystem.calculate_valence_angle(pos1,pos2,pos3)
+                            #cos_angle = Structure.calculate_valence_angle(pos1,pos2,pos3)
                             # if the bond passes the filtering
-                            #if ind2 != ind1 and ind2!= ind3 and SimulationSystem.body_3_check(cos_angle, type1, type2, type3,valency_params_mask):
+                            #if ind2 != ind1 and ind2!= ind3 and Structure.body_3_check(cos_angle, type1, type2, type3,valency_params_mask):
                             if ((ind2 != ind1 or (is_periodic == True and onp.array_equal(pos1,pos2) == False))
                             and (ind2!= ind3 or (is_periodic == True and onp.array_equal(pos2,pos3) == False))
-                            and SimulationSystem.body_3_check(cos_angle, type1, type2, type3,valency_params_mask)
+                            and Structure.body_3_check(cos_angle, type1, type2, type3,valency_params_mask)
                             and bo_new[bond_ind1] * bo_new[bond_ind2] > 0.00000): # 0.00001 !Scott Habershon recommendation March 2009
 
                                 #shift_ind1 = np.array_equal(self.global_body_2_inter_list[bond_ind1,5:8], shifts[neigh1])
@@ -537,7 +532,7 @@ class SimulationSystem:
         global_body_3_inter_list = onp.array(temp_global_body_3_inter_list,dtype=onp.int32)
         global_body_3_inter_shift_map = onp.array(temp_global_body_3_inter_shift_map,dtype=onp.bool)
         '''
-        self.global_body_3_angles = SimulationSystem.calculate_3_body_angles(self.atom_positions,self.box_size,
+        self.global_body_3_angles = Structure.calculate_3_body_angles(self.atom_positions,self.box_size,
                                                                        self.global_body_2_inter_list,
                                                                        self.global_body_3_inter_list,
                                                                        self.global_body_3_inter_list_mask,
@@ -564,7 +559,7 @@ class SimulationSystem:
         pos1 = atom_positions[atom_indices[0]] + orth_matrix.dot(shift1.transpose()).transpose() * shift1_multip.reshape(-1,1)
         pos3 = atom_positions[atom_indices[2]] + orth_matrix.dot(shift2.transpose()).transpose() * shift2_multip.reshape(-1,1)
         # assign 1 to the masked positions to not get nan in later steps
-        angles = jax.vmap(SimulationSystem.calculate_valence_angle,in_axes=(0,0,0))(pos1,pos2,pos3) * global_body_3_inter_list_mask + (np.bitwise_not(global_body_3_inter_list_mask))
+        angles = jax.vmap(Structure.calculate_valence_angle,in_axes=(0,0,0))(pos1,pos2,pos3) * global_body_3_inter_list_mask + (np.bitwise_not(global_body_3_inter_list_mask))
         #global_body_3_inter_list[:,0] = angles
 
         return angles
@@ -692,7 +687,7 @@ class SimulationSystem:
         global_body_4_inter_list_mask = onp.ones(shape=(global_body_4_count),dtype=onp.bool)
         global_body_4_inter_list_mask[-1] = 0
         '''
-        self.global_body_4_angles = SimulationSystem.calculate_body_4_angles_new(self.atom_positions,
+        self.global_body_4_angles = Structure.calculate_body_4_angles_new(self.atom_positions,
                                                                            self.box_size,
                                                                            self.global_body_4_inter_list,
                                                                            self.global_body_4_inter_list_mask,
@@ -702,7 +697,7 @@ class SimulationSystem:
         '''
         # update the mask
         #start = time.time()
-        SimulationSystem.calculate_body_4_angles(self, all_pos)
+        Structure.calculate_body_4_angles(self, all_pos)
         #end = time.time()
         #print("4 body angle calculation:{}".format(end - start))
         self.global_body_4_inter_list_mask[:self.global_body_4_count] = 1
@@ -722,7 +717,7 @@ class SimulationSystem:
         c1 = v2[2] * v3[0] - v2[0] * v3[2]
         c2 = v2[0] * v3[1] - v2[1] * v3[0]
         trip_prod = v1[0] * c0 + v1[1] * c1 +v1[2] * c2 + 1e-10
-        val = SimulationSystem.calculate_body_4_angles_single(pos1,pos2,pos3,pos4)[-1]
+        val = Structure.calculate_body_4_angles_single(pos1,pos2,pos3,pos4)[-1]
         angle = np.arccos(val)
 
 
@@ -730,19 +725,19 @@ class SimulationSystem:
 
     def calculate_body_4_angles_single(pos1,pos2,pos3,pos4):
         # [1-(2-3)-4] ---- (2-3 is the center)
-        angle_123 = SimulationSystem.calculate_valence_angle(pos1,pos2,pos3)
-        angle_234 = SimulationSystem.calculate_valence_angle(pos2,pos3,pos4)
+        angle_123 = Structure.calculate_valence_angle(pos1,pos2,pos3)
+        angle_234 = Structure.calculate_valence_angle(pos2,pos3,pos4)
         coshd = np.cos(angle_123)
         coshe = np.cos(angle_234)
         sinhd = np.sin(angle_123)
         sinhe = np.sin(angle_234)
 
-        r4 = SimulationSystem.calculate_distance(pos1,pos4)
+        r4 = Structure.calculate_distance(pos1,pos4)
         d142 = r4 * r4
 
-        rla = SimulationSystem.calculate_distance(pos1,pos2)
-        rlb = SimulationSystem.calculate_distance(pos2,pos3)
-        rlc = SimulationSystem.calculate_distance(pos3,pos4)
+        rla = Structure.calculate_distance(pos1,pos2)
+        rlb = Structure.calculate_distance(pos2,pos3)
+        rlc = Structure.calculate_distance(pos3,pos4)
 
         tel= (rla*rla+rlb*rlb+rlc*rlc-d142-2.0*(rla*rlb*coshd-rla*rlc*
             coshd*coshe+rlb*rlc*coshe))
@@ -766,7 +761,7 @@ class SimulationSystem:
         pos3 = atom_positions[global_body_4_inter_list[:,2]] + orth_matrix.dot(global_body_4_inter_shift[:,6:9].transpose()).transpose()
         pos4 = atom_positions[global_body_4_inter_list[:,3]] + orth_matrix.dot(global_body_4_inter_shift[:,9:12].transpose()).transpose()
 
-        body_4_angles = jax.vmap(SimulationSystem.calculate_body_4_angles_single,in_axes=(0,0,0,0))(pos1,pos2,pos3,pos4)
+        body_4_angles = jax.vmap(Structure.calculate_body_4_angles_single,in_axes=(0,0,0,0))(pos1,pos2,pos3,pos4)
 
         return body_4_angles
 
@@ -776,7 +771,7 @@ class SimulationSystem:
         pos3 = all_pos[:self.global_body_4_count,6:9]
         pos4 = all_pos[:self.global_body_4_count,9:12]
 
-        [coshd,coshe,sinhd,sinhe,arg] = jax.vmap(SimulationSystem.calculate_body_4_angles_single,in_axes=(0,0,0,0))(pos1,pos2,pos3,pos4)
+        [coshd,coshe,sinhd,sinhe,arg] = jax.vmap(Structure.calculate_body_4_angles_single,in_axes=(0,0,0,0))(pos1,pos2,pos3,pos4)
         self.global_body_4_inter_list[:self.global_body_4_count ,0] = coshd[:self.global_body_4_count]
         self.global_body_4_inter_list[:self.global_body_4_count ,1] = coshe[:self.global_body_4_count]
         self.global_body_4_inter_list[:self.global_body_4_count ,2] = sinhd[:self.global_body_4_count]
@@ -819,7 +814,7 @@ class SimulationSystem:
                                 i3 = local_body_2_neigh_list[i1][n1][0]
                                 type3 = atom_types[i3]
                                 ihhb3 = ff_nphb[type3]
-                                if b_ind != -1 and ihhb3 == 2 and i3 != i2 and global_body_2_distances[b_ind] < CLOSE_NEIGH_CUTOFF and SimulationSystem.hbond_check(hbond_params_mask,type3,type1,type2): #double check if this is enough
+                                if b_ind != -1 and ihhb3 == 2 and i3 != i2 and global_body_2_distances[b_ind] < CLOSE_NEIGH_CUTOFF and Structure.hbond_check(hbond_params_mask,type3,type1,type2): #double check if this is enough
                                     # the order from the fortran code (i3,i1,i2)
                                     global_hbond_inter_list.append((i3,type3,i1,type1,i2,type2, b_ind))
                                     shift2 = local_body_2_neigh_list[i1][n1][2:]
@@ -854,8 +849,8 @@ class SimulationSystem:
 
         # assign 1 to the masked positions to not get nan in later steps
 
-        angles = jax.vmap(SimulationSystem.calculate_valence_angle,in_axes=(0,0,0))(pos1,pos2,pos3)# * global_hbond_inter_list_mask + (np.bitwise_not(global_hbond_inter_list_mask))
-        dist =  jax.vmap(SimulationSystem.calculate_distance,in_axes=(0,0))(pos2,pos3)# + (np.bitwise_not(global_hbond_inter_list_mask) * 100.0)
+        angles = jax.vmap(Structure.calculate_valence_angle,in_axes=(0,0,0))(pos1,pos2,pos3)# * global_hbond_inter_list_mask + (np.bitwise_not(global_hbond_inter_list_mask))
+        dist =  jax.vmap(Structure.calculate_distance,in_axes=(0,0))(pos2,pos3)# + (np.bitwise_not(global_hbond_inter_list_mask) * 100.0)
         return np.stack((angles,dist)).transpose()
 
     def calculate_distance(pos1,pos2):

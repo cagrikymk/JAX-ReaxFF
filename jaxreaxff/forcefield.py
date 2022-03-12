@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Aug  4 13:53:40 2020
+Contains force field related code
 
-@author: cagri
+Author: Mehmet Cagri Kaymak
 """
 
 
@@ -11,9 +11,6 @@ import numpy as onp
 import jax.numpy as np
 import jax
 import pickle
-from jax.experimental import loops
-from numba import jit
-#from reaxFF_potential import safe_sqrt, vectorized_cond
 
 # it fixes nan values issue, from: https://github.com/google/jax/issues/1052
 def vectorized_cond(pred, true_fun, false_fun, operand):
