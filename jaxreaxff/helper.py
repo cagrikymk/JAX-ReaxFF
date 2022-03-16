@@ -236,7 +236,7 @@ def find_all_cutoffs(flattened_force_field,flattened_non_dif_params,cutoff,atom_
                 cutoff_dict[(type_j,type_i)] = CLOSE_NEIGH_CUTOFF
     return cutoff_dict
 
-def process_and_cluster_geos(systems,force_field,param_indices,bounds,max_num_clusters=10,all_cut_indices=None, num_threads=1):
+def process_and_cluster_geos(systems,force_field,param_indices,bounds,max_num_clusters=10,all_cut_indices=None, num_threads=1, list_prev_max_dict=None):
     start = time.time()
     saved_all_pots = []
     saved_all_total_pots = []
@@ -313,7 +313,7 @@ def process_and_cluster_geos(systems,force_field,param_indices,bounds,max_num_cl
     list_angle_rest,
     list_torsion_rest,
     list_do_minim,
-    list_num_minim_steps],cur_max_dict = align_system_inter_lists(systems, all_cut_indices)
+    list_num_minim_steps],cur_max_dict = align_system_inter_lists(systems, all_cut_indices,list_prev_max_dict=list_prev_max_dict)
 
     ordered_systems = [systems[i] for i in globally_sorted_indices]
     orig_list_pos = copy.deepcopy(list_all_pos)
@@ -1709,14 +1709,15 @@ def parse_force_field(force_field_file, cutoff2):
 
     force_field.params_to_indices[(1,3,1)] = (44, 0)
     force_field.params_to_indices[(1,15,1)] = (45, 0)
-    force_field.params_to_indices[(1,16,1)] = (46, 0)
-    force_field.params_to_indices[(1,17,1)] = (47, 0)
-    force_field.params_to_indices[(1,18,1)] = (48, 0)
-    force_field.params_to_indices[(1,20,1)] = (49, 0)
-    force_field.params_to_indices[(1,21,1)] = (50, 0)
+    force_field.params_to_indices[(1,16,1)] = (55, 0)
+    force_field.params_to_indices[(1,17,1)] = (46, 0)
+    force_field.params_to_indices[(1,18,1)] = (47, 0)
+    force_field.params_to_indices[(1,20,1)] = (48, 0)
+    force_field.params_to_indices[(1,21,1)] = (49, 0)
+    force_field.params_to_indices[(1,22,1)] = (50, 0)
     force_field.params_to_indices[(1,31,1)] = (51, 0)
     force_field.params_to_indices[(1,34,1)] = (52, 0)
-    force_field.params_to_indices[(1,38,1)] = (53, 0)
+    force_field.params_to_indices[(1,39,1)] = (53, 0)
 
     # over under
     force_field.par_6 = general_params[5]
