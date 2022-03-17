@@ -30,7 +30,7 @@ conda activate jax-env
 ```
 **4-** Jax-ReaxFF is installed with the following command:
 ```
-python setup.py install
+pip install .
 ```
 After the setup, Jax-ReaxFF can be accessed via command line interface(CLI) with **jaxreaxff**
 
