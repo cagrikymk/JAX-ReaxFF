@@ -25,9 +25,9 @@ import time
 import copy
 import argparse, textwrap
 from jaxreaxff.smartformatter import SmartFormatter
-from jaxreaxff.helper import DEVICE_NAME
-
 from jaxreaxff.myjit import my_jit
+
+
 
 def main():
     # create parser for command-line arguments
@@ -135,23 +135,23 @@ def main():
 
     #parse arguments
     args = parser.parse_args()
-    global DEVICE_NAME
-    DEVICE_NAME = args.backend.lower()
+    device_name = args.backend.lower()
 
-    print("Selected backend for JAX:",DEVICE_NAME.upper())
+    print("Selected backend for JAX:",device_name.upper())
     default_backend = jax.default_backend().lower()
 
-    if DEVICE_NAME == 'gpu' and default_backend=='cpu':
-        print("[WARNING] selected backend({}) is not available!".format(DEVICE_NAME.upper()))
+    if device_name == 'gpu' and default_backend == 'cpu':
+        print("[WARNING] selected backend({}) is not available!".format(device_name.upper()))
         print("[WARNING] Falling back to CPU")
         print("To use the GPU version, jaxlib with CUDA support needs to installed!")
-        DEVICE_NAME = default_backend
+        device_name = default_backend
 
     # advanced options
     advanced_opts = {"perc_err_change_thr":0.01,       # if change in error is less than this threshold, add noise
                      "perc_noise_when_stuck":0.01,     # noise percantage (wrt param range) to add when stuck
                      "perc_width_rest_search":0.05,    # width of the restricted parameter search after iteration > rest_search_start 
                      "rest_search_start":args.rest_search_start, #estrict the search space after epoch > rest_search_start, ignore if -1
+                     "backend":device_name
                      }
 
     onp.random.seed(args.seed)
@@ -272,16 +272,16 @@ def main():
 
 
 
-    loss_func = my_jit(loss_w_sel_params,static_argnums=(1,34),
-                        static_list_of_array_argnums=(6,),backend=DEVICE_NAME)
-    grad_func = my_jit(jax.grad(loss_w_sel_params),static_argnums=(1,34),
-                        static_list_of_array_argnums=(6,),backend=DEVICE_NAME)
-    loss_and_grad = my_jit(jax.value_and_grad(loss_w_sel_params),static_argnums=(1,34),
-                            static_list_of_array_argnums=(6,),backend=DEVICE_NAME)
+    loss_func = my_jit(loss_w_sel_params,static_argnums=(1,33),
+                        static_list_of_array_argnums=(6,),backend=advanced_opts['backend'])
+    grad_func = my_jit(jax.grad(loss_w_sel_params),static_argnums=(1,33),
+                        static_list_of_array_argnums=(6,),backend=advanced_opts['backend'])
+    loss_and_grad = my_jit(jax.value_and_grad(loss_w_sel_params),static_argnums=(1,33),
+                            static_list_of_array_argnums=(6,),backend=advanced_opts['backend'])
 
-    energy_minim_loss_and_grad_function = my_jit(jax.vmap(jax.value_and_grad(calculate_total_energy_for_minim),
+    energy_minim_loss_and_grad_function = jax.jit(jax.vmap(jax.value_and_grad(calculate_total_energy_for_minim),
                                                            in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),
-                                                 backend=DEVICE_NAME)
+                                                 backend=device_name)
 
     def new_grad(*x):
         grads = grad_func(*x)
@@ -289,7 +289,7 @@ def main():
 
     def new_loss_and_grad(*x):
         val,grads = loss_and_grad(*x)
-        return val, grads
+        return onp.asarray(val,dtype=onp.float64), onp.asarray(np.nan_to_num(grads),dtype=onp.float64)
 
     # copy the original atom positions
     orig_list_all_pos = copy.deepcopy(list_all_pos)
@@ -298,7 +298,7 @@ def main():
     minim_index_lists = select_energy_minim(list_do_minim)
 
     subsets_with_en_minim = my_jit(get_minim_lists, static_list_of_array_argnums=(0,), 
-                                    backend=DEVICE_NAME)(minim_index_lists,list_do_minim, list_num_minim_steps,
+                                    backend=advanced_opts['backend'])(minim_index_lists,list_do_minim, list_num_minim_steps,
                                          list_real_atom_counts,
                                          orig_list_all_pos,list_all_pos, list_all_shift_combs,list_orth_matrices,
                                          list_all_type,list_all_mask,
@@ -339,7 +339,7 @@ def main():
             selected_params = np.array(selected_params_init)
 
         s=time.time()
-        flattened_force_field,global_min_params,global_min,all_params,all_loss_values,f_ev_list,g_ev_list = train_FF(loss_func,loss_and_grad,grad_func,
+        flattened_force_field,global_min_params,global_min,all_params,all_loss_values,f_ev_list,g_ev_list = train_FF(loss_func,new_loss_and_grad,grad_func,
                                                        minim_index_lists,subsets_with_en_minim,energy_minim_loss_and_grad_function,energy_minim_count,
                                                        energy_minim_init_LR,energy_minim_multip_LR,list_do_minim,list_num_minim_steps,end_RMSG,
                                                        selected_params,param_indices,bounds, flattened_force_field,flattened_non_dif_params,
@@ -378,11 +378,11 @@ def main():
         for i,res in enumerate(results_list):
             params = res['params']
             current_loss = res['value']
-            flattened_force_field = jax.jit(use_selected_parameters,backend=DEVICE_NAME, static_argnums=(1))(params,param_indices, flattened_force_field)
+            flattened_force_field = jax.jit(use_selected_parameters,backend=advanced_opts['backend'], static_argnums=(1))(params,param_indices, flattened_force_field)
             force_field.flattened_force_field = flattened_force_field
             force_field.unflatten()
 
-            flattened_force_field = jax.jit(preprocess_force_field,backend=DEVICE_NAME)(flattened_force_field, flattened_non_dif_params)
+            flattened_force_field = jax.jit(preprocess_force_field,backend=advanced_opts['backend'])(flattened_force_field, flattened_non_dif_params)
 
             minim_flag = sum([np.sum(l) for l in list_do_minim]) != 0 and energy_minim_count > 0
 
@@ -391,7 +391,8 @@ def main():
                 list_positions,loss_vals,min_loss,minn_loss_vals,list_RMSG = energy_minim_with_subs(orig_list_all_pos,minim_index_lists,
                                                                                             flattened_force_field,flattened_non_dif_params,subsets_with_en_minim,
                                                                                             energy_minim_loss_and_grad_function, energy_minim_count,
-                                                                                            energy_minim_init_LR,energy_minim_multip_LR,end_RMSG)
+                                                                                            energy_minim_init_LR,energy_minim_multip_LR,end_RMSG,
+                                                                                            advanced_opts)
 
 
 
@@ -399,7 +400,7 @@ def main():
                 [list_all_dist_mat,list_all_body_2_distances, 
                 list_all_body_3_angles, 
                 list_all_body_4_angles, 
-                list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=DEVICE_NAME)(list_positions,list_orth_matrices,list_all_shift_combs,
+                list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=advanced_opts['backend'])(list_positions,list_orth_matrices,list_all_shift_combs,
                                                                                                   list_all_body_2_list,list_all_body_2_map,
                                                                                                   list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
                                                                                                   list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
@@ -421,7 +422,7 @@ def main():
                                      list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
                                      list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
                                      list_bond_rest,list_angle_rest,list_torsion_rest,
-                                     list_do_minim,orig_list_all_pos,True)
+                                     list_do_minim,True)
 
             new_name = "{}/new_FF_{}_{:.2f}".format(args.out_folder,i+1,current_loss)
             parse_and_save_force_field(args.init_FF, new_name, force_field)
@@ -432,26 +433,27 @@ def main():
     else:
         params = best_FF['params']
         current_loss = best_FF['value']
-        flattened_force_field = jax.jit(use_selected_parameters,backend=DEVICE_NAME, static_argnums=(1))(params,param_indices, flattened_force_field)
+        flattened_force_field = jax.jit(use_selected_parameters,backend=advanced_opts['backend'], static_argnums=(1))(params,param_indices, flattened_force_field)
         force_field.flattened_force_field = flattened_force_field
         force_field.unflatten()
 
         minim_flag = sum([np.sum(l) for l in list_do_minim]) != 0 and energy_minim_count > 0
-        flattened_force_field = jax.jit(preprocess_force_field,backend=DEVICE_NAME)(flattened_force_field, flattened_non_dif_params)
+        flattened_force_field = jax.jit(preprocess_force_field,backend=advanced_opts['backend'])(flattened_force_field, flattened_non_dif_params)
 
         if minim_flag:
 
             list_positions,loss_vals,min_loss,minn_loss_vals,list_RMSG = energy_minim_with_subs(orig_list_all_pos,minim_index_lists,
                                                                                         flattened_force_field,flattened_non_dif_params,subsets_with_en_minim,
                                                                                         energy_minim_loss_and_grad_function, energy_minim_count,
-                                                                                        energy_minim_init_LR,energy_minim_multip_LR,end_RMSG)
+                                                                                        energy_minim_init_LR,energy_minim_multip_LR,end_RMSG,
+                                                                                        advanced_opts)
 
 
 
             [list_all_dist_mat,list_all_body_2_distances, 
             list_all_body_3_angles, 
             list_all_body_4_angles, 
-            list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=DEVICE_NAME)(list_positions,list_orth_matrices,list_all_shift_combs,
+            list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=advanced_opts['backend'])(list_positions,list_orth_matrices,list_all_shift_combs,
                                                                                               list_all_body_2_list,list_all_body_2_map,
                                                                                               list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
                                                                                               list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,
@@ -473,7 +475,7 @@ def main():
                                  list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
                                  list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
                                  list_bond_rest,list_angle_rest,list_torsion_rest,
-                                 list_do_minim,orig_list_all_pos,True)
+                                 list_do_minim,True)
 
         new_name = "{}/best_FF_{:.2f}".format(args.out_folder,current_loss)
         parse_and_save_force_field(args.init_FF, new_name, force_field)

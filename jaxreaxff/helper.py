@@ -24,8 +24,6 @@ from multiprocessing import Pool
 from jaxreaxff.clustering import modified_kmeans
 from tabulate import tabulate
 
-# default device is gpu
-DEVICE_NAME = 'gpu'
 
 # Produces a report with item based error (similar to what the standalone code does)
 def produce_error_report(filename, tranining_items, tranining_items_str, indiv_error):
@@ -697,7 +695,7 @@ def align_system_inter_lists(systems, all_cut_indices,list_prev_max_dict=None):
         if list_prev_max_dict != None and 'max_neigh_cnt' in list_prev_max_dict:
             if max_neigh_count > list_prev_max_dict['max_neigh_cnt'][c]:
                 print('[WARNING] max_neigh_cnt_cur > max_neigh_cnt_prev')
-                list_prev_max_dict['max_neigh_cnt'][c] = max_neigh_count
+                #list_prev_max_dict['max_neigh_cnt'][c] = max_neigh_count
             else:
                 max_neigh_count = list_prev_max_dict['max_neigh_cnt'][c]
 
@@ -728,7 +726,7 @@ def align_system_inter_lists(systems, all_cut_indices,list_prev_max_dict=None):
 
         if list_prev_max_dict != None and 'max_body_2_cnt' in list_prev_max_dict:
             if max_body_2_count > list_prev_max_dict['max_body_2_cnt'][c]:
-                list_prev_max_dict['max_body_2_cnt'][c] = max_body_2_count
+                #list_prev_max_dict['max_body_2_cnt'][c] = max_body_2_count
                 print('[WARNING] max_body_2_cnt_cur > max_body_2_cnt_prev')
             else:
                 max_body_2_count = list_prev_max_dict['max_body_2_cnt'][c]
@@ -748,7 +746,7 @@ def align_system_inter_lists(systems, all_cut_indices,list_prev_max_dict=None):
         if list_prev_max_dict != None and 'max_body_3_cnt' in list_prev_max_dict:
             if max_body_3_count > list_prev_max_dict['max_body_3_cnt'][c]:
                 print('[WARNING] max_body_3_cnt_cur > max_body_3_cnt_prev')
-                list_prev_max_dict['max_body_3_cnt'][c] = max_body_3_count
+                #list_prev_max_dict['max_body_3_cnt'][c] = max_body_3_count
             else:
                 max_body_3_count = list_prev_max_dict['max_body_3_cnt'][c]
 
@@ -766,7 +764,7 @@ def align_system_inter_lists(systems, all_cut_indices,list_prev_max_dict=None):
         if list_prev_max_dict != None and 'max_body_4_cnt' in list_prev_max_dict:
             if max_body_4_count > list_prev_max_dict['max_body_4_cnt'][c]:
                 print('[WARNING] max_body_4_cnt_cur > max_body_4_cnt_prev')
-                list_prev_max_dict['max_body_4_cnt'][c] = max_body_4_count
+                #list_prev_max_dict['max_body_4_cnt'][c] = max_body_4_count
             else:
                 max_body_4_count = list_prev_max_dict['max_body_4_cnt'][c]
 
@@ -785,7 +783,7 @@ def align_system_inter_lists(systems, all_cut_indices,list_prev_max_dict=None):
         if list_prev_max_dict != None and 'max_hbond_cnt' in list_prev_max_dict:
             if max_hbond_count > list_prev_max_dict['max_hbond_cnt'][c]:
                 print('[WARNING] max_hbond_cnt_cur > max_hbond_cnt_prev')
-                list_prev_max_dict['max_hbond_cnt'][c] = max_hbond_count
+                #list_prev_max_dict['max_hbond_cnt'][c] = max_hbond_count
             else:
                 max_hbond_count = list_prev_max_dict['max_hbond_cnt'][c]
 
@@ -1310,33 +1308,33 @@ def structure_training_data(sim_systems, all_training_items):
     structured_training_data = dict()
     if 'ENERGY' in all_training_items and len(all_training_items['ENERGY']) > 0:
         energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals =  structure_energy_training_data(name_dict, all_training_items['ENERGY'])
-        structured_training_data['ENERGY'] = [energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals]
+        structured_training_data['ENERGY'] = (energy_sys_list_of_lists, energy_multip_list_of_lists, energy_all_weights, energy_all_energy_vals)
 
     if 'CHARGE' in all_training_items and len(all_training_items['CHARGE']) > 0:
         chg_sys_index_list, chg_atom_index_list, chg_all_weights, chg_all_charge_vals = structure_charge_training_data(name_dict,all_training_items['CHARGE'])
-        structured_training_data['CHARGE'] = [chg_sys_index_list, chg_atom_index_list, chg_all_weights, chg_all_charge_vals]
+        structured_training_data['CHARGE'] = (chg_sys_index_list, chg_atom_index_list, chg_all_weights, chg_all_charge_vals)
 
     if 'GEOMETRY-2' in all_training_items and len(all_training_items['GEOMETRY-2']) > 0:
         geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals = structure_geo2_training_data(name_dict,all_training_items['GEOMETRY-2'])
-        structured_training_data['GEOMETRY-2'] = [geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals]
+        structured_training_data['GEOMETRY-2'] = (geo2_sys_index_list, geo2_atom_index_list, geo2_all_weights, geo2_all_target_vals)
 
     if 'GEOMETRY-3' in all_training_items and len(all_training_items['GEOMETRY-3']) > 0:
         geo3_sys_index_list, geo3_atom_index_list, geo3_all_weights, geo3_all_target_vals = structure_geo3_training_data(name_dict,all_training_items['GEOMETRY-3'])
-        structured_training_data['GEOMETRY-3'] = [geo3_sys_index_list, geo3_atom_index_list, geo3_all_weights, geo3_all_target_vals]
+        structured_training_data['GEOMETRY-3'] = (geo3_sys_index_list, geo3_atom_index_list, geo3_all_weights, geo3_all_target_vals)
 
     if 'GEOMETRY-4' in all_training_items and len(all_training_items['GEOMETRY-4']) > 0:
         geo4_sys_index_list, geo4_atom_index_list, geo4_all_weights, geo4_all_target_vals = structure_geo4_training_data(name_dict,all_training_items['GEOMETRY-4'])
-        structured_training_data['GEOMETRY-4'] = [geo4_sys_index_list, geo4_atom_index_list, geo4_all_weights, geo4_all_target_vals]
+        structured_training_data['GEOMETRY-4'] = (geo4_sys_index_list, geo4_atom_index_list, geo4_all_weights, geo4_all_target_vals)
 
     if 'FORCE-RMSG' in all_training_items and len(all_training_items['FORCE-RMSG']) > 0:
         force_sys_index_list, force_all_weights, force_all_target_vals = structure_geo_RMSG_training_data(name_dict,all_training_items['FORCE-RMSG'])
-        structured_training_data['FORCE-RMSG'] = [force_sys_index_list, force_all_weights, force_all_target_vals]
+        structured_training_data['FORCE-RMSG'] = (force_sys_index_list, force_all_weights, force_all_target_vals)
     if 'RMSG-NEW' in all_training_items and len(all_training_items['RMSG-NEW']) > 0:
         force_sys_index_list, force_all_weights, force_all_target_vals = structure_geo_RMSG_training_data(name_dict,all_training_items['RMSG-NEW'])
-        structured_training_data['RMSG-NEW'] = [force_sys_index_list, force_all_weights, force_all_target_vals]
+        structured_training_data['RMSG-NEW'] = (force_sys_index_list, force_all_weights, force_all_target_vals)
     if 'FORCE-ATOM' in all_training_items and len(all_training_items['FORCE-ATOM']) > 0:
         force_sys_index_list, force_atom_index_list, force_all_weights, force_all_target_vals = structure_force_training_data(name_dict,all_training_items['FORCE-ATOM'])
-        structured_training_data['FORCE-ATOM'] = [force_sys_index_list, force_atom_index_list, force_all_weights, force_all_target_vals]
+        structured_training_data['FORCE-ATOM'] = (force_sys_index_list, force_atom_index_list, force_all_weights, force_all_target_vals)
 
     return structured_training_data
 
