@@ -1205,7 +1205,7 @@ def calculate_coulomb_pot(atom_types, hulp1_mat,tapering_matrices, charges, gamm
     return total_pot
 def calculate_charge_energy(atom_types, charges, idempotential, electronegativity):
 
-    ech = onp.sum(23.02 * (electronegativity[atom_types] * charges +
+    ech = np.sum(23.02 * (electronegativity[atom_types] * charges +
                  idempotential[atom_types] * np.square(charges)))
     return ech
 
