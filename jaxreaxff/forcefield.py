@@ -552,7 +552,8 @@ class ForceField:
                               self.body_3_indices_src, #19
                               self.body_3_indices_dst,
                               self.body_4_indices_src,
-                              self.body_4_indices_dst
+                              self.body_4_indices_dst,
+                              self.nphb
                               ]
 
         for i in range(len(self.non_dif_params)):
