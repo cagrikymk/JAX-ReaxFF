@@ -79,6 +79,11 @@ def main():
         '"random": Sample the parameters from uniform distribution between given ranges.\n'
         '"educated": Sample the parameters from a narrow uniform distribution centered at given values.\n'
         '"fixed": Start from the parameters given in "init_FF" file')
+    parser.add_argument('--random_sample_count', metavar='number',
+        type=int,
+        default=0,
+        help='R|Number of samples for the random parameter search before the gradient step.\n' +
+        'Only applicable to the "random" initial start, ignored otherwise.')
     # energy minimization related parameters
     parser.add_argument('--num_e_minim_steps', metavar='number',
         type=int,
@@ -130,9 +135,7 @@ def main():
         type=int,
         default=0,
         help='Seed value')
-
-
-
+                  
     #parse arguments
     args = parser.parse_args()
     device_name = args.backend.lower()
@@ -145,11 +148,15 @@ def main():
         print("[WARNING] Falling back to CPU")
         print("To use the GPU version, jaxlib with CUDA support needs to installed!")
         device_name = default_backend
+        
+    if args.random_sample_count < 0:
+        print("[WARNING] random_sample_count cannot be less than 0, setting it to 0 to disable the random search!")
+        args.random_sample_count = 0 
 
     # advanced options
     advanced_opts = {"perc_err_change_thr":0.01,       # if change in error is less than this threshold, add noise
                      "perc_noise_when_stuck":0.01,     # noise percantage (wrt param range) to add when stuck
-                     "perc_width_rest_search":0.05,    # width of the restricted parameter search after iteration > rest_search_start 
+                     "perc_width_rest_search":0.05,    # width of the restricted parameter search after iteration > rest_search_start
                      "rest_search_start":args.rest_search_start, #estrict the search space after epoch > rest_search_start, ignore if -1
                      "backend":device_name
                      }
@@ -283,6 +290,22 @@ def main():
                                                            in_axes=(0,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),
                                                  backend=device_name)
 
+    my_args =  (param_indices, flattened_force_field, flattened_non_dif_params,
+               structured_training_data,
+               list_all_pos,
+               list_all_type,list_all_mask,
+               list_all_total_charge,
+               list_all_shift_combs,
+               list_orth_matrices,
+               list_all_body_2_neigh_list,
+               list_all_dist_mat,
+               list_all_body_2_list,list_all_body_2_map,list_all_body_2_trip_mask,list_all_body_2_distances,
+               list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,list_all_body_3_angles,
+               list_all_body_4_list,list_all_body_4_map,list_all_body_4_shift,list_all_body_4_angles,
+               list_all_hbond_list,list_all_hbond_mask,list_all_hbond_shift,list_all_angles_and_dist,
+               list_bond_rest,list_angle_rest,list_torsion_rest,
+               list_do_minim)
+
     def new_grad(*x):
         grads = grad_func(*x)
         return grads
@@ -291,13 +314,17 @@ def main():
         val,grads = loss_and_grad(*x)
         return onp.asarray(val,dtype=onp.float64), onp.asarray(np.nan_to_num(grads),dtype=onp.float64)
 
+    def new_loss_func(params, args):
+        loss = loss_func(params, *args)
+        return onp.float64(loss)
+
     # copy the original atom positions
     orig_list_all_pos = copy.deepcopy(list_all_pos)
     orig_list_all_pos = [np.array(a) for a in orig_list_all_pos]
     # indices that require energy minimization
     minim_index_lists = select_energy_minim(list_do_minim)
 
-    subsets_with_en_minim = my_jit(get_minim_lists, static_list_of_array_argnums=(0,), 
+    subsets_with_en_minim = my_jit(get_minim_lists, static_list_of_array_argnums=(0,),
                                     backend=advanced_opts['backend'])(minim_index_lists,list_do_minim, list_num_minim_steps,
                                          list_real_atom_counts,
                                          orig_list_all_pos,list_all_pos, list_all_shift_combs,list_orth_matrices,
@@ -329,10 +356,22 @@ def main():
     for i in range(population_size):
         print('*' * 40)
         print("Trial-{} is starting...".format(i+1))
-
         if args.init_FF_type == 'random':
-            selected_params = onp.random.uniform(low=bounds[:,0],high=bounds[:,1])
-            selected_params = np.array(selected_params, dtype=TYPE)
+            min_loss = float('inf')
+            min_params = None
+            for _ in range(args.random_sample_count):
+                selected_params = onp.random.uniform(low=bounds[:,0],high=bounds[:,1])
+                selected_params = np.array(selected_params, dtype=TYPE)
+                loss = new_loss_func(selected_params, my_args)
+                if loss < min_loss or onp.isnan(min_loss) == True:
+                    min_loss = loss
+                    min_params = selected_params
+            if min_params != None and onp.isnan(min_loss) == False:
+                selected_params = min_params
+                print("Loss after random search (w/o energy minim.): ", min_loss)
+            else:
+                selected_params = onp.random.uniform(low=bounds[:,0],high=bounds[:,1])
+                selected_params = np.array(selected_params, dtype=TYPE)
         elif args.init_FF_type == 'educated':
             selected_params = add_noise_to_params(selected_params_init,bounds,scale=0.1)
         else: # if init_FF_type == 'fixed'
@@ -397,9 +436,9 @@ def main():
 
 
 
-                [list_all_dist_mat,list_all_body_2_distances, 
-                list_all_body_3_angles, 
-                list_all_body_4_angles, 
+                [list_all_dist_mat,list_all_body_2_distances,
+                list_all_body_3_angles,
+                list_all_body_4_angles,
                 list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=advanced_opts['backend'])(list_positions,list_orth_matrices,list_all_shift_combs,
                                                                                                   list_all_body_2_list,list_all_body_2_map,
                                                                                                   list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
@@ -450,9 +489,9 @@ def main():
 
 
 
-            [list_all_dist_mat,list_all_body_2_distances, 
-            list_all_body_3_angles, 
-            list_all_body_4_angles, 
+            [list_all_dist_mat,list_all_body_2_distances,
+            list_all_body_3_angles,
+            list_all_body_4_angles,
             list_all_angles_and_dist] = jax.jit(calculate_dist_and_angles, backend=advanced_opts['backend'])(list_positions,list_orth_matrices,list_all_shift_combs,
                                                                                               list_all_body_2_list,list_all_body_2_map,
                                                                                               list_all_body_3_list,list_all_body_3_map,list_all_body_3_shift,
@@ -482,7 +521,7 @@ def main():
 
         report_name = "{}/best_report_{:.2f}".format(args.out_folder,current_loss)
         produce_error_report(report_name, all_training_items,all_training_items_str, indiv_error)
-        
+
 
 if __name__ == "__main__":
     main()
