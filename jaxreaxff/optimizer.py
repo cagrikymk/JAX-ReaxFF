@@ -534,8 +534,13 @@ def loss(flattened_force_field,flattened_non_dif_params,
         pos4s = all_positions[geo4_sys_index_list, geo4_atom_index_list[:,3]]
         geo4_all_target_vals = geo4_all_target_vals #* dgrrdn# degree to radian
         calc_ang = jax.vmap(Structure.calculate_body_4_angle_single)(pos1s,pos2s,pos3s,pos4s).reshape(-1)
+        calc_ang = np.clip(calc_ang, -1.0 + 1e-7, 1.0 - 1e-7)
+        calc_ang = np.arccos(calc_ang)
         calc_ang = calc_ang * rdndgr
-        geo4_all_target_vals = np.abs(geo4_all_target_vals)
+        # to have periodicity, Ex. diff between 170 and -170 is 20 degree.
+        calc_ang = np.where(calc_ang < 0.0, calc_ang+360.0, calc_ang)
+        geo4_all_target_vals = np.where(geo4_all_target_vals < 0.0, geo4_all_target_vals+360.0, geo4_all_target_vals)
+
         geo4_error = np.sum(((geo4_all_target_vals - calc_ang) / geo4_all_weights) ** 2)
         total_error = total_error  + geo4_error
         if return_indiv_error:

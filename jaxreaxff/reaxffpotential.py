@@ -8,7 +8,7 @@ Author: Mehmet Cagri Kaymak
 """
 
 from jaxreaxff.structure import Structure
-from jaxreaxff.forcefield import TYPE,c1c,dgrrdn,preprocess_force_field
+from jaxreaxff.forcefield import TYPE,c1c,dgrrdn,rdndgr,preprocess_force_field
 
 import numpy as onp
 import jax.numpy as np
@@ -310,7 +310,7 @@ def calculate_bond_restraint_energy(atom_positions, bond_restraints):
 def calculate_angle_restraint_energy(atom_positions, angle_restraints):
     atom_indices = angle_restraints[:,:3].astype(np.int32)
     forces = angle_restraints[:,3:5]
-    target_angle = angle_restraints[:,5] * dgrrdn # TODO:double check
+    target_angle = angle_restraints[:,5]
     angle_restraint_mask = angle_restraints[:,7]
 
     atoms_i = atom_indices[:,0]
@@ -322,15 +322,20 @@ def calculate_angle_restraint_energy(atom_positions, angle_restraints):
     pos2 = atom_positions[atoms_j]
     pos3 = atom_positions[atoms_k]
 
-    cur_angle = jax.vmap(Structure.calculate_valence_angle)(pos1,pos2,pos3) # TODO: double check this part
-    en_restraint = np.sum(angle_restraint_mask * forces_1 * (1.0 - np.exp(-forces_2 * (cur_angle - target_angle)**2)))
+    cur_angle = jax.vmap(Structure.calculate_valence_angle)(pos1,pos2,pos3)
+    cur_angle = cur_angle * rdndgr
+    # to have periodicity, Ex. diff between 170 and -170 is 20 degree.
+    cur_angle = np.where(cur_angle < 0.0, cur_angle+360.0, cur_angle)
+    target_angle = np.where(target_angle < 0.0, target_angle+360.0, target_angle)
+    diff = (cur_angle - target_angle) * dgrrdn
+    en_restraint = np.sum(angle_restraint_mask * forces_1 * (1.0 - np.exp(-forces_2 * (diff)**2)))
 
     return en_restraint
 
 def calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
     atom_indices = torsion_restraints[:,:4].astype(np.int32)
     forces = torsion_restraints[:,4:6]
-    target_torsion = torsion_restraints[:,6] * dgrrdn
+    target_torsion = torsion_restraints[:,6]
     torsion_restraint_mask = torsion_restraints[:,8]
 
     atoms_1 = atom_indices[:,0]
@@ -348,10 +353,15 @@ def calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
     # clip the values to not get NaN
     cur_torsion = np.clip(cur_torsion, -1.0 + 1e-7, 1.0 - 1e-7)
     cur_torsion = np.arccos(cur_torsion)
-
-    en_restraint = np.sum(torsion_restraint_mask * forces_1 * (1.0 - np.exp(-forces_2 * (cur_torsion - target_torsion)**2)))
+    cur_torsion = cur_torsion * rdndgr
+    # to have periodicity, Ex. diff between 170 and -170 is 20 degree.
+    cur_torsion = np.where(cur_torsion < 0.0, cur_torsion+360.0, cur_torsion)
+    target_torsion = np.where(target_torsion < 0.0, target_torsion+360.0, target_torsion)
+    diff = (cur_torsion - target_torsion) * dgrrdn
+    en_restraint = np.sum(torsion_restraint_mask * forces_1 * (1.0 - np.exp(-forces_2 * (diff)**2)))
 
     return en_restraint
+    
 def calculate_torsion_pot(atom_types, global_body_4_inter_list, global_body_4_inter_list_mask,global_body_4_angles,
                               bo, bopi, abo,
                               valf,
@@ -654,17 +664,17 @@ def calculate_valency_pot(atom_types, global_body_3_inter_list,
     #my_valency_param_mask = valency_param_mask[atom_types,:,:][:,atom_types,:][:,:,atom_types]
     #complete_mask = valency_system_mask * my_valency_param_mask
     # first create the required data structures
-    bo_new = bo - cutoff2
-    #bo_new = bo
-    boa = bo_new[global_body_3_inter_list[:, -2]]
-    bob = bo_new[global_body_3_inter_list[:, -1]]
+    boa = bo[global_body_3_inter_list[:, -2]]
+    bob = bo[global_body_3_inter_list[:, -1]]
 
+    new_mask = np.where(boa * bob < 0.00001, 0, 1) #!Scott Habershon recommendation March 2009
+    complete_mask = global_body_3_inter_list_mask * new_mask
+    
+    boa = boa - cutoff2
+    bob = bob - cutoff2
     # thresholding
     boa = np.clip(boa, a_min=0) #if (boa.lt.zero.or.bob.lt.zero) then skip
     bob = np.clip(bob, a_min=0)
-    new_mask = np.where(boa * bob < 0.00001, 0, 1) #!Scott Habershon recommendation March 2009
-    complete_mask = global_body_3_inter_list_mask * new_mask
-
     # calculate SBO term
     # calculate sbo2 and vmbo for every atom in the sim.sys.
 
