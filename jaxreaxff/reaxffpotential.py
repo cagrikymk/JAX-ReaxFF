@@ -38,7 +38,7 @@ def safe_sqrt_jvp(primals, tangents):
   primal_out = safe_sqrt(x)
   tangent_out = 0.5 * x_dot / np.where(x > 0, primal_out, np.inf)
   return primal_out, tangent_out
-  
+
 
 def calculate_total_energy_single(flattened_force_field, flattened_non_dif_params, system):
     #body_2_distances = Structure.calculate_2_body_distances(system.atom_positions,system.box_size, system.global_body_2_inter_list,system.global_body_2_inter_list_mask)
@@ -330,7 +330,7 @@ def calculate_angle_restraint_energy(atom_positions, angle_restraints):
 def calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
     atom_indices = torsion_restraints[:,:4].astype(np.int32)
     forces = torsion_restraints[:,4:6]
-    target_torsion = torsion_restraints[:,6] * dgrrdn # TODO:double check
+    target_torsion = torsion_restraints[:,6] * dgrrdn
     torsion_restraint_mask = torsion_restraints[:,8]
 
     atoms_1 = atom_indices[:,0]
@@ -344,11 +344,14 @@ def calculate_torsion_restraint_energy(atom_positions, torsion_restraints):
     pos3 = atom_positions[atoms_3]
     pos4 = atom_positions[atoms_4]
 
-    cur_torsion = jax.vmap(Structure.calculate_body_4_angles_single)(pos1,pos2,pos3,pos4)[:,-1].reshape(-1)  # TODO: double check this part
+    cur_torsion = jax.vmap(Structure.calculate_body_4_angles_single)(pos1,pos2,pos3,pos4)[:,-1].reshape(-1)
+    # clip the values to not get NaN
+    cur_torsion = np.clip(cur_torsion, -1.0 + 1e-7, 1.0 - 1e-7)
+    cur_torsion = np.arccos(cur_torsion)
+
     en_restraint = np.sum(torsion_restraint_mask * forces_1 * (1.0 - np.exp(-forces_2 * (cur_torsion - target_torsion)**2)))
 
     return en_restraint
-
 def calculate_torsion_pot(atom_types, global_body_4_inter_list, global_body_4_inter_list_mask,global_body_4_angles,
                               bo, bopi, abo,
                               valf,
