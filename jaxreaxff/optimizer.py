@@ -14,11 +14,11 @@ import jax
 import time
 import copy
 from scipy.optimize import minimize
-from jax_md.reaxff_interactions import calculate_angle
+from jax_md.reaxff.reaxff_interactions import calculate_angle
 from jax_md.dataclasses import replace
 from jax_md.util import safe_mask
-from jax_md.reaxff_forcefield import ForceField
-from jax_md.reaxff_energy import calculate_reaxff_energy
+from jax_md.reaxff.reaxff_forcefield import ForceField
+from jax_md.reaxff.reaxff_energy import calculate_reaxff_energy
 from jaxreaxff.helper import split_dataclass, count_inter_list_sizes, move_dataclass
 from jaxreaxff.helper import filter_dataclass, set_params, get_params
 from jaxreaxff.interactions import calculate_dist_and_angles, calculate_dist
@@ -231,7 +231,7 @@ def calculate_loss(force_field,
     force_items = training_data.force_items
     force_preds = all_forces[force_items.sys_ind,force_items.a_ind]
     force_errors = ((force_items.target - force_preds) /
-                           force_items.weight) ** 2
+                           force_items.weight.reshape(-1,1)) ** 2
     force_error = jnp.sum(force_errors)
     total_error += force_error
     if return_indiv_error:

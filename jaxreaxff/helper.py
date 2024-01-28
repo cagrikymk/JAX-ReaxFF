@@ -18,7 +18,7 @@ from jaxreaxff.trainingdata import TorsionItem, ForceItem, RMSGItem, TrainingDat
 from jaxreaxff.structure import Structure, BondRestraint, AngleRestraint, TorsionRestraint
 from jaxreaxff.inter_list_counter import pool_handler_for_inter_list_count
 from jax_md import dataclasses
-from jax_md.reaxff_forcefield import ForceField
+from jax_md.reaxff.reaxff_forcefield import ForceField
 # Since we shouldnt access the private API (jaxlib), create a dummy jax array
 # and get the type information from the array.
 #from jaxlib.xla_extension import ArrayImpl as JaxArrayType
@@ -268,8 +268,9 @@ def build_force_report_item(force_item, pred, weighted_error, geo_index_to_name)
   dirs = ["X", "Y", "Z"]
   rows = []
   for i in range(3):
-    out_str = f"FORCE-{dirs[i]}: " + out_str
-    row = [out_str, force_item.weight, force_item.target[i], pred[i], weighted_error[i]]
+    new_out_str = f"FORCE-{dirs[i]}: " + out_str
+    row = [new_out_str, force_item.weight, float(force_item.target[i]),
+     float(pred[i]), float(weighted_error[i])]
     rows.append(row)
   return rows
 
@@ -348,9 +349,9 @@ def produce_error_report(filename, tranining_items, indiv_error, geo_index_to_na
       if key == "FORCE":
         rows = row
         for j, row in enumerate(rows):
-          cumulative_err += weighted_errors[i][j]
+          cumulative_err += float(weighted_errors[i][j])
           row.append(cumulative_err)
-          data_to_print.extend(row)
+          data_to_print.append(row)
       else:
         cumulative_err += weighted_errors[i]
         row.append(cumulative_err)

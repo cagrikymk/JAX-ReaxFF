@@ -6,20 +6,19 @@ Driver code to run the trainer
 Author: Mehmet Cagri Kaymak
 """
 import os
-os.environ['JAX_ENABLE_X64'] = 'True'
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
-import jax.profiler
 import jax
+jax.config.update("jax_enable_x64", True)
+import jax.profiler
 import jax.numpy as jnp
 import numpy as onp
 import time
 import argparse
-#TODO: from .smartformatter import SmartFormatter
-from smartformatter import SmartFormatter
+from .smartformatter import SmartFormatter
 from frozendict import frozendict
-from jax_md.reaxff_energy import calculate_reaxff_energy
-from jax_md.reaxff_forcefield import ForceField
-from jax_md.reaxff_helper import read_force_field
+from jax_md.reaxff.reaxff_energy import calculate_reaxff_energy
+from jax_md.reaxff.reaxff_forcefield import ForceField
+from jax_md.reaxff.reaxff_helper import read_force_field
 from jax_md import dataclasses
 from jaxreaxff.optimizer import (calculate_loss, 
                                  calculate_energy_and_charges_w_rest, 
@@ -123,36 +122,6 @@ def main():
       default=0,
       help='Seed value')
   
-  def calculate_energy2(positions, structure, nbr_lists, force_field):
-    dists_and_angles = calculate_dist_and_angles(positions, structure, nbr_lists)
-    energy, d =  calculate_reaxff_energy(structure.atom_types,
-                                  structure.atomic_nums,
-                                  nbr_lists,
-                                  *dists_and_angles,
-                                  force_field,
-                                  total_charge = structure.total_charge,
-                                  tol= 1e-06,
-                                  backprop_solve = False,
-                                  tors_2013 = False,
-                                  solver_model = "EEM")
-  
-    return energy, d
-  
-  
-  def calculate_energy(force_field, structure, nbr_lists, dists_and_angles):
-    energy, d =  calculate_reaxff_energy(structure.atom_types,
-                                  structure.atomic_nums,
-                                  nbr_lists,
-                                  *dists_and_angles,
-                                  force_field,
-                                  total_charge = structure.total_charge,
-                                  tol= 1e-06,
-                                  backprop_solve = False,
-                                  tors_2013 = False,
-                                  solver_model = "EEM")
-  
-    return energy, d
-  
   #parse arguments
   args = parser.parse_args()
   # TODO: remove
@@ -172,8 +141,7 @@ def main():
   onp.random.seed(args.seed)
   TYPE = jnp.float64
   # read the initial force field
-  args.init_FF = "ffield"
-  force_field = read_force_field(args.init_FF,cutoff2 = args.cutoff2, dtype=TYPE)
+  force_field = read_force_field(args.init_FF, cutoff2 = args.cutoff2, dtype=TYPE)
   force_field = ForceField.fill_off_diag(force_field)
   force_field = ForceField.fill_symm(force_field)
   
@@ -195,14 +163,14 @@ def main():
       bounds.append((p[2],p[3]))
   bounds = onp.array(bounds)
   # print INFO
-  print("f[INFO] Parameter file is read, there are {len(param_indices)} parameters to be optimized!")
+  print(f"[INFO] Parameter file is read, there are {len(param_indices)} parameters to be optimized!")
   ###########################################################################
   
   
   # read the geo file
-  systems = read_geo_file("geo_orig", force_field.name_to_index, 10.0)
+  systems = read_geo_file(args.geo, force_field.name_to_index, 10.0)
   
-  training_data = read_train_set("trainset_orig.in")
+  training_data = read_train_set(args.train_file)
   systems, training_data = filter_data(systems, training_data)
   
   geo_name_to_index, geo_index_to_name = create_structure_map(systems)
@@ -242,15 +210,12 @@ def main():
   force_field = move_dataclass(force_field, jnp)
   
   batched_allocate = reaxff_interaction_list_generator(force_field,
-                                                       close_cutoff = 5.0,
+                                                       close_cutoff = 6.0,
                                                        far_cutoff = 10.0,
                                                        use_hbond=True)
   
   allocate_func = jax.jit(batched_allocate,static_argnums=(3,))
-  center_sizes = [frozendict(c) for c in center_sizes]
-  center_sizes = tuple(center_sizes)
-  
-  
+  center_sizes = [frozendict(c) for c in center_sizes]   
   
   list_positions = [s.positions for s in aligned_data]  
   
@@ -320,8 +285,6 @@ def main():
   init_params = onp.array(init_params)
   
   
-  optim_options =dict(maxiter=100,maxls=20,maxcor=20, disp=False)
-  optimizer='SLSQP'
   population_size = args.num_trials
   random_sample_count = 100
   results_list = []
@@ -329,7 +292,6 @@ def main():
   best_fitness = float("inf")
   opt_method = args.opt_method
   num_steps = args.num_steps
-  
   e_minim_flag = sum([jnp.sum(data.energy_minimize) for data in aligned_data]) > 0
   e_minim_flag = e_minim_flag & (args.num_e_minim_steps > 0)
   if opt_method == "L-BFGS-B":
@@ -356,7 +318,7 @@ def main():
      global_min,
      center_sizes] = train_FF(selected_params, param_indices, bounds, force_field,
                            aligned_data, center_sizes, training_data,
-                           num_steps, e_minim_flag, optimizer, optim_options,
+                           num_steps, e_minim_flag, opt_method, optim_options,
                            advanced_opts,
                            new_loss_and_grad_func, minim_func, allocate_func)
     for c in center_sizes:
