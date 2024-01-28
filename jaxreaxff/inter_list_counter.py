@@ -182,7 +182,7 @@ def calculate_hbond_size(atom_types,
       type2 = atom_types[a2]
       ihhb1 = nphb[type1]
       ihhb2 = nphb[type2]
-      if ihhb1 != 1 or ihhb2 != 2 or dist > dist_cutoff:
+      if ihhb1 != 1 or ihhb2 != 2 or dist < dist_cutoff:
         continue
       #i3 is the short range nbr (donor)
       for i3 in range(close_nbr_inds[a1].size):
@@ -327,11 +327,12 @@ def calculate_inter_list_sizes(structure,
   size_dict["hbond_filter_far_size"] = far_acc_size
 
   # calculate the size of close neighbor sub list for h-bond creation
+  # multiply BO and the cutoff by -1 since we check if value < cutoff
   (close_h_size,
    close_donor_size) = calculate_hbond_dense_size(atom_types,
                                                  filt2_inds,
-                                                 filt2_bo,
-                                                 hbond_bo_cutoff,
+                                                 filt2_bo * -1,
+                                                 hbond_bo_cutoff * -1,
                                                  force_field.nphb)
 
   size_dict["hbond_filter_close_size"] = close_donor_size
