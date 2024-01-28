@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 K-means like clustering code to cluster similar structures together
 to minimize memory and computational cost
@@ -8,155 +6,152 @@ accelerated using numba
 
 Author: Mehmet Cagri Kaymak
 """
-from scipy.spatial import distance
 import numpy as onp
 import numba
 
-def calculate_dist(X, Y):
-    cost1 = onp.sum(onp.abs(X[:4] - Y[:4]))
-    cost2 = abs(X[4] * (X[5] ** 2) - Y[4] * (Y[5] ** 2))
-
-    return cost1 + cost2
-
-@numba.njit
-def calc_cost_and_centers(X, labels, k):
-    counts = onp.zeros(k)
-    max_centers = onp.zeros(shape=(k,len(X[0])))
-    for i in range(len(X)):
-        counts[labels[i]] += 1
-        max_centers[labels[i]] = onp.where(max_centers[labels[i]] > X[i], max_centers[labels[i]], X[i])
-
-    #cost,part1,part2 = calculate_total_cost(X,counts,max_centers)
-    return max_centers#,cost
-
 @numba.njit
 def calculate_cost_and_new_centers(single_X, centroids, counts):
-    # calculate change in total comp.
-    change_cost = onp.zeros(len(centroids))
-    new_cents = []
-    for i in range(len(centroids)):
+  '''
+  Calculate the cost differences by assigning X to each centroid and
+  the updated centroid, if the X becomes a part of that group
+  '''
+  # calculate change in total comp.
+  change_cost = onp.zeros(len(centroids))
+  new_cents = []
+  for i in range(len(centroids)):
+    max_vals = onp.where(centroids[i] > single_X, centroids[i], single_X)
 
-        max_vals = onp.where(centroids[i] > single_X, centroids[i], single_X)
-        change1 = max_vals - centroids[i]
-        change2 = max_vals - single_X
-        change = onp.sum(change1 * (counts[i]+1))
-        #solver_cost_change = change1[-1]**3 * (counts[i]+1) - centroids[i][-1]**3 * (counts[i])
-        prev = centroids[i][4] * (centroids[i][5] ** 2) * counts[i]  #nonbounded cost: image count * (atom_count)**2
-        curr = max_vals[4] * (max_vals[5] ** 2) *  (counts[i]+1)
-        change = change + curr - prev
+    new_cost = sum(calculate_single_cost(max_vals)) * (counts[i] + 1)
+    old_cost = sum(calculate_single_cost(centroids[i])) * counts[i]
 
-        change_cost[i] = change# + solver_cost_change
-        new_cents.append(max_vals)
+    change_cost[i] = new_cost - old_cost
+    new_cents.append(max_vals)
 
-    return change_cost,new_cents
+  return change_cost, new_cents
 
+@numba.njit
+def calculate_single_cost(sizes):
+  '''
+  Calculate the cost of a group
+  '''
+  # N x K where N is # atoms and K is # far neighbors
+  nonbonded = sizes[0] * sizes[2]
+  # N X L + 3_body size + 4_body size
+  # where N is # atoms and L is # close neighbors
+  bonded = sizes[0] * sizes[3] + sizes[5] + sizes[6]
+  # cost of hbond
+  hbond = sizes[7] + sizes[8] + sizes[9] * sizes[0] + sizes[10] * sizes[0]
+  return bonded + hbond, nonbonded
 
+@numba.njit
 def calculate_total_cost(X,counts,centroids):
-    total_cost = 0
-    total_part1 = 0
-    total_part2 = 0
-
-    for i in range(len(counts)):
-        part1= onp.sum(centroids[i][:4] * counts[i])
-        total_cost+= part1
-        part2 = centroids[i][4] * (centroids[i][5] ** 2) * counts[i] #+ (centroids[i][5] ** 3) * counts[i]
-        total_cost+= part2
-        total_part1 += part1
-        total_part2 += part2
-    return total_cost,total_part1,total_part2
+  '''
+  Calculate the cost of current grouping of the structures
+  '''
+  total_bonded = 0
+  total_nonbonded = 0
+  for i in range(len(counts)):
+    bonded, nonbonded = calculate_single_cost(centroids[i])
+    total_bonded += bonded * counts[i]
+    total_nonbonded += nonbonded * counts[i]
+  return total_bonded, total_nonbonded
 
 @numba.njit
 def assign_labels(X, centroids):
-    counts = onp.zeros(len(centroids))
-    labels = onp.zeros(len(X),dtype=onp.int32)
-    #iteration order changes the result, so shuffle the order to randomize
-    idx = onp.arange(len(X))
-    onp.random.shuffle(idx)
-    for i in idx:
-        costs,new_cents = calculate_cost_and_new_centers(X[i], centroids, counts)
-        min_ind = onp.argmin(costs)
-        labels[i] = min_ind
-        counts[min_ind] += 1
-        centroids[min_ind] = new_cents[min_ind]
+  '''
+  Assign group label to each system, for given centroids
+  '''
+  counts = onp.zeros(len(centroids))
+  labels = onp.zeros(len(X),dtype=onp.int32)
+  #iteration order changes the result, so shuffle the order to randomize
+  idx = onp.arange(len(X))
+  onp.random.shuffle(idx)
+  for i in idx:
+    costs, new_cents = calculate_cost_and_new_centers(X[i], centroids, counts)
+    min_ind = onp.argmin(costs)
+    labels[i] = min_ind
+    counts[min_ind] += 1
+    centroids[min_ind] = new_cents[min_ind]
 
-    for i in range(len(counts)):
-        if counts[i] == 0:
-             centroids[i,:] = 0.0
+  for i in range(len(counts)):
+    if counts[i] == 0:
+      centroids[i,:] = 0.0
 
-    return labels,counts,centroids
+  return labels,counts,centroids
 
-def modified_kmeans(systems,k=3,max_iterations=100, rep_count=10, print_mode=True):
+def modified_kmeans(system_size_dicts ,k=3,
+                    max_iterations=100, rep_count=10, print_mode=True):
+  '''
+  X: multidimensional data
+  k: number of clusters
+  max_iterations: number of repetitions before clusters are established
 
-    all_lists = []
-    for s in systems:
-        #2-body, 3-body, 4-body, hbond count, image count, atom count
-        my_list = [s.global_body_2_count,s.global_body_3_count,s.global_body_4_count, s.global_hbond_count, len(s.all_shift_comb),(s.real_atom_count)]
-        all_lists.append(my_list)
+  Steps:
+  1. Convert data to numpy aray
+  2. Pick indices of k random point without replacement
+  3. Find class (P) of each data point using euclidean distance
+  4. Stop when max_iteration are reached of P matrix doesn't change
 
-    X = onp.array(all_lists)
+  '''
 
-    '''
-    X: multidimensional data
-    k: number of clusters
-    max_iterations: number of repetitions before clusters are established
+  selected_keys = ['num_atoms','periodic_image_count',
+                   'far_nbr_size', 'close_nbr_size','filter2_size',
+                   'filter3_size','filter4_size',
+                   'hbond_size', 'hbond_h_size', 'hbond_filter_far_size',
+                   'hbond_filter_close_size']
+  all_lists = []
+  for s in system_size_dicts:
+    my_list = [s[k] for k in selected_keys]
+    all_lists.append(my_list)
 
-    Steps:
-    1. Convert data to numpy aray
-    2. Pick indices of k random point without replacement
-    3. Find class (P) of each data point using euclidean distance
-    4. Stop when max_iteration are reached of P matrix doesn't change
+  X = onp.array(all_lists)
 
-    Return:
-    np.array: containg class of each data point
-    '''
-    min_cost = 999999999999999999999
-    idx = onp.arange(len(X))
+  min_cost = float('inf')
+  min_bonded = float('inf')
+  min_nonbonded = float('inf')
+  idx = onp.arange(len(X))
+  centroids = X[idx, :]
+  counts = onp.ones(len(centroids))
+  bonded, nonbonded = calculate_total_cost(X,counts,centroids)
+  if print_mode:
+    print("Cost without aligning:", nonbonded + bonded)
+    print("nonbonded:            ", nonbonded)
+    print("bonded:               ", bonded)
+  # Try the clustering rep_count times and pick the one with the lowest cost
+  for r in range(rep_count):
+    idx = onp.random.choice(len(X), k, replace=False)
     centroids = X[idx, :]
-    counts = onp.ones(len(centroids))
-    cost,part1,part2 = calculate_total_cost(X,counts,centroids)
-    if print_mode:
-        print("Cost without aligning:", cost)
-        print("nonbounded:           ", part2)
-        print("bounded:              ", part1)
-    for r in range(rep_count):
-        idx = onp.random.choice(len(X), k, replace=False)
-        centroids = X[idx, :]
 
+    P_labels,counts,centroids = assign_labels(X, centroids)
+    bonded, nonbonded = calculate_total_cost(X,counts,centroids)
+    # update the centroids till convergence or reaching max iteration
+    for iter_c in range(max_iterations):
+      labels,counts,centroids = assign_labels(X, centroids)
+      if iter_c != 0 and onp.array_equal(P_labels,labels):break
+      P_labels = labels
+      bonded, nonbonded = calculate_total_cost(X,counts,centroids)
+      cost = bonded + nonbonded
+      #print(cost,part1,part2)
+    if cost < min_cost:
+      min_cost = cost
+      min_labels = P_labels
+      min_centr = centroids
+      min_counts = counts
+      min_bonded = bonded
+      min_nonbonded = nonbonded
+  if print_mode:
+    print("Number of clusters:   ", k)
+    print("Cost after aligning:  ", min_cost)
+    print("nonbonded:            ", min_nonbonded)
+    print("bonded:               ", min_bonded)
+  cluster_dicts = []
+  for i in range(len(min_centr)):
+    dict_min_centr = {}
+    for j,k in enumerate(selected_keys):
+      dict_min_centr[k] = min_centr[i,j]
+    cluster_dicts.append(dict_min_centr)
 
-        P_labels,counts,centroids = assign_labels(X, centroids)
-        #centroids = calc_cost_and_centers(X, P_labels, k)
-        cost,part1,part2 = calculate_total_cost(X,counts,centroids)
-
-        for iter_c in range(max_iterations):
-            labels,counts,centroids = assign_labels(X, centroids)
-            #centroids = calc_cost_and_centers(X, P_labels, k)
-            if iter_c != 0 and onp.array_equal(P_labels,labels):break
-            P_labels = labels
-            cost,part1,part2 = calculate_total_cost(X,counts,centroids)
-            #print(cost,part1,part2)
-        if cost < min_cost:
-            min_cost = cost
-            min_labels = P_labels
-            min_centr = centroids
-            min_counts = counts
-            min_part1 = part1
-            min_part2 = part2
-    if print_mode:
-        print("Number of clusters:   ", k)
-        print("Cost after aligning:  ", min_cost)
-        print("nonbounded:           ", min_part2)
-        print("bounded:              ", min_part1)
-
-    return min_labels,min_centr,min_counts,min_cost
-def calc_cost(X, labels, k):
-    counts = onp.zeros(k)
-    max_centers = onp.zeros(shape=(k,len(X[0])))
-    for i in range(len(X)):
-        counts[labels[i]] += 1
-        max_centers[labels[i]] = onp.where(max_centers[labels[i]] > X[i], max_centers[labels[i]], X[i])
-
-    cost,part1,part2 = calculate_total_cost(X,counts,max_centers)
-    return cost,part1,part2
+  return min_labels,cluster_dicts,min_counts,min_cost
 
 
 
