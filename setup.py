@@ -35,7 +35,7 @@ cuda_version = "cuda{}".format(cuda_version.replace(".",""))
 INSTALL_REQUIRES = [
   'jax',
   'jaxlib',
-  'jax-md',
+  'jax_md @ git+https://github.com/cagrikymk/jax-md.git@reaxff_dev#egg=jax_md',
   'numba>=0.56',
   'numpy',
   'scipy>=1.2.1',
