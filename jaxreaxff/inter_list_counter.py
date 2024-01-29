@@ -150,7 +150,7 @@ def calculate_hbond_dense_size(atom_types,
   h_nbr_inds = nbr_inds[hydrogen_mask]
   h_nbr_vals = nbr_values[hydrogen_mask]
   h_nbr_mask = hydrogen_pair_mask[h_nbr_inds]
-  h_val_mask = (h_nbr_vals < cutoff) & (h_nbr_inds != -1)
+  h_val_mask = (h_nbr_vals < cutoff) & (h_nbr_inds != -1) & (h_nbr_vals != 0.0)
 
   counts = onp.count_nonzero(h_val_mask & h_nbr_mask, axis=1)
   max_c = onp.max(counts,initial=0)
@@ -182,7 +182,7 @@ def calculate_hbond_size(atom_types,
       type2 = atom_types[a2]
       ihhb1 = nphb[type1]
       ihhb2 = nphb[type2]
-      if ihhb1 != 1 or ihhb2 != 2 or dist < dist_cutoff:
+      if ihhb1 != 1 or ihhb2 != 2 or dist > dist_cutoff:
         continue
       #i3 is the short range nbr (donor)
       for i3 in range(close_nbr_inds[a1].size):

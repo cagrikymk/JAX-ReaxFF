@@ -229,6 +229,8 @@ def calculate_loss(force_field,
       all_indiv_errors['CHARGE'] = [charge_preds, charge_items.target, charge_errors]
   if training_data.force_items != None:
     force_items = training_data.force_items
+    # forces: -1 * grads
+    all_forces = all_forces * -1
     force_preds = all_forces[force_items.sys_ind,force_items.a_ind]
     force_errors = ((force_items.target - force_preds) /
                            force_items.weight.reshape(-1,1)) ** 2
@@ -543,8 +545,8 @@ def train_FF(params, param_indices, param_bounds, force_field,
     else:
       # extend the interaction list sizes if needed
       for i in range(len(list_structure)):
-        sub_nbr = allocate_func(list_positions[i], list_structure[i],
-                                   force_field, center_sizes[i])[0]
+        sub_nbr, new_c = allocate_func(list_positions[i], list_structure[i],
+                                   force_field, center_sizes[i])
         if jnp.any(sub_nbr.did_buffer_overflow):
           print(f"Interaction list overflow for cluster-{i+1} during training!")
           new_cluster_center = update_inter_sizes(list_positions[i],
