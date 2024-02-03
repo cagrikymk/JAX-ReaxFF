@@ -454,7 +454,8 @@ def read_geo_file(geo_file, name_to_index_map, far_nbr_cutoff):
                              atoms_positions, orth_mat, total_charge,
                              do_minimization, max_it, all_shifts,
                              new_bond_restraints, new_angle_restraints,
-                             new_torsion_restraints)
+                             new_torsion_restraints,
+                             None,None,None) # target values are not used here
 
       list_systems.append(new_system)
       atoms_positions = []
@@ -679,23 +680,31 @@ def read_train_set(train_in):
           name_list.append(split_line[4 * i + 2].strip())
 
       energy = float(split_line[-1])
-      energy_item = EnergyItem(name_list, multiplier_list, energy, w)
+      energy_item = EnergyItem(name_list, multiplier_list, energy, w, 1.0)
 
       energy_items.append(energy_item)
     # charge item
     elif charge_flag == 1:
       line = preprocess_trainset_line(line)
       split_line = line.split()
+      mask = 1.0
+      if split_line[0].upper() == "V":
+        mask = 0.0
+        split_line = split_line[1:]
       name = split_line[0].strip()
       weight = float(split_line[1])
       index = int(split_line[2]) - 1
       charge = float(split_line[3])
-      charge_item = ChargeItem(name, index, charge, weight)
+      charge_item = ChargeItem(name, index, charge, weight, mask)
       charge_items.append(charge_item)
     # geo item
     elif geo_flag == 1:
       line = preprocess_trainset_line(line)
       split_line = line.split()
+      mask = 1.0
+      if split_line[0].upper() == "V":
+        mask = 0.0
+        split_line = split_line[1:]
       name = split_line[0].strip()
       weight = float(split_line[1])
       target = float(split_line[-1])
@@ -703,7 +712,7 @@ def read_train_set(train_in):
       if len(split_line) == 5:
         index1 = int(split_line[2]) - 1
         index2 = int(split_line[3]) - 1
-        dist_item = DistItem(name, index1, index2, target, weight)
+        dist_item = DistItem(name, index1, index2, target, weight, mask)
         geo2_items.append(dist_item)
 
       # 3-body
@@ -711,7 +720,7 @@ def read_train_set(train_in):
         index1 = int(split_line[2]) - 1
         index2 = int(split_line[3]) - 1
         index3 = int(split_line[4]) - 1
-        angle_item = AngleItem(name, index1, index2, index3, target, weight)
+        angle_item = AngleItem(name, index1, index2, index3, target, weight, mask)
         geo3_items.append(angle_item)
       # 4-body
       if len(split_line) == 7:
@@ -719,14 +728,19 @@ def read_train_set(train_in):
         index2 = int(split_line[3]) - 1
         index3 = int(split_line[4]) - 1
         index4 = int(split_line[5]) - 1
-        torsion_item = TorsionItem(name, index1, index2, index3, index4, target, weight)
+        torsion_item = TorsionItem(name, index1, index2, index3, index4, target, weight, mask)
         geo4_items.append(torsion_item)
       #RMSG
       if len(split_line) == 3:
-        rmsg_item = RMSGItem(name, target, weight)
+        rmsg_item = RMSGItem(name, target, weight, mask)
         force_RMSG_items.append(rmsg_item)
     # force item
     elif force_flag == 1:
+      split_line = line.split()
+      mask = 1.0
+      if split_line[0].upper() == "V":
+        mask = 0.0
+        split_line = split_line[1:]
       line = preprocess_trainset_line(line)
       split_line = line.split()
       name = split_line[0].strip()
@@ -737,7 +751,7 @@ def read_train_set(train_in):
         f1 = float(split_line[3])
         f2 = float(split_line[4])
         f3 = float(split_line[5])
-        force_item = ForceItem(name, index, [f1,f2,f3], weight)
+        force_item = ForceItem(name, index, [f1,f2,f3], weight, mask)
         force_atom_items.append(force_item)
 
   if len(energy_items) > 0:

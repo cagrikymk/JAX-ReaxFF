@@ -113,9 +113,9 @@ class ReaxFFEnergyTest(parameterized.TestCase):
       hbond_count = size_dicts[i]["hbond_size"]
       body3_count = size_dicts[i]["filter3_size"]
       body4_count = size_dicts[i]["filter4_size"]
-      #self.assertEqual(hbond_count, data[geo_name]['hbond count'], geo_name + ' hbond count')
-      #self.assertEqual(body3_count, data[geo_name]['3-body count'], geo_name + ' 3-body count')
-      #self.assertEqual(body4_count, data[geo_name]['4-body count'], geo_name + ' 4-body count')
+      self.assertEqual(hbond_count, data[geo_name]['hbond count'], geo_name + ' hbond count')
+      self.assertEqual(body3_count, data[geo_name]['3-body count'], geo_name + ' 3-body count')
+      self.assertEqual(body4_count, data[geo_name]['4-body count'], geo_name + ' 4-body count')
 
   @parameterized.parameters(
        [(i, TEST_DATA[i]['name'])  for i in range(len(TEST_DATA))])
@@ -127,7 +127,6 @@ class ReaxFFEnergyTest(parameterized.TestCase):
     data = TEST_DATA[i]['results']
     num_threads = os.cpu_count()
     globally_sorted_indices, all_cut_indices, center_sizes = process_and_cluster_geos(my_geo,my_ff, max_num_clusters=5, num_threads=num_threads)
-    print("clusture done")
     for i in range(len(center_sizes)):
       for k in center_sizes[i].keys():
         if center_sizes[i][k] == 0:
@@ -138,7 +137,6 @@ class ReaxFFEnergyTest(parameterized.TestCase):
       zz = align_structures([my_geo[i] for i in all_cut_indices[i]], center_sizes[i], jnp.float64)
       zz = move_dataclass(zz, jnp)
       aligned_data.append(zz)
-    print("align done")
     my_ff = move_dataclass(my_ff, jnp)
 
 
@@ -152,7 +150,6 @@ class ReaxFFEnergyTest(parameterized.TestCase):
 
     all_inters = [allocate_f(aligned_data[i].positions, aligned_data[i], my_ff, center_sizes[i])[0] for i in range(len(center_sizes))]
     my_calculate_energy = jax.vmap(jax.value_and_grad(calculate_energy), (0,0,0, None))
-    print("before energy")
     all_energies = jnp.zeros(num_structures)
     all_forces = [None] * num_structures
     for i in range(len(center_sizes)):

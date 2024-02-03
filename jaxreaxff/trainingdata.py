@@ -12,6 +12,7 @@ class ChargeItem(object):
     a_ind: Array
     target: Array
     weight: Array
+    mask: Array
 
 @dataclasses.dataclass
 class EnergyItem(object):
@@ -19,7 +20,8 @@ class EnergyItem(object):
     multip: Array
     target: Array
     weight: Array
-
+    mask: Array
+    
 @dataclasses.dataclass
 class DistItem(object):
     sys_ind: Array
@@ -27,7 +29,8 @@ class DistItem(object):
     a2_ind: Array
     target: Array
     weight: Array
-
+    mask: Array
+    
 @dataclasses.dataclass
 class AngleItem(object):
     sys_ind: Array
@@ -36,7 +39,8 @@ class AngleItem(object):
     a3_ind: Array
     target: Array
     weight: Array
-
+    mask: Array
+    
 @dataclasses.dataclass
 class TorsionItem(object):
     sys_ind: Array
@@ -46,20 +50,21 @@ class TorsionItem(object):
     a4_ind: Array
     target: Array
     weight: Array
-
+    mask: Array
 @dataclasses.dataclass
 class ForceItem(object):
     sys_ind: Array
     a_ind: Array
     target: Array
     weight: Array
-
+    mask: Array
 @dataclasses.dataclass
 class RMSGItem(object):
     sys_ind: Array
     target: Array
     weight: Array
-
+    mask: Array
+    
 @dataclasses.dataclass
 class TrainingData(object):
     charge_items: ChargeItem = None

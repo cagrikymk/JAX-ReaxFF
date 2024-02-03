@@ -51,6 +51,10 @@ class Structure(object):
     angle_restraints: AngleRestraint
     torsion_restraints: TorsionRestraint
 
+    target_e: Array
+    target_f: Array
+    target_ch: Array
+
 
 def align_restraints(structures):
     full_size = len(structures)
@@ -97,6 +101,10 @@ def align_structures(structures, max_sizes, dtype=onp.float32):
     # all distances will be >> cutoffs when padded
     periodic_image_shifts = periodic_image_shifts + 999
 
+    target_e = onp.zeros(shape=(full_size,), dtype=dtype)
+    target_f = onp.zeros(shape=(full_size, num_atoms, 3), dtype=dtype)
+    target_ch = onp.zeros(shape=(full_size, num_atoms), dtype=dtype)
+
     for i in range(full_size):
       s = structures[i]
       name[i] = s.name
@@ -109,6 +117,13 @@ def align_structures(structures, max_sizes, dtype=onp.float32):
       energy_minimize[i] = s.energy_minimize
       energy_minim_steps[i] = s.energy_minim_steps
       periodic_image_shifts[i, :len(s.periodic_image_shifts)] = s.periodic_image_shifts
+
+      target_e[i] = s.target_e
+      target_f[i, :s.atom_count, :] = s.target_f
+      target_ch[i, :s.atom_count] = s.target_ch
+
+
+
 
     bond_rest, angle_res, tors_rest = align_restraints(structures)
     new_system = Structure(name=name,
@@ -123,5 +138,16 @@ def align_structures(structures, max_sizes, dtype=onp.float32):
                            periodic_image_shifts=periodic_image_shifts,
                            bond_restraints=bond_rest,
                            angle_restraints=angle_res,
-                           torsion_restraints=tors_rest)
+                           torsion_restraints=tors_rest,
+                           target_e=target_e,
+                           target_f=target_f,
+                           target_ch=target_ch)
     return new_system
+
+def align_and_batch_structures(structures, max_sizes, batch_size, dtype=onp.float32):
+  full_size = len(structures)
+  batches = []
+  for bs in range(0,full_size-batch_size,batch_size):
+    batches.append(align_structures(structures[bs:bs+batch_size],
+                                    max_sizes, dtype))
+  return batches

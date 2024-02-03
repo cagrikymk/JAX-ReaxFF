@@ -214,7 +214,7 @@ def calculate_loss(force_field,
                            * energy_items.multip,axis=1)
     energy_errors = ((energy_items.target - energy_preds) /
                             energy_items.weight) ** 2
-    energy_error = jnp.sum(energy_errors)
+    energy_error = jnp.sum(energy_errors * energy_items.mask)
     total_error += energy_error
     if return_indiv_error:
       all_indiv_errors['ENERGY'] = [energy_preds, energy_items.target, energy_errors]
@@ -234,7 +234,7 @@ def calculate_loss(force_field,
     force_preds = all_forces[force_items.sys_ind,force_items.a_ind]
     force_errors = ((force_items.target - force_preds) /
                            force_items.weight.reshape(-1,1)) ** 2
-    force_error = jnp.sum(force_errors)
+    force_error = jnp.sum(force_errors * force_items.mask.reshape(-1,1))
     total_error += force_error
     if return_indiv_error:
       all_indiv_errors['FORCE'] = [force_preds, force_items.target, force_errors]
@@ -246,7 +246,7 @@ def calculate_loss(force_field,
     disps = pos1 - pos2
     dists = jax.vmap(calculate_dist)(disps)
     dist_errors = ((dist_items.target - dists) /
-                           dist_items.weight) ** 2
+                           dist_items.weight * dist_items.mask) ** 2
     dist_error = jnp.sum(dist_errors)
     total_error += dist_error
     if return_indiv_error:
@@ -271,7 +271,7 @@ def calculate_loss(force_field,
     targets = jnp.where(targets < 0.0, targets+360.0, targets)
 
     angle_errors = ((targets - angles) /
-                           angle_items.weight) ** 2
+                           angle_items.weight * angle_items.mask) ** 2
     angle_error = jnp.sum(angle_errors)
     total_error += angle_error
     if return_indiv_error:

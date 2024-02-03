@@ -321,8 +321,6 @@ def main():
                            num_steps, e_minim_flag, opt_method, optim_options,
                            advanced_opts,
                            new_loss_and_grad_func, minim_func, allocate_func)
-    for c in center_sizes:
-      print(c)
     end = time.time()
   
     result = {"time":end-start, "value": global_min, 
