@@ -102,7 +102,7 @@ def calculate_shift(force_field, data, max_sizes, allocate_f, energy_f):
   num_types = len(avaiable_types)
   final_result = []
   for X in data:
-    result = onp.zeros((len(X.atom_types), num_types))
+    result = onp.zeros((len(X.atom_types), num_types + 1))
     for i, t in enumerate(avaiable_types):
       count = jnp.sum(X.atom_types == t, axis=1)
       result[:, i] = onp.array(count)
@@ -203,7 +203,7 @@ def loss_function(force_field, structure, nbr_lists,
   if use_forces:
       atom_mask = structure.atom_types >= 0
       (energy_vals, charges), forces = jax.vmap(jax.value_and_grad(calculate_energy_and_charges),
-                                     (0,0,0,None))(structure.position, structure, nbr_lists, force_field)
+                                     (0,0,0,None))(structure.positions, structure, nbr_lists, force_field)
       forces = forces * atom_mask[:,:, jnp.newaxis]
       force_err = (forces - structure.target_f) ** 2
       force_loss = jnp.sum(force_err/(structure.atom_count.reshape(-1,1,1) * 3)) * force_w

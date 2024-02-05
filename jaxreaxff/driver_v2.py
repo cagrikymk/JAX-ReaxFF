@@ -180,7 +180,7 @@ def  main():
   get_params_jit = jax.jit(get_params,static_argnums=(1,))
   set_params_jit = jax.jit(set_params,static_argnums=(1,))
   energy_f = jax.jit(jax.vmap(calculate_energy_and_charges, (0,0,0,None)))
-  energy_force_f = jax.jit(jax.vmap(jax.value_and_grad(calculate_energy_and_charges), (0,0,0,None)))
+  energy_force_f = jax.jit(jax.vmap(jax.value_and_grad(calculate_energy_and_charges, has_aux=True), (0,0,0,None)))
   new_loss_f = partial(loss_function, use_forces=args.use_forces, force_w=args.force_w, 
                                         use_charges=args.use_charges, charge_w=args.charge_w)
   grad_f = jax.jit(jax.grad(new_loss_f))
