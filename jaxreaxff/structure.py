@@ -56,29 +56,36 @@ class Structure(object):
     target_ch: Array
 
 
-def align_restraints(structures):
-    full_size = len(structures)
-    field_names = ['bond_restraints', 'angle_restraints', 'torsion_restraints']
-    classes = [BondRestraint, AngleRestraint, TorsionRestraint]
-    final_structures = []
-    for i,field in enumerate(field_names):
-        my_class = classes[i]
-        max_size = 1
-        for s in structures:
-            val = getattr(s, field)
-            max_size = max(max_size, len(val.target))
 
-        attr_dict = {}
-        class_fields = [field.name for field in dataclasses.fields(my_class)]
-        for c_field in class_fields:
-            sub_val = getattr(val, c_field)
-            attr_dict[c_field] = onp.zeros((full_size,max_size), dtype=sub_val.dtype) - 1
-            for j,s in enumerate(structures):
-                val = getattr(s, field)
-                sub_val = getattr(val, c_field)
-                attr_dict[c_field][j, :len(sub_val)] = sub_val
-        final_structures.append(my_class(**attr_dict))
-    return final_structures
+def align_restraints(structures):
+  full_size = len(structures)
+  field_names = ['bond_restraints', 'angle_restraints', 'torsion_restraints']
+  classes = [BondRestraint, AngleRestraint, TorsionRestraint]
+  final_structures = []
+  for i,field in enumerate(field_names):
+    my_class = classes[i]
+    max_size = 1
+    for s in structures:
+      val = getattr(s, field)
+      if val != None:
+        max_size = max(max_size, len(val.target))
+
+    attr_dict = {}
+    class_fields = [field.name for field in dataclasses.fields(my_class)]
+    for c_field in class_fields:
+      if val != None:
+        dtype = getattr(val, c_field).dtype
+      else:
+        dtype = onp.int32
+      attr_dict[c_field] = onp.zeros((full_size,max_size), dtype=dtype) - 1
+      for j,s in enumerate(structures):
+        val = getattr(s, field)
+        if val == None:
+          continue
+        sub_val = getattr(val, c_field)
+        attr_dict[c_field][j, :len(sub_val)] = sub_val
+    final_structures.append(my_class(**attr_dict))
+  return final_structures
 
 def align_structures(structures, max_sizes, dtype=onp.float32):
     full_size = len(structures)

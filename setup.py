@@ -41,6 +41,8 @@ INSTALL_REQUIRES = [
   'scipy>=1.2.1',
   'tabulate>=0.8.9',
   'frozendict',
+  'tqdm',
+  'optax'
 ]
 
 # https://packaging.python.org/guides/making-a-pypi-friendly-readme/
@@ -54,7 +56,9 @@ setup(
    author='Mehmet Cagri Kaymak',
    author_email='cagrikymk@gmail.com',
    packages=["jaxreaxff"],
-   entry_points={'console_scripts': ['jaxreaxff=jaxreaxff.driver:main',]},
+   entry_points={'console_scripts': ['jaxreaxff=jaxreaxff.driver:main',
+                                     'jaxreaxffv2=jaxreaxff.driver_v2:main']
+                },
    url='https://github.com/cagrikymk/JAX-ReaxFF',
    license='LICENSE',
    description='A gradient based framework for fast optimization of ReaxFF',
