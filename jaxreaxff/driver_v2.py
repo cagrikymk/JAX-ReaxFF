@@ -10,6 +10,7 @@ from frozendict import frozendict
 from jax_md.reaxff.reaxff_forcefield import ForceField
 from jax_md.reaxff.reaxff_helper import read_force_field
 from jax_md import dataclasses
+from .smartformatter import SmartFormatter
 from jaxreaxff.optimizer import calculate_energy_and_charges, update_inter_sizes
 from jaxreaxff.helper import set_params, get_params
 from jaxreaxff.interactions import (reaxff_interaction_list_generator,
@@ -31,7 +32,8 @@ import copy
 
 def  main():
   # create parser for command-line arguments
-  parser = argparse.ArgumentParser(description='JAX-ReaxFF driver')
+  parser = argparse.ArgumentParser(description='JAX-ReaxFF driver v2',
+                                   formatter_class=SmartFormatter)
   # default inputs: inital force field, parameters, geo and trainset files
   parser.add_argument('--init_FF', metavar='filename',
       type=str,
@@ -211,6 +213,10 @@ def  main():
   
   best_FF = force_field
   lowest_err = MAE
+
+  if not os.path.exists(args.out_folder):
+    os.makedirs(args.out_folder)
+
   for ind in range(args.num_epoch):
     b_inds = onp.arange(len(train_data))
     onp.random.shuffle(b_inds)
