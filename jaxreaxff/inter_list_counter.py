@@ -13,13 +13,18 @@ onp.seterr(all="ignore")
 from functools import partial
 import numba as nb
 
-def pool_handler_for_inter_list_count(systems, force_field, pool, chunksize=1):
+def pool_handler_for_inter_list_count(systems, force_field, 
+                                      pool, chunksize=1,
+                                      close_cutoff=5.0,
+                                      far_cutoff=10.0):
   '''
   Calculate the interaction list sizes for the provided geometries
   using the provided pool and chunk size
   '''
   modified_create_inter_lists = partial(calculate_inter_list_sizes,
-                                        force_field=force_field)
+                                        force_field=force_field,
+                                        close_cutoff=close_cutoff,
+                                        far_cutoff=far_cutoff)
   all_sizes = pool.map(modified_create_inter_lists, systems,
                        chunksize=chunksize)
   return all_sizes
@@ -143,9 +148,10 @@ def calculate_hbond_dense_size(atom_types,
   '''
   FF_types_hb = nphb
   types_hb = FF_types_hb[atom_types]
-  hydrogen_mask = types_hb == 1 # mask for hydrogen type
-  hydrogen_pair_mask = types_hb == 2 # atoms that can be involved in h-bond
-
+  # mask for hydrogen type
+  hydrogen_mask = (types_hb == 1) & (atom_types != -1)
+  # atoms that can be involved in h-bond
+  hydrogen_pair_mask = (types_hb == 2) & (atom_types != -1)
 
   h_nbr_inds = nbr_inds[hydrogen_mask]
   h_nbr_vals = nbr_values[hydrogen_mask]
@@ -175,6 +181,8 @@ def calculate_hbond_size(atom_types,
   # a1 is the H ATOM (center)
   for a1 in range(N):
     type1 = atom_types[a1]
+    if type1 == -1:
+      continue
     # i2 is the long range nbr(acceptor)
     for i2 in range(far_nbr_inds[a1].size):
       a2 = far_nbr_inds[a1][i2]
@@ -182,7 +190,7 @@ def calculate_hbond_size(atom_types,
       type2 = atom_types[a2]
       ihhb1 = nphb[type1]
       ihhb2 = nphb[type2]
-      if ihhb1 != 1 or ihhb2 != 2 or dist > dist_cutoff:
+      if type2 == -1 or ihhb1 != 1 or ihhb2 != 2 or dist > dist_cutoff:
         continue
       #i3 is the short range nbr (donor)
       for i3 in range(close_nbr_inds[a1].size):
@@ -198,7 +206,7 @@ def create_distance_matrix(shift_pos, tiled_atom_pos1, orth_matrix):
   '''
   Create a distance matrix for selected box shift and box matrix
   '''
-  tiled_atom_pos1_trans = tiled_atom_pos1.transpose(1,0,2)
+  tiled_atom_pos1_trans = tiled_atom_pos1.swapaxes(0,1)
   shifted_tiled_atom_pos1_trans = tiled_atom_pos1_trans - shift_pos
   diff = tiled_atom_pos1 - shifted_tiled_atom_pos1_trans
   distance_matrix = onp.sqrt(onp.square(diff).sum(axis=2))
@@ -217,7 +225,9 @@ def create_distance_matrices(atom_positions, orth_matrix, all_shift_comb, mask):
   distance_matrices = onp.stack([create_distance_matrix(pos,
                                                         tiled_atom_pos1,
                                                         orth_matrix)
-                                 for pos in shift_pos], axis=2)
+                                 for pos in shift_pos])
+  # dist mat: [N, N, # shifts]
+  distance_matrices = distance_matrices.swapaxes(0,2)
   # create the mask
   mask = mask.reshape(-1,1)
   mask_2d = onp.dot(mask,mask.transpose())
@@ -227,7 +237,9 @@ def create_distance_matrices(atom_positions, orth_matrix, all_shift_comb, mask):
 
 
 def calculate_inter_list_sizes(structure,
-                              force_field):
+                              force_field,
+                              close_cutoff=5.0,
+                              far_cutoff=10.0):
   '''
   Calculate the all ineraction list sizes for a given structure and force field
   '''
@@ -237,8 +249,6 @@ def calculate_inter_list_sizes(structure,
   # dictionary to hold the final values
   size_dict = {}
   # default cutoffs
-  long_range_cutoff = 10
-  short_range_cutoff = 5.0
   hbond_dist_cutff = 7.5
   hbond_bo_cutoff = 0.01
   dist_mats = create_distance_matrices(structure.positions,
@@ -251,12 +261,12 @@ def calculate_inter_list_sizes(structure,
 
   [far_nbr_inds,
   far_nbr_shifts,
-  far_nbr_dists] = create_dense_nbr_list(dist_mats, cutoff=long_range_cutoff)
+  far_nbr_dists] = create_dense_nbr_list(dist_mats, cutoff=far_cutoff)
   size_dict["far_nbr_size"] = far_nbr_inds.shape[1]
 
   [close_nbr_inds,
   close_nbr_shifts,
-  close_nbr_dists] = create_dense_nbr_list(dist_mats, cutoff=short_range_cutoff)
+  close_nbr_dists] = create_dense_nbr_list(dist_mats, cutoff=close_cutoff)
   size_dict["close_nbr_size"] = close_nbr_inds.shape[1]
 
 

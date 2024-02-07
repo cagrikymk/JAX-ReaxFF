@@ -107,7 +107,9 @@ class ReaxFFEnergyTest(parameterized.TestCase):
     my_index_to_name = self.geo_index_to_name[i]
     data = TEST_DATA[i]['results']
     num_threads = os.cpu_count()
-    size_dicts = count_inter_list_sizes(my_geo, my_ff, num_threads=num_threads, chunksize=4)
+    size_dicts = count_inter_list_sizes(my_geo, my_ff, 
+                                        num_threads=num_threads, chunksize=4,
+                                        close_cutoff=5.0, far_cutoff=10.0)
     for i in range(len(size_dicts)):
       geo_name = my_index_to_name[i]
       hbond_count = size_dicts[i]["hbond_size"]
@@ -126,7 +128,11 @@ class ReaxFFEnergyTest(parameterized.TestCase):
     my_index_to_name = self.geo_index_to_name[i]
     data = TEST_DATA[i]['results']
     num_threads = os.cpu_count()
-    globally_sorted_indices, all_cut_indices, center_sizes = process_and_cluster_geos(my_geo,my_ff, max_num_clusters=5, num_threads=num_threads)
+    [globally_sorted_indices, 
+     all_cut_indices, 
+     center_sizes] = process_and_cluster_geos(my_geo, my_ff, 
+                                              max_num_clusters=5, num_threads=num_threads,
+                                              close_cutoff=5.0, far_cutoff=10.0)
     for i in range(len(center_sizes)):
       for k in center_sizes[i].keys():
         if center_sizes[i][k] == 0:
@@ -148,12 +154,12 @@ class ReaxFFEnergyTest(parameterized.TestCase):
     allocate_f = jax.jit(batched_allocate,static_argnums=(3,))
     center_sizes = [frozendict(c) for c in center_sizes]
 
-    all_inters = [allocate_f(aligned_data[i].positions, aligned_data[i], my_ff, center_sizes[i])[0] for i in range(len(center_sizes))]
+    all_inters = [allocate_f(aligned_data[i].positions, aligned_data[i], my_ff, center_sizes[i]) for i in range(len(center_sizes))]
     my_calculate_energy = jax.vmap(jax.value_and_grad(calculate_energy), (0,0,0, None))
     all_energies = jnp.zeros(num_structures)
     all_forces = [None] * num_structures
     for i in range(len(center_sizes)):
-      energy, forces = my_calculate_energy(aligned_data[i].positions, aligned_data[i], all_inters[i], my_ff)
+      energy, forces = my_calculate_energy(aligned_data[i].positions, aligned_data[i], all_inters[i][0], my_ff)
       all_energies = all_energies.at[aligned_data[i].name].set(energy)
       for j in range(len(aligned_data[i].name)):
         ind = int(aligned_data[i].name[j])
@@ -167,4 +173,9 @@ class ReaxFFEnergyTest(parameterized.TestCase):
                              err_msg=f"{geo_name} - energy", atol=ATOL, rtol=RTOL)
       assert_numpy_allclose(all_forces[i], data[geo_name]['forces'],
                             err_msg=f"{geo_name} - force", atol=0.1, rtol=0.01)
+    # compare the interaction list sizes calculated by 2 different functions
+    # (jax-md allocate) vs (jaxreaxff inter_list_counter)
+    for i in range(len(center_sizes)):
+      for k, v in all_inters[i][1].items():
+        self.assertEqual(int(v), int(center_sizes[i][k]), msg=f"count-allocate compare: {k}")
 

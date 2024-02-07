@@ -58,6 +58,18 @@ def main():
       type=str,
       default="trainset.in",
       help='Training set file')
+  parser.add_argument('--use_valid', metavar='boolean',
+      type=bool,
+      default=False,
+      help='Flag indicating whether to use validation data')
+  parser.add_argument('--valid_file', metavar='filename',
+      type=str,
+      default="validset.in",
+      help='Validation set file (same format as trainset.in)')
+  parser.add_argument('--valid_geo_file', metavar='filename',
+      type=str,
+      default="valid_geo",
+      help='Geo file for the validation data')
   # optimization related parameters
   parser.add_argument('--opt_method', metavar='method',
       choices=['L-BFGS-B', 'SLSQP'],
@@ -66,12 +78,10 @@ def main():
       help='Optimization method - "L-BFGS-B" or "SLSQP"')
   parser.add_argument('--num_trials', metavar='number',
       type=int,
-      choices=range(1, 1000),
-      default=2,
-      help='Number of trials')
+      default=1,
+      help='Number of trials (Population size)')
   parser.add_argument('--num_steps', metavar='number',
       type=int,
-      choices=range(1, 1000),
       default=5,
       help='Number of optimization steps per trial')
   parser.add_argument('--init_FF_type', metavar='init_type',
@@ -84,7 +94,6 @@ def main():
   # energy minimization related parameters
   parser.add_argument('--num_e_minim_steps', metavar='number',
       type=int,
-      choices=range(0, 1000),
       default=0,
       help='Number of energy minimization steps')
   parser.add_argument('--e_minim_LR', metavar='init_LR',
@@ -129,8 +138,8 @@ def main():
   default_backend = jax.default_backend().lower()
   
   if default_backend == 'cpu':
-      print("[WARNING] Falling back to CPU")
-      print("To use the GPU version, jaxlib with CUDA support needs to installed!")
+    print("[WARNING] Falling back to CPU")
+    print("To use the GPU version, jaxlib with CUDA support needs to installed!")
   
   # advanced options
   advanced_opts = {"perc_err_change_thr":0.01,       # if change in error is less than this threshold, add noise
@@ -171,10 +180,28 @@ def main():
   systems = read_geo_file(args.geo, force_field.name_to_index, 10.0)
   
   training_data = read_train_set(args.train_file)
-  systems, training_data = filter_data(systems, training_data)
-  
+  # default value for the valid. data
+  validation_data = None
+  systems_tr, training_data = filter_data(systems, training_data)
+  # read and process the validation data if used
+  if args.use_valid:
+    print("[INFO] Validation data is provided!")
+    systems_valid = read_geo_file(args.valid_geo_file, force_field.name_to_index, 10.0)
+    validation_data = read_train_set(args.valid_file)
+    systems_valid, validation_data = filter_data(systems_valid, validation_data)
+    # combine training and validation data together (geo files)
+    used_geo_names = set([s.name for s in systems_tr])
+    systems = systems_tr
+    for sys in systems_valid:
+      if sys.name not in used_geo_names:
+        systems.append(sys)
+  else:
+     systems = systems_tr
+       
   geo_name_to_index, geo_index_to_name = create_structure_map(systems)
   training_data = structure_training_data(training_data, geo_name_to_index)
+  if args.use_valid:
+     validation_data = structure_training_data(validation_data, geo_name_to_index)
   # replace names with indices
   for i,s in enumerate(systems):
       s = dataclasses.replace(s, name = geo_name_to_index[s.name])
@@ -188,7 +215,8 @@ def main():
    center_sizes] = process_and_cluster_geos(systems, force_field,
                                             max_num_clusters=args.max_num_clusters, 
                                             num_threads=num_threads, 
-                                            chunksize=4)
+                                            chunksize=4,
+                                            close_cutoff=5.0, far_cutoff=10.0)
   for i in range(len(center_sizes)):
       for k in center_sizes[i].keys():
           if k in DYNAMIC_INTERACTION_KEYS:
@@ -210,15 +238,15 @@ def main():
   force_field = move_dataclass(force_field, jnp)
   
   batched_allocate = reaxff_interaction_list_generator(force_field,
-                                                       close_cutoff = 6.0,
+                                                       close_cutoff = 5.0,
                                                        far_cutoff = 10.0,
                                                        use_hbond=True)
   
   allocate_func = jax.jit(batched_allocate,static_argnums=(3,))
   center_sizes = [frozendict(c) for c in center_sizes]   
   
-  list_positions = [s.positions for s in aligned_data]  
-  
+  list_positions = [s.positions for s in aligned_data]
+
   get_params_jit = jax.jit(get_params,static_argnums=(1,))
   set_params_jit = jax.jit(set_params,static_argnums=(1,))
   
@@ -318,6 +346,7 @@ def main():
      global_min,
      center_sizes] = train_FF(selected_params, param_indices, bounds, force_field,
                            aligned_data, center_sizes, training_data,
+                           validation_data,
                            num_steps, e_minim_flag, opt_method, optim_options,
                            advanced_opts,
                            new_loss_and_grad_func, minim_func, allocate_func)
@@ -344,6 +373,10 @@ def main():
   else:
     results_to_save = [{'params':best_params, 'value':best_fitness, 
                         "unique_id":"best"}]
+  if population_size <= 0:
+     print("[INFO] The population size <= 0, the initial force field is being evaluated...")
+     results_to_save = [{'params':jnp.array(init_params), 'value':float('inf'), 
+                        "unique_id":"init_ff"}]   
   
   for ii,res in enumerate(results_to_save):
     params = res['params']
@@ -386,6 +419,23 @@ def main():
   
     report_name = "{}/report_{}_{}.txt".format(args.out_folder,unique_id,loss_str)
     produce_error_report(report_name, training_data, indiv_errors, geo_index_to_name)
-
+  
+    # produce the report for the validation data if available
+    if args.use_valid:
+      [valid_loss, 
+       valid_indiv_errors] = new_loss_func(params, param_indices,
+                                        force_field, validation_data,
+                                        list_positions, aligned_data,
+                                        center_sizes,
+                                        True)
+      for k in valid_indiv_errors.keys():
+        # move data to regular numpy arrays
+        for i,sub_val in enumerate(valid_indiv_errors[k]):
+          valid_indiv_errors[k][i] = onp.array(sub_val)
+      valid_loss = float(valid_loss)
+      valid_loss_str = str(round(valid_loss))
+      report_name = "{}/valid_report_{}_{}.txt".format(args.out_folder,unique_id,valid_loss_str)
+      produce_error_report(report_name, validation_data, valid_indiv_errors, geo_index_to_name)       
+         
 if __name__ == "__main__":
   main()

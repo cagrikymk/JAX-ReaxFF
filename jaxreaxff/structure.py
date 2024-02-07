@@ -106,7 +106,7 @@ def align_structures(structures, max_sizes, dtype=onp.float32):
     periodic_image_shifts = onp.zeros(shape=(full_size, image_count, 3), dtype=onp.int32)
     # add 999 to ignore the padded items during distance calc.
     # all distances will be >> cutoffs when padded
-    periodic_image_shifts = periodic_image_shifts + 999
+    periodic_image_shifts = periodic_image_shifts + 9999
 
     target_e = onp.zeros(shape=(full_size,), dtype=dtype)
     target_f = onp.zeros(shape=(full_size, num_atoms, 3), dtype=dtype)

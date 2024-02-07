@@ -145,7 +145,9 @@ def  main():
     
   thread_count = os.cpu_count()
   force_field = move_dataclass(force_field, onp)
-  size_dicts = count_inter_list_sizes(data, force_field, num_threads=thread_count, chunksize=8)
+  size_dicts = count_inter_list_sizes(data, force_field, 
+                                      num_threads=thread_count, chunksize=8,
+                                      close_cutoff=5.0, far_cutoff=10.0)
   max_sizes = size_dicts[0]
   multip = 1.5
   for k in DYNAMIC_INTERACTION_KEYS:

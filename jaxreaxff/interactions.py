@@ -200,8 +200,10 @@ def reaxff_interaction_list_generator(force_field,
     Calculate the dense neighbor size
     '''
     # dist_mats size: [N, N, # shifts]
-    counts = jnp.count_nonzero((dist_mats < cutoff) & (dist_mats > 0), axis=(1,2))
-    return jnp.max(counts)
+    mask = (dist_mats < cutoff) & (dist_mats > 0)
+    counts = jnp.sum(mask.astype(jnp.int32), axis=(1,2))
+    max_c = jnp.max(counts)
+    return max_c
 
 
   def create_dense_nbr_list(structure, dist_mats, max_nbr_size, cutoff):

@@ -12,6 +12,7 @@ import sys
 from multiprocessing import get_context
 from tabulate import tabulate
 import math
+import copy
 from jaxreaxff.clustering import modified_kmeans
 from jaxreaxff.trainingdata import ChargeItem, EnergyItem, DistItem, AngleItem 
 from jaxreaxff.trainingdata import TorsionItem, ForceItem, RMSGItem, TrainingData
@@ -181,12 +182,21 @@ def cluster_systems_for_aligning(size_dicts, num_cuts=5,
   for i,s in enumerate(size_dicts):
     label = labels[i]
     all_cut_indices[label].append(i)
-
-  return all_cut_indices, min_cost, min_centr
+  
+  centers = []
+  for group in all_cut_indices:
+    my_center = copy.deepcopy(size_dicts[group[0]])
+    for i in group[1:]:
+      for k in my_center.keys():
+        my_center[k] = max(my_center[k], size_dicts[i][k])
+    centers.append(my_center)
+        
+  return all_cut_indices, min_cost, centers
 
 
 def count_inter_list_sizes(systems, force_field,
-                           num_threads=1, pool=None, chunksize=32):
+                           num_threads=1, pool=None, chunksize=32,
+                           close_cutoff=5.0, far_cutoff=10.0):
   '''
   Calculate the interaction list sizes for given list of structures
   '''
@@ -198,7 +208,8 @@ def count_inter_list_sizes(systems, force_field,
   else:
     my_pool = pool
   size_dicts = pool_handler_for_inter_list_count(systems, force_field,
-                                                 my_pool, chunksize)
+                                                 my_pool, chunksize,
+                                                 close_cutoff, far_cutoff)
   end = time.time()
   if pool == None:
     my_pool.terminate()
@@ -207,29 +218,32 @@ def count_inter_list_sizes(systems, force_field,
 
 
 def process_and_cluster_geos(systems,force_field,max_num_clusters=10,
-                             num_threads=1,chunksize=1,all_cut_indices=None):
+                             num_threads=1,chunksize=1,
+                             close_cutoff=5.0, far_cutoff=10.0):
   '''
   Calculate the interaction list sizes for given list of structures first
   then cluster the similar structures together
   '''  
-  size_dicts = count_inter_list_sizes(systems, force_field, num_threads=num_threads, chunksize=chunksize)
+  size_dicts = count_inter_list_sizes(systems, force_field, 
+                                      num_threads=num_threads, chunksize=chunksize,
+                                      close_cutoff=close_cutoff,
+                                      far_cutoff=far_cutoff)
 
-  if all_cut_indices == None:
-    all_costs_old = []
-    prev = -1
-    selected_n_cut = 0
-    for n_cut in range(1,max_num_clusters+1):
-      all_cut_indices, cost_total, center_sizes = cluster_systems_for_aligning(size_dicts,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
-      #print("Cost with {} clusters: {}".format(n_cut, cost_total))
-      all_costs_old.append(cost_total)
-      if prev != -1 and cost_total > prev or (prev-cost_total) / prev < 0.15:
-          selected_n_cut = n_cut - 1
-          break
-      prev = cost_total
-    #sys.exit()
-    if selected_n_cut == 0:
-      selected_n_cut = max_num_clusters
-    all_cut_indices, cost_total, center_sizes = cluster_systems_for_aligning(size_dicts,num_cuts=selected_n_cut,max_iterations=1000,rep_count=1000,print_mode=True)
+  all_costs_old = []
+  prev = -1
+  selected_n_cut = 0
+  for n_cut in range(1,max_num_clusters+1):
+    all_cut_indices, cost_total, center_sizes = cluster_systems_for_aligning(size_dicts,num_cuts=n_cut,max_iterations=1000,rep_count=1000,print_mode=False)
+    #print("Cost with {} clusters: {}".format(n_cut, cost_total))
+    all_costs_old.append(cost_total)
+    if prev != -1 and cost_total > prev or (prev-cost_total) / prev < 0.15:
+        selected_n_cut = n_cut - 1
+        break
+    prev = cost_total
+  #sys.exit()
+  if selected_n_cut == 0:
+    selected_n_cut = max_num_clusters
+  all_cut_indices, cost_total, center_sizes = cluster_systems_for_aligning(size_dicts,num_cuts=selected_n_cut,max_iterations=1000,rep_count=1000,print_mode=True)
 
   globally_sorted_indices = []
   for l in all_cut_indices:
@@ -667,7 +681,7 @@ def read_train_set(train_in):
 
       name_list = []
       multiplier_list = []
-      w = float(split_line[0])
+      weight = float(split_line[0])
       for i in range(num_ref_items):
           div = float(split_line[4 * i + 4].strip())
           mult = 1/div
@@ -680,31 +694,23 @@ def read_train_set(train_in):
           name_list.append(split_line[4 * i + 2].strip())
 
       energy = float(split_line[-1])
-      energy_item = EnergyItem(name_list, multiplier_list, energy, w, 1.0)
+      energy_item = EnergyItem(name_list, multiplier_list, energy, weight)
 
       energy_items.append(energy_item)
     # charge item
     elif charge_flag == 1:
       line = preprocess_trainset_line(line)
       split_line = line.split()
-      mask = 1.0
-      if split_line[0].upper() == "V":
-        mask = 0.0
-        split_line = split_line[1:]
       name = split_line[0].strip()
       weight = float(split_line[1])
       index = int(split_line[2]) - 1
       charge = float(split_line[3])
-      charge_item = ChargeItem(name, index, charge, weight, mask)
+      charge_item = ChargeItem(name, index, charge, weight)
       charge_items.append(charge_item)
     # geo item
     elif geo_flag == 1:
       line = preprocess_trainset_line(line)
       split_line = line.split()
-      mask = 1.0
-      if split_line[0].upper() == "V":
-        mask = 0.0
-        split_line = split_line[1:]
       name = split_line[0].strip()
       weight = float(split_line[1])
       target = float(split_line[-1])
@@ -712,7 +718,7 @@ def read_train_set(train_in):
       if len(split_line) == 5:
         index1 = int(split_line[2]) - 1
         index2 = int(split_line[3]) - 1
-        dist_item = DistItem(name, index1, index2, target, weight, mask)
+        dist_item = DistItem(name, index1, index2, target, weight)
         geo2_items.append(dist_item)
 
       # 3-body
@@ -720,7 +726,7 @@ def read_train_set(train_in):
         index1 = int(split_line[2]) - 1
         index2 = int(split_line[3]) - 1
         index3 = int(split_line[4]) - 1
-        angle_item = AngleItem(name, index1, index2, index3, target, weight, mask)
+        angle_item = AngleItem(name, index1, index2, index3, target, weight)
         geo3_items.append(angle_item)
       # 4-body
       if len(split_line) == 7:
@@ -728,19 +734,15 @@ def read_train_set(train_in):
         index2 = int(split_line[3]) - 1
         index3 = int(split_line[4]) - 1
         index4 = int(split_line[5]) - 1
-        torsion_item = TorsionItem(name, index1, index2, index3, index4, target, weight, mask)
+        torsion_item = TorsionItem(name, index1, index2, index3, index4, target, weight)
         geo4_items.append(torsion_item)
       #RMSG
       if len(split_line) == 3:
-        rmsg_item = RMSGItem(name, target, weight, mask)
+        rmsg_item = RMSGItem(name, target, weight)
         force_RMSG_items.append(rmsg_item)
     # force item
     elif force_flag == 1:
       split_line = line.split()
-      mask = 1.0
-      if split_line[0].upper() == "V":
-        mask = 0.0
-        split_line = split_line[1:]
       line = preprocess_trainset_line(line)
       split_line = line.split()
       name = split_line[0].strip()
@@ -751,7 +753,7 @@ def read_train_set(train_in):
         f1 = float(split_line[3])
         f2 = float(split_line[4])
         f3 = float(split_line[5])
-        force_item = ForceItem(name, index, [f1,f2,f3], weight, mask)
+        force_item = ForceItem(name, index, [f1,f2,f3], weight)
         force_atom_items.append(force_item)
 
   if len(energy_items) > 0:
