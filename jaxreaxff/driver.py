@@ -79,7 +79,8 @@ def main():
   parser.add_argument('--num_trials', metavar='number',
       type=int,
       default=1,
-      help='Number of trials (Population size)')
+      help='R|Number of trials (Population size).\n' +
+      'If set to <= 0, provided force field will be evaluated w/o any training (init_FF).')
   parser.add_argument('--num_steps', metavar='number',
       type=int,
       default=5,
