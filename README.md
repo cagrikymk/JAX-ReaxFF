@@ -1,24 +1,23 @@
 # JAX-ReaxFF
 JAX-ReaxFF: A Gradient Based Framework for Extremely Fast Optimization of Reactive Force Fields
 
+Traditional methods for optimizing ReaxFF parameters rely on slow, stochastic techniques like genetic algorithms or Monte Carlo methods. We present JAX-Reaxff, a new optimizer that leverages modern machine learning infrastructure to dramatically speed up this process.
 
-### Note: We are currently working on integrating JAX-ReaxFF with JAX-MD. After the integration, the same library will be used for both training and running MD simulation. Once the integration is complete, the code in this repo will be updated to work with JAX-MD.
+By utilizing the JAX library to compute gradients of the loss function, we can employ highly efficient local optimization methods, drastically reducing optimization time from days to minutes. JAX-ReaxFF runs efficiently on multi-core CPUs, GPUs, and TPUs, making it versatile and powerful. It also provides a sandbox environment for exploring custom ReaxFF functional forms, enhancing modeling accuracy.
 
-Existing parameter optimization methods for ReaxFF consist of black-box techniques using genetic algorithms or Monte-Carlo methods. Due to the stochastic behavior of these methods, the optimization process can require millions of error evaluations for complex parameter fitting tasks, significantly hampering the rapid development of high quality parameter sets. 
+You can learn more about the method in the following papers
+(Plase cite them if you utlize this repository):
 
-In this work, we present JAX-ReaxFF, a novel software tool that leverages modern machine learning infrastructure to enable extremely fast optimization of ReaxFF parameters. By calculating gradients of the loss function using the JAX library, we are able to utilize highly effective local optimization methods, such as the limited Broyden–Fletcher–Goldfarb–Shanno (LBFGS) and Sequential Least Squares Programming (SLSQP) methods. 
+Original Paper: [Jax-ReaxFF](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00363)
 
-As a result of the performance portability of JAX, JAX-ReaxFF can execute efficiently on multi-core CPUs, GPUs (or even TPUs). By leveraging the gradient information and modern hardware accelerators, we are able to decrease parameter optimization time for ReaxFF from days to mere minutes. JAX-ReaxFF framework can also serve as a sandbox environment to explore customizing the ReaxFF functional form for more accurate modeling.
-
-Paper: [Jax-ReaxFF](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00363)
-
+JAX-MD Integration Paprt: [End-to-End Differentiable ReaxFF](https://link.springer.com/chapter/10.1007/978-3-031-32041-5_11)
 
 ## How to Install
 Jax-ReaxFF requires JAX and jaxlib ([Jax Repo](https://github.com/google/jax)). <br>
-The code is tested with JAX 0.3.0 and jaxlib 0.1.74+.
+The code is tested with JAX 0.4.13 - 0.4.23 and jaxlib 0.4.13 - 0.4.23.
 Since the optimizer is highly more performant on GPUs, GPU version of jaxlib needs to be installed (GPU version supports both CPU and GPU execution). <br>
 
-**1-** Before the installation, a supported version of CUDA and CuDNN are needed (for jaxlib). <br>
+**1-** Before the installation, a supported version of CUDA and CuDNN are needed (for jaxlib). Alternatively, one could install the jax-md version that comes with required CUDA libraries. <br>
 
 **2-** Cloning the Jax-ReaxFF repo:
 ```
@@ -28,7 +27,7 @@ cd Jax-ReaxFF
 
 **3-** The installation can be done in a conda environment:
 ```
-conda create -n jax-env python=3.8
+conda create -n jax-env python=3.9
 conda activate jax-env
 ```
 **4-** Jax-ReaxFF is installed with the following command:
@@ -49,35 +48,39 @@ jaxreaxff --init_FF Datasets/cobalt/ffield_lit             \
           --save_opt all                                   \
           --num_trials 1                                   \
           --num_steps 20                                   \
-          --init_FF_type fixed                             \
-          --backend cpu
+          --init_FF_type fixed                             
 ```          
 **5-** To have the GPU support, jaxlib with CUDA support needs to be installed, otherwise the code can only run on CPUs.
 ```
 # install jaxlib-0.3.0 with Python 3.8, CUDA-11 and cuDNN-8.05 support
-pip install https://storage.googleapis.com/jax-releases/cuda11/jaxlib-0.3.0+cuda11.cudnn805-cp38-none-manylinux2010_x86_64.whl
+pip install -U "jax[cuda12_pip]==0.4.23" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 ```
-Other precompilations of jaxlib compatible with different cuda, cudnn and Python versions can be found here: [Jax Releases](https://storage.googleapis.com/jax-releases/jax_releases.html) <br>
+You can learn more about JAX installation here: [JAX install guide](https://github.com/google/jax#installation)<br>
 
-To test the GPU version:
+After installing the GPU version, the script will automatically utilize the GPU. If the script does not detect the GPU, it will print a warning message.
+
+
+#### Using Validation Data
 ```
-jaxreaxff --init_FF Datasets/cobalt/ffield_lit             \
-          --params Datasets/cobalt/params                  \
-          --geo Datasets/cobalt/geo                        \
-          --train_file Datasets/cobalt/trainset.in         \
-          --num_e_minim_steps 200                          \
-          --e_minim_LR 1e-3                                \
-          --out_folder ffields                             \
-          --save_opt all                                   \
-          --num_trials 1                                   \
-          --num_steps 20                                   \
-          --init_FF_type fixed                             \
-          --backend gpu
-```   
+jaxreaxff --init_FF Datasets/disulfide/ffield_lit             \
+          --params Datasets/disulfide/params                  \
+          --geo Datasets/disulfide/geo                        \
+          --train_file Datasets/disulfide/trainset.in         \
+          --use_valid True                                    \
+          --valid_file Datasets/disulfide/valSet/trainset.in  \
+          --valid_geo_file Datasets/disulfide/valSet/geo      \
+          --num_e_minim_steps 200                             \
+          --e_minim_LR 1e-3                                   \
+          --out_folder ffields                                \
+          --save_opt all                                      \
+          --num_trials 1                                      \
+          --num_steps 20                                      \
+          --init_FF_type fixed                             
+``` 
 
 #### Potential Issues
 
-On a HPC cluster, CUDA might be loaded somewhere different than /usr/local/cuda-xx.x. In this case, XLA compiler might not locate CUDA installation. 
+On a HPC cluster, CUDA might be loaded somewhere different than /usr/local/cuda-xx.x. In this case, XLA compiler might not locate CUDA installation. This only happens if you install JAX with local CUDA support.
 To solve this, we can speficy the cuda directory using XLA_FLAGS:
 ```
 # To see where cuda is installed
@@ -92,5 +95,3 @@ and it can be solved by changing XLA_FLAGS to:
 export XLA_FLAGS="$XLA_FLAGS --xla_gpu_force_compilation_parallelism=1"
 ```
 This flag can increase the compilation time drastically.
-
-

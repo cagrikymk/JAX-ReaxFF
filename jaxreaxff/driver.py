@@ -61,7 +61,7 @@ def main():
   parser.add_argument('--use_valid', metavar='boolean',
       type=bool,
       default=False,
-      help='Flag indicating whether to use validation data')
+      help='Flag indicating whether to use validation data (True/False)')
   parser.add_argument('--valid_file', metavar='filename',
       type=str,
       default="validset.in",
@@ -92,6 +92,12 @@ def main():
       '"random": Sample the parameters from uniform distribution between given ranges.\n'
       '"educated": Sample the parameters from a narrow uniform distribution centered at given values.\n'
       '"fixed": Start from the parameters given in "init_FF" file')
+  parser.add_argument('--random_sample_count', metavar='number',
+      type=int,
+      default=0,
+      help='R|Before the optimization starts, uniforms sample the paramater space.\n' +
+      'Select the best sample to start the training with, only works with "random" inital start.\n' +
+      'if set to 0, no random search step will be skipped. ')
   # energy minimization related parameters
   parser.add_argument('--num_e_minim_steps', metavar='number',
       type=int,
@@ -315,7 +321,7 @@ def main():
   
   
   population_size = args.num_trials
-  random_sample_count = 100
+  random_sample_count = args.random_sample_count
   results_list = []
   best_params = None
   best_fitness = float("inf")
