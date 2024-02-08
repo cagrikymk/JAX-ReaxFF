@@ -33,12 +33,16 @@ cuda_version = "cuda{}".format(cuda_version.replace(".",""))
 '''
 
 INSTALL_REQUIRES = [
-  'jax>=0.2.16,<=0.3.1',
-  'jaxlib>=0.1.70,<=0.3.0',
-  'numba>=0.51.2',
-  'numpy>=1.18.0,<1.22.0',
+  'jax>=0.4.13,<=0.4.23',
+  'jaxlib>=0.4.13,<=0.4.23',
+  'jax_md @ git+https://github.com/cagrikymk/jax-md.git@reaxff_dev#egg=jax_md',
+  'numba>=0.56',
+  'numpy',
   'scipy>=1.2.1',
-  'tabulate>=0.8.9'
+  'tabulate>=0.8.9',
+  'frozendict',
+  'tqdm',
+  'optax'
 ]
 
 # https://packaging.python.org/guides/making-a-pypi-friendly-readme/
@@ -48,11 +52,13 @@ with io.open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
   
 setup(
    name='jaxreaxff',
-   version='0.1.0',
+   version='0.2.0',
    author='Mehmet Cagri Kaymak',
-   author_email='kaymakme@msu.edu',
+   author_email='cagrikymk@gmail.com',
    packages=["jaxreaxff"],
-   entry_points={'console_scripts': ['jaxreaxff=jaxreaxff.driver:main',]},
+   entry_points={'console_scripts': ['jaxreaxff=jaxreaxff.driver:main',
+                                     'jaxreaxffv2=jaxreaxff.driver_v2:main']
+                },
    url='https://github.com/cagrikymk/JAX-ReaxFF',
    license='LICENSE',
    description='A gradient based framework for fast optimization of ReaxFF',
