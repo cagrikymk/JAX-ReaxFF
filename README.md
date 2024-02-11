@@ -52,7 +52,6 @@ jaxreaxff --init_FF Datasets/cobalt/ffield_lit             \
 ```          
 **5-** To have the GPU support, jaxlib with CUDA support needs to be installed, otherwise the code can only run on CPUs.
 ```
-# install jaxlib-0.3.0 with Python 3.8, CUDA-11 and cuDNN-8.05 support
 pip install -U "jax[cuda12_pip]==0.4.23" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 ```
 You can learn more about JAX installation here: [JAX install guide](https://github.com/google/jax#installation)<br>

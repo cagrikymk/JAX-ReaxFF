@@ -202,16 +202,17 @@ def loss_function(force_field, structure, nbr_lists,
   charge_loss = 0
   if use_forces:
       atom_mask = structure.atom_types >= 0
-      (energy_vals, charges), forces = jax.vmap(jax.value_and_grad(calculate_energy_and_charges),
+      (energy_vals, charges), forces = jax.vmap(jax.value_and_grad(calculate_energy_and_charges, has_aux=True),
                                      (0,0,0,None))(structure.positions, structure, nbr_lists, force_field)
-      forces = forces * atom_mask[:,:, jnp.newaxis]
       force_err = (forces - structure.target_f) ** 2
+      force_err = force_err * atom_mask[:,:, jnp.newaxis]
       force_loss = jnp.sum(force_err/(structure.atom_count.reshape(-1,1,1) * 3)) * force_w
   else:
       energy_vals, charges = jax.vmap(calculate_energy_and_charges,
                              (0,0,0,None))(structure.positions, structure, nbr_lists, force_field)
   if use_charges:
     charge_err = (charges - structure.target_ch) ** 2  
+    charge_err = charge_err * atom_mask
     charge_loss = jnp.sum(charge_err/structure.atom_count.reshape(-1,1)) * charge_w
     
   target_energies = structure.target_e
