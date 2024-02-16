@@ -549,7 +549,7 @@ def random_parameter_search(bounds, sample_count,
   else:
     selected_params = onp.random.uniform(low=bounds[:,0],high=bounds[:,1])
     selected_params = jnp.array(selected_params, dtype=dtype)
-  return min_params, min_loss
+  return selected_params
 
 
 

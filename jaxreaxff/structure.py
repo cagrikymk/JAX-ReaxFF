@@ -155,6 +155,7 @@ def align_and_batch_structures(structures, max_sizes, batch_size, dtype=onp.floa
   full_size = len(structures)
   batches = []
   for bs in range(0,full_size-batch_size,batch_size):
-    batches.append(align_structures(structures[bs:bs+batch_size],
-                                    max_sizes, dtype))
+    batch = align_structures(structures[bs:bs+batch_size],
+                             max_sizes, dtype)
+    batches.append(batch)
   return batches

@@ -167,6 +167,7 @@ def  main():
   
   batch_size = args.batch_size
   data = align_and_batch_structures(data, max_sizes, batch_size=batch_size, dtype=TYPE)
+  data = [move_dataclass(d, jnp) for d in data]
   total_size = len(data)
   train_size = int(total_size * 0.8)
   train_data = data[:train_size]
