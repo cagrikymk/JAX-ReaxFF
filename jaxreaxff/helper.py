@@ -462,6 +462,10 @@ def read_geo_file(geo_file, name_to_index_map, far_nbr_cutoff):
                                           force1 = torsion_restraints[:,4].astype(onp.float32),
                                           force2 = torsion_restraints[:,5].astype(onp.float32),
                                           target = torsion_restraints[:,6].astype(onp.float32))
+      # filler values
+      target_e = 0
+      target_f = onp.zeros_like(atoms_positions, dtype=onp.float32)
+      target_ch = onp.zeros_like(reax_atom_types, dtype=onp.float32)
       # create the structure from the read data
       new_system = Structure(system_name, num_atoms,
                              reax_atom_types, atomic_nums,
@@ -469,7 +473,7 @@ def read_geo_file(geo_file, name_to_index_map, far_nbr_cutoff):
                              do_minimization, max_it, all_shifts,
                              new_bond_restraints, new_angle_restraints,
                              new_torsion_restraints,
-                             None,None,None) # target values are not used here
+                             target_e,target_f,target_ch) # target values are not used here
 
       list_systems.append(new_system)
       atoms_positions = []

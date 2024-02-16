@@ -116,9 +116,9 @@ def align_structures(structures, max_sizes, dtype=onp.float32):
       s = structures[i]
       name[i] = s.name
       atom_count[i] = s.atom_count
-      atom_types[i,:s.atom_count] = s.atom_types
-      atomic_nums[i,:s.atom_count] = s.atomic_nums
-      positions[i,:s.atom_count,:] = s.positions
+      atom_types[i,:s.atom_count] = s.atom_types[:s.atom_count]
+      atomic_nums[i,:s.atom_count] = s.atomic_nums[:s.atom_count]
+      positions[i,:s.atom_count,:] = s.positions[:s.atom_count]
       orth_matrix[i] = s.orth_matrix
       total_charge[i] = s.total_charge
       energy_minimize[i] = s.energy_minimize
@@ -126,11 +126,8 @@ def align_structures(structures, max_sizes, dtype=onp.float32):
       periodic_image_shifts[i, :len(s.periodic_image_shifts)] = s.periodic_image_shifts
 
       target_e[i] = s.target_e
-      target_f[i, :s.atom_count, :] = s.target_f
-      target_ch[i, :s.atom_count] = s.target_ch
-
-
-
+      target_f[i, :s.atom_count, :] = s.target_f[:s.atom_count]
+      target_ch[i, :s.atom_count] = s.target_ch[:s.atom_count]
 
     bond_rest, angle_res, tors_rest = align_restraints(structures)
     new_system = Structure(name=name,

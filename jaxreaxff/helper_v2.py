@@ -30,7 +30,8 @@ def read_data(data_path, force_field):
       if 'atomic_charges' in row:
         target_ch = row['atomic_charges']
       else:
-        target_ch = None
+        # filler values for target charges
+        target_ch = onp.zeros_like(species,dtype=onp.float32)
       if 'total_charge' in row:
         total_charge = row['total_charge']
       else:
@@ -47,7 +48,8 @@ def read_data(data_path, force_field):
       if 'forces' in row:
         target_f = row['forces']
       else:
-        target_f = None
+        # filler values for target forces
+        target_f = onp.zeros_like(row['coordinates'], dtype=onp.float32)
       new_system = Structure(name="",
                              atom_count=N,
                              atom_types=species,
