@@ -339,7 +339,7 @@ def main():
     print("Trial-{} is starting...".format(i+1))
     start = time.time()
     if args.init_FF_type == 'random':
-      [min_params, min_loss] = random_parameter_search(bounds, random_sample_count,
+      min_params = random_parameter_search(bounds, random_sample_count,
                                   param_indices, force_field, training_data,
                                   list_positions, aligned_data, center_sizes,
                                   new_loss_func)
