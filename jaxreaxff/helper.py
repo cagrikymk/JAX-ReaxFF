@@ -20,10 +20,27 @@ from jaxreaxff.structure import Structure, BondRestraint, AngleRestraint, Torsio
 from jaxreaxff.inter_list_counter import pool_handler_for_inter_list_count
 from jax_md import dataclasses
 from jax_md.reaxff.reaxff_forcefield import ForceField
+import argparse
+
 # Since we shouldnt access the private API (jaxlib), create a dummy jax array
 # and get the type information from the array.
 #from jaxlib.xla_extension import ArrayImpl as JaxArrayType
 JaxArrayType = type(jnp.zeros(1))
+
+def build_float_range_checker(min_v, max_v):
+  '''
+  Returns a function that can be used to validate fiven FP value
+  withing the allowed range ([min_v, max_v])
+  '''
+  def range_checker(arg):
+    try:
+      val = float(arg)
+    except ValueError:    
+      raise argparse.ArgumentTypeError("Value must be a floating point number")
+    if val < min_v or val > max_v:
+      raise argparse.ArgumentTypeError("Value must be in range [" + str(min_v) + ", " + str(max_v)+"]")
+    return val
+  return range_checker
 
 def get_params(force_field, params_list):
   '''

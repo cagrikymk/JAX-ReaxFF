@@ -36,6 +36,7 @@ from jaxreaxff.helper import (move_dataclass, process_and_cluster_geos,
                               parse_and_save_force_field)
 import math
 from functools import partial
+from jaxreaxff.helper import build_float_range_checker
 
 def main():
   # create parser for command-line arguments
@@ -133,6 +134,13 @@ def main():
       help='R|Max number of clusters that can be used\n' +
            'High number of clusters lowers the memory cost\n' +
            'However, it increases compilation time,especially for cpus')
+  parser.add_argument('--perc_noise_when_stuck', metavar='percentage',
+      type=build_float_range_checker(0.0, 0.1),
+      default=0.04,
+      help='R|Percentage of the noise that will be added to the parameters\n' +
+           'when the optimizer is stuck.\n' +
+           'param_noise_i = (param_min_i, param_max_i) * perc_noise_when_stuck\n' +
+           'Allowed range: [0.0, 0.1]')
   parser.add_argument('--seed', metavar='seed',
       type=int,
       default=0,
@@ -149,9 +157,9 @@ def main():
     print("To use the GPU version, jaxlib with CUDA support needs to installed!")
   
   # advanced options
-  advanced_opts = {"perc_err_change_thr":0.01,       # if change in error is less than this threshold, add noise
-                   "perc_noise_when_stuck":0.04,     # noise percantage (wrt param range) to add when stuck
-                   "perc_width_rest_search":0.15,    # width of the restricted parameter search after iteration > rest_search_start
+  advanced_opts = {"perc_err_change_thr":0.01,                         # if change in error is less than this threshold, add noise
+                   "perc_noise_when_stuck":args.perc_noise_when_stuck, # noise percantage (wrt param range) to add when stuck
+                   "perc_width_rest_search":0.15,                      # width of the restricted parameter search after iteration > rest_search_start
                    }
   
   onp.random.seed(args.seed)
