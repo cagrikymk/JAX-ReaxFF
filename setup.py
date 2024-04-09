@@ -38,7 +38,7 @@ INSTALL_REQUIRES = [
   'jax_md @ git+https://github.com/cagrikymk/jax-md.git@reaxff_dev#egg=jax_md',
   'numba>=0.56',
   'numpy',
-  'scipy>=1.2.1',
+  'scipy>=1.2.1,<=1.12.0',
   'tabulate>=0.8.9',
   'frozendict',
   'tqdm',
