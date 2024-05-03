@@ -298,12 +298,16 @@ def calculate_inter_list_sizes(structure,
 
   size_dict["filter2_size"] = filt2_inds.shape[1]
 
+  # Since we use 3 body list to generate 4-body, we need to not filter 3-body
+  # interactions if we need them for 4-body
+  new_body3_mask = force_field.body34_params_mask | force_field.body3_params_mask
+
   # calculate the size of 3-body interaction list
   size_filter3 = calculate_filter3_size(atom_types,
                                       filt2_inds,
                                       filt2_bo,
                                       force_field.cutoff2,
-                                      force_field.body3_params_mask)
+                                      new_body3_mask)
   size_dict["filter3_size"] = size_filter3
   # calculate the size of 4-body interaction list
   size_filter4 = calculate_filter4_size(atom_types,
