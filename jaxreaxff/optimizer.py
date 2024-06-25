@@ -513,7 +513,7 @@ def add_noise_to_params(params, bounds, scale=0.001):
   # produce noise from [-1,1]
   noise = onp.random.uniform(low = -1.0, high = 1.0,size=len(params))
   new_params = params + (noise * scale) * (bounds[:,1] - bounds[:,0])
-  new_params = jnp.clip(new_params,a_min=bounds[:,0],a_max=bounds[:,1])
+  new_params = jnp.clip(new_params, bounds[:,0], bounds[:,1])
 
   return new_params
 
