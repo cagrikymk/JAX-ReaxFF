@@ -14,7 +14,7 @@ JAX-MD Integration Paper: [End-to-End Differentiable ReaxFF](https://link.spring
 
 ## How to Install
 Jax-ReaxFF requires JAX and jaxlib ([Jax Repo](https://github.com/google/jax)). <br>
-The code is tested with JAX 0.4.13 - 0.4.23 and jaxlib 0.4.13 - 0.4.23.
+The code is tested with JAX 0.4.26 - 0.4.30 and jaxlib 0.4.26 - 0.4.30.
 Since the optimizer is highly more performant on GPUs, GPU version of jaxlib needs to be installed (GPU version supports both CPU and GPU execution). <br>
 
 **1-** Before the installation, a supported version of CUDA and CuDNN are needed (for jaxlib). Alternatively, one could install the jax-md version that comes with required CUDA libraries. <br>
@@ -52,7 +52,7 @@ jaxreaxff --init_FF Datasets/cobalt/ffield_lit             \
 ```          
 **5-** To have the GPU support, jaxlib with CUDA support needs to be installed, otherwise the code can only run on CPUs.
 ```
-pip install -U "jax[cuda12_pip]==0.4.23" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+pip install -U "jax[cuda12]==0.4.30"
 ```
 You can learn more about JAX installation here: [JAX install guide](https://github.com/google/jax#installation)<br>
 
