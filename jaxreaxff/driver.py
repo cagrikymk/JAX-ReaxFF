@@ -123,6 +123,10 @@ def main():
       help='R|"all" or "best"\n' +
       '"all": save all of the trained force fields\n' +
       '"best": save only the best force field')
+  parser.add_argument('--bonded_cutoff', metavar='cutoff',
+      type=float,
+      default=5.0,
+      help='Cutoff distance for bonded interactions (in Angstrom).')
   parser.add_argument('--cutoff2', metavar='cutoff',
       type=float,
       default=0.001,
@@ -231,7 +235,7 @@ def main():
                                             max_num_clusters=args.max_num_clusters, 
                                             num_threads=num_threads, 
                                             chunksize=4,
-                                            close_cutoff=5.0, far_cutoff=10.0)
+                                            close_cutoff=args.bonded_cutoff, far_cutoff=10.0)
   for i in range(len(center_sizes)):
       for k in center_sizes[i].keys():
           if k in DYNAMIC_INTERACTION_KEYS:
@@ -253,7 +257,7 @@ def main():
   force_field = move_dataclass(force_field, jnp)
   
   batched_allocate = reaxff_interaction_list_generator(force_field,
-                                                       close_cutoff = 5.0,
+                                                       close_cutoff = args.bonded_cutoff,
                                                        far_cutoff = 10.0,
                                                        use_hbond=True)
   
