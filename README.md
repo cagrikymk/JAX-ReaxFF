@@ -27,7 +27,7 @@ cd Jax-ReaxFF
 
 **3-** The installation can be done in a conda environment:
 ```
-conda create -n jax-env python=3.9
+conda create -n jax-env python=3.10
 conda activate jax-env
 ```
 **4-** Jax-ReaxFF is installed with the following command:
