@@ -353,7 +353,6 @@ def reaxff_interaction_list_generator(force_field,
     for h-bond (acceptor donor pairs)
 
     '''
-    print(f"{h_nbr_inds=}, {h_nbr_pots=}, {hb_acceptor_mask=}, {max_hb_close_size=}")
     filter_hb_close = filter_hb_close_fn.allocate_fixed(
                                           candidate_args=(h_nbr_inds,
                                                           h_nbr_pots,

@@ -328,7 +328,7 @@ def calculate_inter_list_sizes(structure,
                                    force_field.nphb,
                                    force_field.hb_params_mask)
 
-  size_dict["hbond_size"] = onp.maximum(size_hbond, 1)
+  size_dict["hbond_size"] = size_hbond
 
   # calculate the size of far neighbor sub list for h-bond creation
   (far_h_size,
@@ -337,8 +337,8 @@ def calculate_inter_list_sizes(structure,
                                                  far_nbr_dists,
                                                  hbond_dist_cutff,
                                                  force_field.nphb)
-  size_dict["hbond_h_size"] = onp.maximum(far_h_size, 1)
-  size_dict["hbond_filter_far_size"] = onp.maximum(far_acc_size, 1)
+  size_dict["hbond_h_size"] = far_h_size
+  size_dict["hbond_filter_far_size"] = far_acc_size
 
   # calculate the size of close neighbor sub list for h-bond creation
   # multiply BO and the cutoff by -1 since we check if value < cutoff
@@ -348,7 +348,8 @@ def calculate_inter_list_sizes(structure,
                                                  filt2_bo * -1,
                                                  hbond_bo_cutoff * -1,
                                                  force_field.nphb)
-  size_dict["hbond_filter_close_size"] = onp.maximum(close_donor_size, 1)
+
+  size_dict["hbond_filter_close_size"] = close_donor_size
 
 
   return size_dict
